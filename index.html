@@ -2078,7 +2078,10 @@
           if (!res.ok) throw new Error('Formspree returned ' + res.status);
           submitted = true;
         } else if (typeof USE_VERCEL_FN !== 'undefined' && USE_VERCEL_FN){
-          const res = await fetch('/api/waitlist', {
+          // Absolute URL so POSTs work whether this is served from
+          // ediblefactor-waitlist.vercel.app (same-origin) or proxied via
+          // ediblefactor.com/waitlist rewrite (cross-origin — CORS whitelisted).
+          const res = await fetch('https://ediblefactor-waitlist.vercel.app/api/waitlist', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
