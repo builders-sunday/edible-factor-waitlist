@@ -1,0 +1,24 @@
+# Local env
+.env
+.env.local
+.env*.local
+
+# Vercel
+.vercel
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Node (none today, but if you add deps later)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Logs
+*.log
