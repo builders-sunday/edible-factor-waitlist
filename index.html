@@ -1218,7 +1218,10 @@
   .footer__wordmark{
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(80px, 22vw, 360px);
+    /* 22vw clipped the trailing italic "r" inside .footer__big{overflow:hidden}
+       on iPhone-class widths. 16vw with a lower min keeps the wordmark intact
+       on every viewport while preserving impact on desktop. */
+    font-size: clamp(48px, 16vw, 360px);
     line-height: 0.85;
     letter-spacing: -0.04em;
     text-align: center;
