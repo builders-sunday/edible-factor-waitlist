@@ -238,7 +238,10 @@
   .hero__title{
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(72px, 14vw, 240px);
+    /* Lower min protects iPhone SE-class widths (320px) where the
+       previous 72px min × "You are HOW" overflowed past .hero's
+       padding. The vw factor still drives impact on tablet+. */
+    font-size: clamp(52px, 14vw, 240px);
     line-height: 0.88;
     letter-spacing: -0.035em;
   }
@@ -1054,7 +1057,9 @@
   .waitlist__title{
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(48px, 7.5vw, 120px);
+    /* "Join the waitlist." at 48px min was tight on 393px. 40px min
+       preserves single-line layout on iPhone-class widths. */
+    font-size: clamp(40px, 7.5vw, 120px);
     line-height: 0.95;
     letter-spacing: -0.025em;
     margin-bottom: 32px;
