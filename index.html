@@ -645,14 +645,13 @@
   .phone-frame .screen img{
     width: 100%;
     height: 100%;
-    /* Source screenshots are aspect ~0.74 (near-square); .screen forces
-       9/19.5 (~0.46). `cover` clipped ~134px of horizontal content per
-       image — "EdibleFactor" → "actor", "Your, HG." → "our, HG.", etc.
-       `contain` shows the full screenshot with small top/bottom letterbox
-       until the source images are recaptured at iPhone-native aspect. */
-    object-fit: contain;
-    object-position: center;
-    background: var(--bg);
+    /* Mockups in /mockups/*.webp are captured at native iPhone 14 Pro
+       resolution (1179x2556 = exactly 9/19.5) by tools/capture-mockups,
+       which drives Playwright headless against the live app with the
+       guest cookie set. Aspect matches .screen exactly, so cover fills
+       edge-to-edge with no clipping. Re-run `npm run capture` to refresh. */
+    object-fit: cover;
+    object-position: top center;
     display: block;
   }
 
