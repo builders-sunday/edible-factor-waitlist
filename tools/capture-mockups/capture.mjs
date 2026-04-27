@@ -26,6 +26,9 @@ const TARGETS = [
   { name: 'ai-sommelier',       path: '/chat',        wait: 1500 },
   { name: 'calorie-trend',      path: '/insights',    wait: 1500 },
   { name: 'lifestyle-swap',     path: '/insights',    wait: 1500, scrollY: 800 },
+  { name: 'menu-scan',          path: '/scan',        wait: 1500 },
+  { name: 'meal-customizer',    path: '/log-meal',    wait: 1500 },
+  { name: 'profile',            path: '/profile',     wait: 1500 },
 ]
 
 const VIEWPORT = { width: 393, height: 852 } // iPhone 14

@@ -1542,6 +1542,9 @@
         <span class="inline-cta__label">Early access · limited seats</span>
         <h3 class="inline-cta__title">Skip the problem. <em>Join the waitlist.</em></h3>
         <form class="wl-form" data-form="inline" novalidate>
+          <!-- Honeypot — invisible to users, filled by bots. api/waitlist.js
+               returns 200 OK without persisting whenever this field is set. -->
+          <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
           <input type="email" name="email" placeholder="your@email.com" required aria-label="Email address" autocomplete="email">
           <button type="submit">
             <span class="btn-label">Reserve my seat</span>
@@ -1854,6 +1857,8 @@
     </p>
 
     <form class="wl-form reveal" data-form="main" novalidate>
+      <!-- Honeypot — see inline form above. -->
+      <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
       <input type="email" name="email" placeholder="your@email.com" required aria-label="Email address" autocomplete="email">
       <button type="submit">
         <span class="btn-label">Reserve my seat</span>
@@ -1884,7 +1889,7 @@
 
 <footer class="footer">
   <div>© 2026 EdibleFactor · Made in Bengaluru</div>
-  <div>hello@ediblefactor.app</div>
+  <div><a href="mailto:hello@ediblefactor.app">hello@ediblefactor.app</a></div>
 </footer>
 
 <script>
