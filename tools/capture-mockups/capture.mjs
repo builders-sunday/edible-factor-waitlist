@@ -44,6 +44,39 @@ async function main() {
     colorScheme: 'dark',
   })
 
+  // Inject simulated iOS safe-area-inset-top before any page script runs.
+  // Playwright's iPhone 14 Pro device profile doesn't actually simulate
+  // the notch / safe area, so env(safe-area-inset-top) resolves to 0 and
+  // the app paints its header at y=0. The waitlist phone-frame mockup
+  // overlays a notch at the top of the rendered screenshot — without
+  // safe-area padding, the notch covers the app's header text. This
+  // pushes the body down and re-anchors fixed headers below the safe area
+  // so the captured screenshot has clean room for the notch.
+  await ctx.addInitScript(() => {
+    const SAFE_TOP = 47 // matches iPhone 14 / 14 Pro safe-area-inset-top
+    const inject = () => {
+      const style = document.createElement('style')
+      style.textContent = `
+        :root { --mockup-safe-top: ${SAFE_TOP}px; }
+        body { padding-top: ${SAFE_TOP}px !important; }
+        /* Tailwind's "fixed top-0" headers and any element pinned to the
+           viewport top need to slide down too, since fixed elements ignore
+           ancestor padding. */
+        header.fixed,
+        header[class*="fixed"][class*="top-0"],
+        [class*="fixed"][class*="top-0"]:not(input):not(button) {
+          top: ${SAFE_TOP}px !important;
+        }
+      `
+      document.documentElement.appendChild(style)
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', inject, { once: true })
+    } else {
+      inject()
+    }
+  })
+
   // Set guest cookie so middleware lets us into protected routes
   // (see middleware.ts in the ediblefactor repo: ef-guest=true bypasses /login redirect)
   const url = new URL(SITE)
