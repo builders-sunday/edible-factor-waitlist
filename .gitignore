@@ -3,7 +3,14 @@
 .env.local
 .env*.local
 
-# Vercel
+# Cloudflare
+.wrangler
+.dev.vars
+
+# Local Claude Code state
+.claude/settings.local.json
+
+# Vercel (legacy)
 .vercel
 
 # OS / editor junk

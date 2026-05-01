@@ -6,38 +6,10 @@
 <title>EdibleFactor · Redesign · You are HOW you eat</title>
 <meta name="description" content="The only app that tracks your calories and your budget at the same time. Private beta · Bengaluru → Global.">
 
-<!-- Fonts: same stack as production -->
+<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-<!-- Tailwind via CDN · for component-ready utility classes; site dev can lift to React -->
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        colors: {
-          bg:    '#07070b',
-          bg2:   '#0c0c12',
-          bg3:   '#13131c',
-          ink:   '#eceaf3',
-          inkdim:'#9693ac',
-          inklow:'#4f4d63',
-          periwinkle: '#a8aaff',
-          periwinkleBright: '#c0c2ff',
-          calorie: '#6eddf0',
-          budget:  '#ff8a4a',
-        },
-        fontFamily: {
-          display: ['"Instrument Serif"', 'Times New Roman', 'serif'],
-          body:    ['Inter', 'system-ui', 'sans-serif'],
-          mono:    ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
-        }
-      }
-    }
-  }
-</script>
 
 <style>
   :root {
@@ -472,6 +444,31 @@
     0%, 100% { transform: translateY(0); opacity: 0.55; }
     50%      { transform: translateY(8px); opacity: 1; }
   }
+
+  /* === Minimal preflight (replaces what Tailwind CDN was applying) === */
+  *,::before,::after{box-sizing:border-box;border-width:0;border-style:solid;border-color:currentColor}
+  html{line-height:1.5;-webkit-text-size-adjust:100%;tab-size:4}
+  body{margin:0;line-height:inherit}
+  h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0}
+  p,figure,blockquote{margin:0}
+  a{color:inherit;text-decoration:inherit}
+  button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;font-weight:inherit;line-height:inherit;color:inherit;margin:0;padding:0}
+  button{background-color:transparent;background-image:none;cursor:pointer;text-transform:none}
+  button:where(:not([type])),button[type=button],button[type=reset],button[type=submit]{-webkit-appearance:button;background-image:none}
+  img,svg,video,canvas,iframe,embed,object{display:block;vertical-align:middle}
+  img,video{max-width:100%;height:auto}
+  strike{text-decoration:line-through}
+  ul,ol,menu{list-style:none;margin:0;padding:0}
+  [hidden]{display:none}
+  ::placeholder{opacity:1;color:#9ca3af}
+
+  /* === Static utility set — replaces Tailwind CDN runtime ===
+     Compiled via tailwindcss CLI against the exact classes used in this file.
+     Regenerate via the snippet in README.md when classes change. */
+  *,:after,:before{--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-bg-opacity:1;--tw-text-opacity:1;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: }
+  .pointer-events-none{pointer-events:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.inset-x-0{left:0;right:0}.-bottom-6{bottom:-1.5rem}.-left-2{left:-.5rem}.left-1\/2{left:50%}.top-0{top:0}.top-1\/2{top:50%}.z-10{z-index:10}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-2{margin-bottom:.5rem}.mb-3{margin-bottom:.75rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.ml-3{margin-left:.75rem}.mt-1{margin-top:.25rem}.mt-10{margin-top:2.5rem}.mt-2{margin-top:.5rem}.mt-3{margin-top:.75rem}.mt-4{margin-top:1rem}.mt-6{margin-top:1.5rem}.mt-8{margin-top:2rem}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-1\.5{height:.375rem}.h-10{height:2.5rem}.h-14{height:3.5rem}.h-\[68px\]{height:68px}.h-px{height:1px}.w-1\.5{width:.375rem}.w-10{width:2.5rem}.w-14{width:3.5rem}.max-w-\[1280px\]{max-width:1280px}.max-w-\[1400px\]{max-width:1400px}.max-w-\[280px\]{max-width:280px}.max-w-\[400px\]{max-width:400px}.max-w-\[480px\]{max-width:480px}.max-w-\[520px\]{max-width:520px}.max-w-\[560px\]{max-width:560px}.max-w-\[720px\]{max-width:720px}.max-w-\[760px\]{max-width:760px}.flex-1{flex:1 1 0%}.-translate-x-1\/2{--tw-translate-x:-50%}.-translate-x-1\/2,.-translate-y-1\/2{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.-translate-y-1\/2{--tw-translate-y:-50%}.select-none{-webkit-user-select:none;-moz-user-select:none;user-select:none}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.flex-nowrap{flex-wrap:nowrap}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-12{gap:3rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-5{gap:1.25rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.gap-x-4{column-gap:1rem}.gap-y-1{row-gap:.25rem}.space-y-2>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.5rem*var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.whitespace-nowrap{white-space:nowrap}.rounded-3xl{border-radius:1.5rem}.rounded-full{border-radius:9999px}.rounded-xl{border-radius:.75rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-white\/10{border-color:hsla(0,0%,100%,.1)}.border-white\/5{border-color:hsla(0,0%,100%,.05)}.bg-bg{background-color:rgb(7 7 11/var(--tw-bg-opacity))}.bg-bg\/70{background-color:rgba(7,7,11,.7)}.bg-bg2\/80{background-color:rgba(12,12,18,.8)}.bg-periwinkle{background-color:rgb(168 170 255/var(--tw-bg-opacity))}.bg-periwinkle\/10{background-color:rgba(168,170,255,.1)}.p-6{padding:1.5rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.py-12{padding-top:3rem;padding-bottom:3rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.pb-6{padding-bottom:1.5rem}.pt-12{padding-top:3rem}.pt-6{padding-top:1.5rem}.pt-\[96px\]{padding-top:96px}.text-center{text-align:center}.align-baseline{vertical-align:baseline}.font-body{font-family:Inter,system-ui,sans-serif}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-5xl{font-size:3rem;line-height:1}.text-6xl{font-size:3.75rem;line-height:1}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[12px\]{font-size:12px}.text-\[clamp\(140px\2c 22vw\2c 360px\)\]{font-size:clamp(140px,22vw,360px)}.text-\[clamp\(64px\2c 10vw\2c 160px\)\]{font-size:clamp(64px,10vw,160px)}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xs{font-size:.75rem;line-height:1rem}.uppercase{text-transform:uppercase}.italic{font-style:italic}.not-italic{font-style:normal}.leading-\[0\.98\]{line-height:.98}.leading-\[1\.05\]{line-height:1.05}.leading-none{line-height:1}.leading-relaxed{line-height:1.625}.leading-tight{line-height:1.25}.tracking-\[0\.14em\]{letter-spacing:.14em}.tracking-\[0\.16em\]{letter-spacing:.16em}.tracking-\[0\.18em\]{letter-spacing:.18em}.tracking-\[0\.22em\]{letter-spacing:.22em}.tracking-tight{letter-spacing:-.025em}.text-budget{color:rgb(255 138 74/var(--tw-text-opacity))}.text-calorie{color:rgb(110 221 240/var(--tw-text-opacity))}.text-ink{color:rgb(236 234 243/var(--tw-text-opacity))}.text-ink\/90{color:rgba(236,234,243,.9)}.text-inkdim{color:rgb(150 147 172/var(--tw-text-opacity))}.text-inklow{color:rgb(79 77 99/var(--tw-text-opacity))}.text-periwinkle{color:rgb(168 170 255/var(--tw-text-opacity))}.text-white\/\[0\.025\]{color:hsla(0,0%,100%,.025)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px)}.backdrop-blur-md,.backdrop-blur-sm{-webkit-backdrop-filter:var(--tw-backdrop-blur);backdrop-filter:var(--tw-backdrop-blur)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px)}.transition-colors{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.hover\:text-periwinkle:hover{color:rgb(168 170 255/var(--tw-text-opacity))}
+  @media (min-width:768px){.md\:mb-10{margin-bottom:2.5rem}.md\:mt-10{margin-top:2.5rem}.md\:inline{display:inline}.md\:flex{display:flex}.md\:inline-flex{display:inline-flex}.md\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.md\:flex-row{flex-direction:row}.md\:justify-start{justify-content:flex-start}.md\:gap-14{gap:3.5rem}.md\:p-7{padding:1.75rem}.md\:px-10{padding-left:2.5rem;padding-right:2.5rem}.md\:py-16{padding-top:4rem;padding-bottom:4rem}.md\:pb-8{padding-bottom:2rem}.md\:pt-16{padding-top:4rem}.md\:text-left{text-align:left}.md\:text-4xl{font-size:2.25rem;line-height:2.5rem}.md\:text-6xl{font-size:3.75rem;line-height:1}.md\:text-7xl{font-size:4.5rem;line-height:1}.md\:text-\[11px\]{font-size:11px}.md\:text-\[2\.4rem\]{font-size:2.4rem}.md\:text-lg{font-size:1.125rem;line-height:1.75rem}}
+  @media (min-width:1024px){.lg\:sticky{position:sticky}.lg\:top-28{top:7rem}.lg\:grid-cols-\[1fr_320px\]{grid-template-columns:1fr 320px}.lg\:grid-cols-\[1fr_440px\]{grid-template-columns:1fr 440px}.lg\:grid-cols-\[380px_1fr\]{grid-template-columns:380px 1fr}.lg\:gap-14{gap:3.5rem}.lg\:gap-16{gap:4rem}}
 </style>
 </head>
 
@@ -776,25 +773,25 @@
           <article class="deck__card" data-card="0" data-pos="0">
             <div class="deck__notch"></div>
             <div class="deck__screen">
-              <img src="https://ediblefactor-waitlist.vercel.app/mockups/home-dashboard.webp" alt="EdibleFactor home dashboard" loading="eager">
+              <img src="/mockups/home-dashboard.webp" alt="EdibleFactor home dashboard" loading="eager" decoding="async" width="280" height="580">
             </div>
           </article>
           <article class="deck__card" data-card="1" data-pos="1">
             <div class="deck__notch"></div>
             <div class="deck__screen">
-              <img src="https://ediblefactor-waitlist.vercel.app/mockups/restaurants-browse.webp" alt="Restaurants browse" loading="eager">
+              <img src="/mockups/restaurants-browse.webp" alt="Restaurants browse" loading="lazy" decoding="async" width="280" height="580">
             </div>
           </article>
           <article class="deck__card" data-card="2" data-pos="2">
             <div class="deck__notch"></div>
             <div class="deck__screen">
-              <img src="https://ediblefactor-waitlist.vercel.app/mockups/ai-sommelier.webp" alt="AI Sommelier" loading="eager">
+              <img src="/mockups/ai-sommelier.webp" alt="AI Sommelier" loading="lazy" decoding="async" width="280" height="580">
             </div>
           </article>
           <article class="deck__card" data-card="3" data-pos="3">
             <div class="deck__notch"></div>
             <div class="deck__screen">
-              <img src="https://ediblefactor-waitlist.vercel.app/mockups/calorie-trend.webp" alt="Calorie trend and macro split" loading="eager">
+              <img src="/mockups/calorie-trend.webp" alt="Calorie trend and macro split" loading="lazy" decoding="async" width="280" height="580">
             </div>
           </article>
         </div>
@@ -1166,11 +1163,8 @@
   document.querySelectorAll('.tracker__col').forEach(el => meterIo.observe(el));
 
   // === Waitlist form submit ===
-  // POSTs to the /api/waitlist Vercel Function in this same repo. Absolute URL
-  // so the request works in both contexts: served same-origin from
-  // ediblefactor-waitlist.vercel.app, OR cross-origin via the
-  // ediblefactor.com/waitlist rewrite (the API has CORS whitelisting for both).
-  const WAITLIST_ENDPOINT = 'https://ediblefactor-waitlist.vercel.app/api/waitlist';
+  // POSTs to /api/waitlist on the same origin (Cloudflare Pages Function).
+  const WAITLIST_ENDPOINT = '/api/waitlist';
 
   document.querySelectorAll('form.wl-form').forEach(form => {
     const input = form.querySelector('input[name=email]');
