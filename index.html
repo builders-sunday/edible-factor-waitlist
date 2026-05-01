@@ -373,9 +373,12 @@
        "Numbers that mean something.") — were 5xl/6xl/7xl */
     section h2.display { font-size: clamp(32px, 9vw, 44px) !important; line-height: 1.02 !important; }
     /* CTA card heading "Skip the problem · Join the waitlist" — was 3xl/2.4rem */
-    .wl-form { padding: 4px 4px 4px 16px; }
-    .wl-form input[type=email] { font-size: 13px; padding: 10px 0; }
-    .wl-form button[type=submit] { padding: 12px 18px; font-size: 10px; }
+    .wl-form { padding: 3px 3px 3px 12px; gap: 6px; }
+    .wl-form input[type=email] { font-size: 13px; padding: 9px 0; }
+    .wl-form button[type=submit] {
+      padding: 9px 12px; font-size: 9.5px; letter-spacing: 0.08em; gap: 4px;
+    }
+    .wl-form__arrow { display: none; }
     /* Friction cards display text */
     .friction p.display { font-size: 1.05rem !important; line-height: 1.25 !important; }
     .friction { padding: 22px 20px; }
@@ -593,8 +596,8 @@
             <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
             <input type="email" name="email" placeholder="your@email.com" required aria-label="Email address" autocomplete="email">
             <button type="submit">
-              <span>Reserve My Seat</span>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <span>Reserve now</span>
+              <svg class="wl-form__arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                 <path d="M1 7h12m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
@@ -941,7 +944,7 @@
 
 <!-- Sticky floating CTA · appears after hero -->
 <a href="#waitlist-hero" class="sticky-cta pill-cta" id="stickyCta" aria-label="Join the waitlist">
-  Reserve My Seat →
+  Reserve now →
 </a>
 
 <script>
@@ -1189,7 +1192,7 @@
       submitBtn.disabled = on;
       submitBtn.innerHTML = on
         ? '<span>Reserving…</span>'
-        : (originalBtnHTML || '<span>Reserve My Seat</span>');
+        : (originalBtnHTML || '<span>Reserve now</span>');
     }
 
     form.addEventListener('submit', async (e) => {
