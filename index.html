@@ -63,7 +63,7 @@
 <!-- Fonts: same stack as production -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <!-- Tailwind utilities (precompiled subset, inlined). Regenerate via the
      recipe in README.md when new utility classes are introduced. The
@@ -102,11 +102,158 @@
       linear-gradient(90deg, rgba(168,170,255,0.04) 1px, transparent 1px);
     background-size: 80px 80px;
   }
+  /* Desktop only: wire the hero's 2-col grid manually (lg:grid-cols-2
+     is not in the precompiled Tailwind subset). Mobile + tablet keep
+     the existing single-column stack untouched. Selectors use
+     `.hero-grid-lg .x` instead of `.x` so they override the base rules
+     via natural specificity, without leaning on !important. */
+  @media (min-width: 1024px) {
+    .hero-grid-lg {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
+      gap: 56px;
+      align-items: center;
+    }
+    /* Cap the H1 so the LEFT column does not need 800+px to fit
+       "You are HOW" on one line. This keeps the headline at a
+       tablet-comparable size on desktop. */
+    .hero-grid-lg .hero__title { font-size: clamp(72px, 7vw, 100px); }
+    /* Desktop drops the glimpse rotator entirely - the dial behind the
+       CTA card carries the visual motion on this breakpoint. */
+    .hero-grid-lg .glimpse { display: none; }
+    /* Center the CTA card vertically in the right column so it reads
+       as the visual anchor of the right side. The right column's grid
+       cell already vertically centers via align-items: center on the
+       grid, but adding flex-center inside the cell also handles cases
+       where the cell auto-stretches taller than the card. */
+    .hero-grid-lg #waitlist-hero {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
 
-  /* Display type · Instrument Serif with italic accent */
-  .display { font-family: 'Instrument Serif', 'Times New Roman', serif; font-weight: 400; line-height: 0.95; letter-spacing: -0.02em; }
-  .accent  { font-style: italic; color: var(--periwinkle); }
+  /* Display type · Space Grotesk with bold periwinkle accent. Italic
+     accent retired because Space Grotesk has no italic cut; emphasis
+     now comes from weight (700) + periwinkle color instead. */
+  .display { font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 500; line-height: 0.98; letter-spacing: -0.025em; }
+  .accent  { font-weight: 700; color: var(--periwinkle); }
   .period  { color: var(--periwinkle); }
+
+  /* Rotor word · width-stable single slot that cycles between
+     "calories" (cyan) and "budget" (peach). Matches the rotor on the
+     app login (PR #32). Italic is browser-synthesised on Space Grotesk
+     because the family has no italic cut; kept anyway for visual
+     consistency with the app side. */
+  .rotor {
+    position: relative;
+    display: inline-block;
+    vertical-align: baseline;
+    font-style: italic;
+    font-weight: 600;
+  }
+  .rotor__sizer { visibility: hidden; }
+  .rotor__word {
+    position: absolute;
+    inset: 0;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 480ms cubic-bezier(0.32, 1.55, 0.36, 1),
+                transform 480ms cubic-bezier(0.32, 1.55, 0.36, 1);
+    pointer-events: none;
+  }
+  .rotor__word.is-active { opacity: 1; transform: translateY(0); }
+  .rotor__word--cal { color: var(--calorie); }
+  .rotor__word--bud { color: var(--budget); }
+  @media (prefers-reduced-motion: reduce) {
+    .rotor__word { transition: none; }
+  }
+
+  /* Hero title row · wraps H1 + glimpse. On mobile the glimpse is
+     absolute in the top-right corner (legacy behaviour). On tablet+ it
+     flexes alongside the H1 and vertically centers, so the two read as
+     a deliberate pair instead of a corner-floating accent. */
+  .hero-title-row { position: relative; }
+  @media (min-width: 768px) {
+    .hero-title-row {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+    .hero-title-row .hero__title { flex: 1 1 0%; min-width: 0; }
+    .hero-title-row .glimpse { order: 1; }  /* push to right of H1 */
+  }
+  @media (min-width: 1024px) {
+    .hero-title-row { gap: 56px; }
+  }
+
+  /* Glimpse rotator · square that iris-reveals through 4 app mockups.
+     Mobile keeps a fixed 116px square (absolute, top-right of H1 row).
+     Tablet/desktop roughly doubles those values and switches to a
+     flex-static sibling so the H1 and glimpse read as a paired unit. */
+  .glimpse {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 116px;
+    height: 116px;
+    z-index: 5;
+    pointer-events: none;
+  }
+  @media (min-width: 768px) {
+    .glimpse {
+      position: static;
+      flex-shrink: 0;
+      width: clamp(220px, 36vw, 600px);
+      height: clamp(220px, 36vw, 600px);
+    }
+  }
+  .glimpse__frame {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--bg-2, #0c0c12);
+    border: 1px solid rgba(168, 170, 255, 0.22);
+    box-shadow:
+      0 12px 28px rgba(0, 0, 0, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+  .glimpse__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    /* Iris reveal · clip-path circle expands from center to reveal the
+       active frame. Opacity rides alongside so the off-frame doesn't
+       fight the active one when z-index ties. */
+    opacity: 0;
+    clip-path: circle(0% at 50% 50%);
+    transition:
+      clip-path 900ms cubic-bezier(0.65, 0, 0.35, 1),
+      opacity 600ms ease-in-out;
+  }
+  .glimpse__img.is-active {
+    opacity: 1;
+    clip-path: circle(75% at 50% 50%);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .glimpse__img {
+      transition: none;
+      clip-path: circle(75% at 50% 50%);
+    }
+  }
+  .glimpse::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 18px;
+    background: linear-gradient(180deg, transparent 60%, rgba(7, 7, 11, 0.45));
+    pointer-events: none;
+  }
 
   /* Mono micro-labels · eyebrow, section labels, kicker pills */
   .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
@@ -151,8 +298,11 @@
     mix-blend-mode: screen;
   }
   .dial svg { width: 100%; height: 100%; }
-  .dial--rotate { animation: rotate 70s linear infinite; transform-origin: center; }
-  .dial--rotate-rev { animation: rotate 110s linear infinite reverse; transform-origin: center; }
+  /* Dial spin speed bumped from 70s/110s to 18s/28s so the rotation
+     is visibly present without being dizzying. ~20deg/sec on the outer
+     ring, slightly slower counter-rotation on the inner. */
+  .dial--rotate { animation: rotate 18s linear infinite; transform-origin: center; }
+  .dial--rotate-rev { animation: rotate 28s linear infinite reverse; transform-origin: center; }
   @keyframes rotate {
     from { transform: rotate(0deg); }
     to   { transform: rotate(360deg); }
@@ -168,8 +318,8 @@
   .marquee__track {
     display: inline-flex; gap: 56px;
     animation: marquee 38s linear infinite;
-    font-family: 'Instrument Serif', serif;
-    font-size: 28px; font-style: italic;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 24px; font-weight: 500; letter-spacing: 0.01em;
     color: var(--ink-dim);
   }
   .marquee__track .dot {
@@ -187,6 +337,18 @@
   .reveal.in-view { opacity: 1; transform: translateY(0); }
 
   /* === Hero title staged reveal === */
+  /* Mobile floor 44px (was 64px) so the 2-line "You are HOW you eat."
+     leaves room for the lede + glimpse rotator above the fold on 375px
+     viewports. Slope bumped to 12vw so the H1 still grows aggressively
+     on tablet/desktop. */
+  .hero__title { font-size: clamp(44px, 12vw, 160px); }
+  /* Mobile only: reserve right-side space for the absolutely-positioned
+     glimpse rotator so the H1 does not slide under it. At >=768px the
+     glimpse is a flex sibling of the H1, so no padding is needed
+     (the flex `gap` handles separation). */
+  @media (max-width: 767px) {
+    .hero__title { padding-right: 132px; }
+  }
   .hero__title .word {
     display: inline-block;
     opacity: 0; transform: translateY(28px);
@@ -209,7 +371,7 @@
   .friction:hover { border-color: rgba(168,170,255,0.32); transform: translateY(-2px); }
   .friction__index { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.16em; color: var(--ink-low); text-transform: uppercase; }
   .friction strike { color: var(--ink-low); text-decoration-color: var(--ink-low); }
-  .friction em { font-style: italic; color: var(--periwinkle); font-family: 'Instrument Serif', serif; font-size: 1.08em; }
+  .friction em { font-weight: 700; color: var(--periwinkle); font-family: 'Space Grotesk', sans-serif; font-size: 1.04em; }
 
   /* === Walkthrough · Card-Deck Flip ===
      A stack of 4 phone "cards". Top card is active. Advancing flips
@@ -489,8 +651,8 @@
 </style>
 
 <!-- FE-launch · favicon + PWA basics -->
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2307070b'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='20' font-style='italic' fill='%23a8aaff'%3Eef%3C/text%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%2307070b'/%3E%3Ctext x='90' y='120' text-anchor='middle' font-family='serif' font-size='110' font-style='italic' fill='%23a8aaff'%3Eef%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2307070b'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='-apple-system,BlinkMacSystemFont,sans-serif' font-size='18' font-weight='700' letter-spacing='-0.5' fill='%23a8aaff'%3Eef%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%2307070b'/%3E%3Ctext x='90' y='124' text-anchor='middle' font-family='-apple-system,BlinkMacSystemFont,sans-serif' font-size='100' font-weight='700' letter-spacing='-3' fill='%23a8aaff'%3Eef%3C/text%3E%3C/svg%3E">
 <link rel="manifest" href="manifest.webmanifest">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self';">
 <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -515,7 +677,9 @@
      ============================================================ -->
 <nav class="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-bg/70 border-b border-white/5">
   <div class="max-w-[1400px] mx-auto px-6 md:px-10 h-[68px] flex items-center justify-between">
-    <a href="#" class="display text-2xl tracking-tight">edible<span class="accent">factor</span></a>
+    <a href="#" class="inline-flex items-center" aria-label="ediblefactor">
+      <img src="/ef-mark.svg" alt="ediblefactor" width="44" height="44" class="block rounded-xl" loading="eager">
+    </a>
     <div class="flex items-center gap-3">
       <span class="hidden lg:inline-flex items-center gap-2 mono text-[11px] tracking-[0.16em] uppercase text-inkdim">
         <span class="w-1.5 h-1.5 rounded-full bg-periwinkle"></span>
@@ -532,27 +696,30 @@
 <section class="relative bg-grid pt-[96px] pb-6 md:pb-8 overflow-hidden">
   <div class="max-w-[1400px] mx-auto px-6 md:px-10">
 
-    <!-- Kicker row -->
-    <div class="reveal flex flex-wrap items-center gap-3 text-[12px] mono tracking-[0.18em] uppercase mb-5">
-      <span class="w-10 h-px bg-periwinkle"></span>
-      <span class="text-calorie">CALORIES</span>
-      <span class="text-inklow">+</span>
-      <span class="text-budget">BUDGET</span>
-      <span class="text-inkdim">· ONE APP</span>
-    </div>
-
-    <!-- Eyebrow -->
-    <p class="reveal mono text-[12px] tracking-[0.18em] uppercase text-periwinkle mb-4 flex items-center gap-3">
-      <span class="w-10 h-px bg-periwinkle"></span>
-      The table's oldest question
-    </p>
-
-    <!-- 2-col split: title + CTA card -->
-    <div class="grid grid-cols-1 lg:grid-cols-[1fr_440px] gap-8 lg:gap-14 items-end">
+    <!-- Hero stack · single-column on mobile + tablet (tablet-like
+         density), two-column on desktop so everything (H1, glimpse,
+         lede, CTA card) fits inside the opening viewport without
+         scrolling. items-start kills the "extra black space on top"
+         that items-end produced in the prior 2-col version. Desktop
+         columns are wired in custom CSS (.hero-grid-lg) because
+         `lg:grid-cols-2` is not in the precompiled Tailwind subset. -->
+    <div class="hero-grid hero-grid-lg grid grid-cols-1 gap-8 items-start">
 
       <!-- LEFT: title + lede -->
       <div>
-        <h1 class="hero__title display text-[clamp(64px,10vw,160px)]">
+        <!-- H1 + glimpse row: stacks on mobile (glimpse absolute in
+             corner) and flexes on tablet+ (glimpse vertically centered
+             beside the H1, so the two feel paired instead of floating) -->
+        <div class="hero-title-row">
+        <div class="glimpse" aria-hidden="true">
+          <div class="glimpse__frame">
+            <img class="glimpse__img is-active" src="/mockups/home-dashboard.webp" alt="" width="200" height="200" loading="eager">
+            <img class="glimpse__img" src="/mockups/restaurants-browse.webp" alt="" width="200" height="200" loading="lazy">
+            <img class="glimpse__img" src="/mockups/ai-sommelier.webp" alt="" width="200" height="200" loading="lazy">
+            <img class="glimpse__img" src="/mockups/calorie-trend.webp" alt="" width="200" height="200" loading="lazy">
+          </div>
+        </div>
+        <h1 class="hero__title display text-[clamp(44px,12vw,160px)]">
           <span class="block">
             <span class="word">You&nbsp;are</span>
             <span class="word accent">HOW</span>
@@ -561,12 +728,15 @@
             <span class="word">you&nbsp;eat</span><span class="period word">.</span>
           </span>
         </h1>
+        </div><!-- /.hero-title-row -->
 
-        <div class="reveal mt-6 max-w-[520px]">
+        <div class="hero__lede-block reveal mt-6 max-w-[520px]">
           <p class="text-base md:text-lg text-ink/90 leading-relaxed">
-            The only app that tracks your <em class="not-italic text-calorie italic display text-2xl align-baseline">calories</em>
-            and your <em class="not-italic text-budget italic display text-2xl align-baseline">budget</em>
-            at the same time.
+            The only app that tracks your <span class="rotor display text-2xl align-baseline" aria-live="polite">
+              <span class="rotor__sizer" aria-hidden="true">calories</span>
+              <span class="rotor__word rotor__word--cal is-active" data-word="calories">calories</span>
+              <span class="rotor__word rotor__word--bud" data-word="budget">budget</span>
+            </span> at the same time.
           </p>
           <p class="mt-2 text-inkdim text-sm leading-relaxed">
             Scan any menu, log any meal, stay inside both budgets. EdibleFactor solves the equation every other app leaves half-done.
@@ -1295,6 +1465,41 @@
   }, { passive: true });
 
   updateSticky();
+
+  // Rotor word · cycles each .rotor's word slots in order. 2400ms per
+  // step matches the app login's RotorWord component. Single setInterval
+  // handles every .rotor on the page (currently just the hero lede).
+  (function initRotors() {
+    var rotors = document.querySelectorAll('.rotor');
+    rotors.forEach(function(rotor) {
+      var words = rotor.querySelectorAll('.rotor__word');
+      if (words.length < 2) return;
+      var idx = 0;
+      setInterval(function() {
+        words[idx].classList.remove('is-active');
+        idx = (idx + 1) % words.length;
+        words[idx].classList.add('is-active');
+      }, 2400);
+    });
+  })();
+
+  // Glimpse rotator · cross-fades the 4 mockup screenshots in the
+  // mobile-only square at the top-right of the hero. 2800ms cadence so
+  // it's not synchronized with the rotor word (visually busier
+  // otherwise).
+  (function initGlimpses() {
+    var frames = document.querySelectorAll('.glimpse__frame');
+    frames.forEach(function(frame) {
+      var imgs = frame.querySelectorAll('.glimpse__img');
+      if (imgs.length < 2) return;
+      var idx = 0;
+      setInterval(function() {
+        imgs[idx].classList.remove('is-active');
+        idx = (idx + 1) % imgs.length;
+        imgs[idx].classList.add('is-active');
+      }, 2800);
+    });
+  })();
 </script>
 
 </body>
