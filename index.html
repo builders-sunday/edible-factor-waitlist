@@ -654,7 +654,9 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2307070b'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='-apple-system,BlinkMacSystemFont,sans-serif' font-size='18' font-weight='700' letter-spacing='-0.5' fill='%23a8aaff'%3Eef%3C/text%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%2307070b'/%3E%3Ctext x='90' y='124' text-anchor='middle' font-family='-apple-system,BlinkMacSystemFont,sans-serif' font-size='100' font-weight='700' letter-spacing='-3' fill='%23a8aaff'%3Eef%3C/text%3E%3C/svg%3E">
 <link rel="manifest" href="manifest.webmanifest">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self'; frame-src https://challenges.cloudflare.com; frame-ancestors 'none'; base-uri 'self';">
+<!-- Cloudflare Turnstile, loaded async; widget rendered explicitly in the form below. -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <meta name="referrer" content="strict-origin-when-cross-origin">
 </head>
 
@@ -804,6 +806,12 @@
                 <path d="M1 7h12m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
+            <!-- Cloudflare Turnstile widget. data-sitekey placeholder is replaced at
+                 deploy with the value of TURNSTILE_SITE_KEY, or hardcoded to the prod
+                 site key. Living inside the form means Turnstile injects a hidden
+                 <input name="cf-turnstile-response"> with the token, which the submit
+                 handler below reads. theme=dark matches the page palette. -->
+            <div class="cf-turnstile mt-3" data-sitekey="TURNSTILE_SITE_KEY_PLACEHOLDER" data-theme="dark" data-size="flexible"></div>
           </form>
           <div class="wl-error mt-3 text-sm text-budget hidden" role="alert">Please enter a valid email.</div>
           <div class="wl-success mt-3 text-sm text-calorie hidden" role="status">You're on the list. Watch your inbox.</div>
@@ -1415,6 +1423,10 @@
       const emailEl = form.querySelector('input[name=email]');
       const email = emailEl.value.trim();
       const honey = form.querySelector('input[name=website]')?.value || '';
+      // Turnstile injects a hidden input with the token once the user passes the
+      // challenge. If the user submits before the widget resolves, the token is
+      // empty and the server returns 403, which surfaces as the captcha error.
+      const turnstileToken = form.querySelector('input[name="cf-turnstile-response"]')?.value || '';
       const err = form.parentElement.querySelector('.wl-error');
       const suc = form.parentElement.querySelector('.wl-success');
       const showErr = (msg) => {
@@ -1436,14 +1448,30 @@
         const res = await fetch('/api/waitlist', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, source: form.dataset.form || 'hero', website: honey }),
+          body: JSON.stringify({
+            email,
+            source: form.dataset.form || 'hero',
+            website: honey,
+            'cf-turnstile-response': turnstileToken,
+          }),
         });
         const data = await res.json().catch(() => ({}));
         if (res.ok && data?.ok) {
           showSuccess();
           form.reset();
+          // Reset Turnstile so a returning user can submit again without reloading.
+          if (window.turnstile && typeof window.turnstile.reset === 'function') {
+            window.turnstile.reset();
+          }
         } else if (res.status === 400) {
-          showErr(data?.error === 'Invalid email' ? 'Please enter a valid email.' : 'Something looked off — please try again.');
+          showErr(data?.error === 'Invalid email' ? 'Please enter a valid email.' : 'Something looked off, please try again.');
+        } else if (res.status === 403) {
+          showErr('Captcha verification failed. Please try the checkbox again.');
+          if (window.turnstile && typeof window.turnstile.reset === 'function') {
+            window.turnstile.reset();
+          }
+        } else if (res.status === 429) {
+          showErr('Too many attempts. Please try again in an hour.');
         } else {
           showErr('Could not save right now. Please try again shortly.');
         }
