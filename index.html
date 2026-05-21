@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#07070b">
 <title>edible·factor · You are HOW you eat</title>
 <meta name="description" content="The only app that tracks your calories and your budget at the same time. Private beta · Bengaluru → Global.">
@@ -795,6 +795,56 @@
     transform: translateY(-200%); transition: transform .2s ease;
   }
   .skip-link:focus-visible { transform: translateY(0); outline-offset: 0; }
+
+  /* === EF logo link · 44pt tap target + focus-visible ring ===
+     The mark itself renders at 44x44 but we pad the anchor so the
+     full hit area is comfortable on touch (44pt minimum, Apple HIG)
+     and the focus ring wraps the whole link, not just the image. */
+  .ef-logo-link {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 2px;
+    margin: -2px;
+    border-radius: 14px;
+    -webkit-tap-highlight-color: transparent;
+    transition: opacity .15s ease;
+  }
+  .ef-logo-link:hover { opacity: 0.85; }
+  .ef-logo-link:focus-visible {
+    outline: 2px solid var(--periwinkle);
+    outline-offset: 3px;
+    border-radius: 14px;
+  }
+  .ef-logo-link:active { opacity: 0.7; }
+
+  /* === Safe-area handling for iPhone notch / dynamic island ===
+     Requires `viewport-fit=cover` in the viewport meta (added in head).
+     The sticky nav, skip-link, and hero head get top padding clamped to
+     at least 0 so non-notched viewports stay unchanged. */
+  nav.fixed.top-0 {
+     padding-top: env(safe-area-inset-top, 0px);
+     padding-left: env(safe-area-inset-left, 0px);
+     padding-right: env(safe-area-inset-right, 0px);
+  }
+  /* Keep skip-link clear of the notch */
+  .skip-link {
+    top: max(8px, env(safe-area-inset-top, 8px));
+  }
+  /* Hero section pads its top by safe-area + the nav offset so body
+     copy ("You are HOW you eat.", lede, etc.) never sits under the
+     dynamic island on iPhone 14/15/16 Pro. Apex content was already
+     pt-[96px]; we add the safe-area inset on top. */
+  @media (max-width: 900px) {
+    section.bg-grid {
+      padding-top: calc(96px + env(safe-area-inset-top, 0px));
+    }
+  }
+  /* Sticky CTA bottom pill also respects the home-indicator gesture
+     bar so the tap target is never under the system chrome. */
+  .sticky-cta {
+    bottom: max(24px, calc(env(safe-area-inset-bottom, 0px) + 16px));
+    right: max(24px, env(safe-area-inset-right, 24px));
+  }
 </style>
 <style>
   .cookie-banner {
@@ -858,7 +908,7 @@
      ============================================================ -->
 <nav class="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-bg/70 border-b border-white/5">
   <div class="max-w-[1400px] mx-auto px-6 md:px-10 h-[68px] flex items-center justify-between">
-    <a href="#" class="inline-flex items-center" aria-label="ediblefactor">
+    <a href="#problem" class="ef-logo-link inline-flex items-center justify-center" aria-label="Jump to the problem" data-smooth-scroll="problem">
       <img src="/ef-mark.svg" alt="ediblefactor" width="44" height="44" class="block rounded-xl" loading="eager">
     </a>
     <div class="flex items-center gap-3">
@@ -1046,7 +1096,7 @@
 <!-- ============================================================
      01  ·  THE PROBLEM  (compressed, 3-up tight row, no inline CTA)
      ============================================================ -->
-<section class="pt-12 pb-6 md:pt-16 md:pb-8">
+<section id="problem" class="pt-12 pb-6 md:pt-16 md:pb-8">
   <div class="max-w-[1400px] mx-auto px-6 md:px-10">
     <div class="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-8 lg:gap-14 items-start">
       <!-- Left: section header -->
@@ -1390,6 +1440,22 @@
 
 <script>
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // === EF logo · smooth-scroll to #problem (instant under reduced-motion) ===
+  // Honor prefers-reduced-motion explicitly: the global `scroll-behavior: smooth`
+  // is usually short-circuited by the UA in reduced-motion mode, but we override
+  // any timing here to be defensive across browsers (older Safari, in-app webviews).
+  document.querySelectorAll('[data-smooth-scroll]').forEach((el) => {
+    el.addEventListener('click', (e) => {
+      const targetId = el.getAttribute('data-smooth-scroll');
+      const target = targetId && document.getElementById(targetId);
+      if (!target) return;
+      e.preventDefault();
+      target.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'start' });
+      // Update history without triggering a hashchange jump
+      if (history.replaceState) history.replaceState(null, '', '#' + targetId);
+    });
+  });
 
   // Scroll-reveal
   const io = new IntersectionObserver((entries) => {
