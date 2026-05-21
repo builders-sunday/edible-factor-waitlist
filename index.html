@@ -541,8 +541,21 @@
     position: fixed; bottom: 24px; right: 24px; z-index: 80;
     opacity: 0; pointer-events: none; transform: translateY(8px);
     transition: opacity .25s ease, transform .25s ease;
+    /* 44pt min tap target on mobile */
+    min-height: 44px;
   }
   .sticky-cta.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  /* Footer-aware dismount: when the footer scrolls into view, fade the
+     floating CTA out so it stops covering the wordmark + copyright. The
+     footer itself contains an inline "Join Waitlist" link so the CTA
+     remains reachable. .show + .hide-for-footer keeps the rule simple:
+     if both are present, hidden wins. */
+  .sticky-cta.hide-for-footer {
+    opacity: 0; pointer-events: none; transform: translateY(8px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sticky-cta { transition: none; }
+  }
 
   /* === Form === */
   .wl-form {
@@ -556,8 +569,9 @@
   .wl-form:focus-within { border-color: rgba(168,170,255,0.45); }
   .wl-form input[type=email] {
     flex: 1; background: transparent; border: none; outline: none;
-    color: var(--ink); font-family: 'Inter', sans-serif; font-size: 14px;
+    color: var(--ink); font-family: 'Inter', sans-serif; font-size: 16px;
     padding: 12px 0; min-width: 0;
+    /* 16px prevents iOS Safari zoom-on-focus; helps avoid layout shift */
   }
   .wl-form input::placeholder { color: var(--ink-low); }
   .wl-form button[type=submit] {
@@ -565,11 +579,41 @@
     font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em;
     text-transform: uppercase; font-weight: 500;
     padding: 14px 22px; border-radius: 9999px;
-    display: inline-flex; align-items: center; gap: 8px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
     transition: background .15s ease;
     white-space: nowrap;
+    min-height: 44px;
   }
   .wl-form button[type=submit]:hover { background: var(--periwinkle-bright); }
+
+  /* Mobile (<= 560px): stack the input above the button so the CTA never
+     overlaps the email field. Both elements render full-width with the
+     same 44pt tap height. Desktop keeps the inline "pill" layout. */
+  @media (max-width: 560px) {
+    .wl-form {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+      border-radius: 18px;
+      padding: 12px;
+    }
+    .wl-form input[type=email] {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(7, 7, 11, 0.35);
+      border: 1px solid rgba(168, 170, 255, 0.18);
+      border-radius: 12px;
+      min-height: 44px;
+    }
+    .wl-form:focus-within input[type=email] {
+      border-color: rgba(168, 170, 255, 0.45);
+    }
+    .wl-form button[type=submit] {
+      width: 100%;
+      padding: 14px 22px;
+      font-size: 12px;
+    }
+  }
 
   /* Smooth scroll */
   html { scroll-behavior: smooth; }
@@ -1394,6 +1438,23 @@
     if (!stickyCta || !heroEl) return;
     const past = heroEl.getBoundingClientRect().bottom < 0;
     stickyCta.classList.toggle('show', past);
+  }
+
+  // Footer-aware dismount for the floating CTA.
+  // When the footer intersects the viewport, the floating "Reserve My Seat"
+  // pill fades out so it stops covering the wordmark + copyright. The
+  // footer itself ships an inline "Join Waitlist" link, so the CTA stays
+  // reachable. Uses IntersectionObserver (cleaner than scroll math), with
+  // a small rootMargin so the fade triggers before the footer top hits
+  // exactly the viewport edge.
+  const footerEl = document.querySelector('footer');
+  if (stickyCta && footerEl && 'IntersectionObserver' in window) {
+    const footerObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        stickyCta.classList.toggle('hide-for-footer', entry.isIntersecting);
+      });
+    }, { rootMargin: '0px 0px -40px 0px', threshold: 0 });
+    footerObserver.observe(footerEl);
   }
 
   // Animated meter fill on enter
