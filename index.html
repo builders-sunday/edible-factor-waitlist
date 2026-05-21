@@ -1308,8 +1308,14 @@
         </div>
       </div>
 
-      <!-- "&" divider -->
-      <div class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-bg border border-white/10 items-center justify-center display text-3xl text-periwinkle italic">&amp;</div>
+      <!-- Inter-card divider intentionally removed: the previous "&"
+           medallion (absolute-positioned at the grid mid-point) read as a
+           floating glyph artifact between the two tracker columns on
+           desktop side-by-side layout. The two cards now communicate their
+           relationship purely through the section heading ("Two budgets,
+           one plate."), the parallel TRACK · 01 / TRACK · 02 labels, and
+           the matching meter geometry. No layout shift; the grid was
+           already `relative` only to host the now-removed absolute child. -->
     </div>
   </div>
 </section>
@@ -1804,18 +1810,29 @@
 
   // Footer-aware dismount for the floating CTA.
   // When the footer intersects the viewport, the floating "Reserve My Seat"
-  // pill fades out so it stops covering the wordmark + copyright. The
-  // footer itself ships an inline "Join Waitlist" link, so the CTA stays
-  // reachable. Uses IntersectionObserver (cleaner than scroll math), with
-  // a small rootMargin so the fade triggers before the footer top hits
-  // exactly the viewport edge.
+  // pill fades out so it stops covering the wordmark, copyright, legal
+  // links, and the "Calorie and macro estimates ..." health disclaimer.
+  // The footer itself ships an inline "Join Waitlist" link, so the CTA
+  // stays reachable. Uses IntersectionObserver (cleaner than scroll math).
+  //
+  // rootMargin: '0px 0px 160px 0px' EXTENDS the root downward by 160px so
+  // the fade fires *before* the footer top enters the viewport. On desktop
+  // the footer disclaimer is centered (max-w-[640px]) and the legal-links
+  // row hugs the right edge directly under the floating pill, so we
+  // pre-emptively dismount the pill rather than waiting for the footer to
+  // cross the viewport edge. The 250ms opacity transition then completes
+  // before the disclaimer is fully visible, eliminating the brief overlap
+  // window the previous -40px rootMargin allowed.
+  // Attaches universally (no viewport gating). The CSS .hide-for-footer
+  // rule is also declared outside any media query, so it applies at all
+  // widths.
   const footerEl = document.querySelector('footer');
   if (stickyCta && footerEl && 'IntersectionObserver' in window) {
     const footerObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         stickyCta.classList.toggle('hide-for-footer', entry.isIntersecting);
       });
-    }, { rootMargin: '0px 0px -40px 0px', threshold: 0 });
+    }, { rootMargin: '0px 0px 160px 0px', threshold: 0 });
     footerObserver.observe(footerEl);
   }
 
