@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Internal sales document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<link rel="icon" href="/ef-mark.svg">
+
+<!--
+  PRIVATE sales document. NOT publicly linked. NOT indexed.
+  Shared via direct link only with qualified leads.
+  Do NOT add: canonical, description, OG, Twitter card,
+  sitemap entry, or any link from index.html.
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #07070b;
+    --bg-2: #0c0c12;
+    --bg-3: #13131c;
+    --ink: #eceaf3;
+    --ink-dim: #9693ac;    /* 5.6:1 on --bg (AA) */
+    --ink-low: #6b6885;    /* 4.5:1 on --bg (AA) */
+    --periwinkle: #a8aaff;
+    --periwinkle-bright: #c0c2ff;
+    --calorie: #6eddf0;
+    --budget: #ff8a4a;
+    --danger: #ff8a4a;
+    --good: #6eddf0;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    background: var(--bg); color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+    line-height: 1.6;
+  }
+  ::selection { background: var(--periwinkle); color: var(--bg); }
+  a { color: var(--periwinkle); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  a:focus-visible {
+    outline: 2px solid var(--periwinkle);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Display + accent type. Matches legal.html. */
+  .display { font-family: 'Instrument Serif', serif; font-weight: 400; line-height: 1.0; letter-spacing: -0.015em; }
+  .accent  { font-style: italic; color: var(--periwinkle); }
+  .mono    { font-family: 'JetBrains Mono', monospace; }
+
+  /* Internal banner: makes it clear this is not a public page. */
+  .internal-banner {
+    background: rgba(255, 138, 74, 0.10);
+    border-bottom: 1px solid rgba(255, 138, 74, 0.30);
+    padding: 10px 16px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--budget);
+  }
+
+  header.appbar {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(7, 7, 11, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(168, 170, 255, 0.08);
+    padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 56px;
+  }
+  .brand {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .brand em { font-style: italic; color: var(--periwinkle); }
+  .doc-stamp {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-low);
+  }
+
+  main { max-width: 820px; margin: 0 auto; padding: 32px 20px 80px; }
+
+  /* HERO */
+  .hero { padding: 24px 0 48px; }
+  .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--periwinkle);
+    margin: 0 0 20px;
+  }
+  .hero h1 {
+    font-size: clamp(40px, 8vw, 68px);
+    margin: 0 0 20px;
+    color: var(--ink);
+  }
+  .hero h1 em { font-style: italic; color: var(--periwinkle); }
+  .hero p.subhead {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(20px, 3vw, 26px);
+    line-height: 1.4;
+    color: var(--ink);
+    max-width: 640px;
+    margin: 0;
+  }
+  .hero p.subhead em { font-style: italic; color: var(--periwinkle); }
+
+  /* Section primitive */
+  section.block {
+    margin: 56px 0;
+    scroll-margin-top: 80px;
+  }
+  section.block h2 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: clamp(28px, 4.5vw, 40px);
+    line-height: 1.1;
+    margin: 0 0 8px;
+    color: var(--ink);
+  }
+  section.block h2 em { font-style: italic; color: var(--periwinkle); }
+  section.block .sect-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: var(--ink-low);
+    margin: 0 0 18px;
+  }
+  section.block p {
+    color: var(--ink-dim);
+    font-size: 16px;
+    line-height: 1.7;
+    margin: 14px 0;
+  }
+  section.block p strong { color: var(--ink); font-weight: 500; }
+  section.block ul {
+    color: var(--ink-dim);
+    font-size: 16px;
+    line-height: 1.7;
+    padding-left: 20px;
+  }
+  section.block ul li { margin: 8px 0; }
+  section.block ul li strong { color: var(--ink); font-weight: 500; }
+
+  /* Cost card (danger / hidden cost) */
+  .cost-card {
+    margin: 24px 0;
+    padding: 24px;
+    border-radius: 16px;
+    background: linear-gradient(160deg, rgba(255, 138, 74, 0.08), rgba(255, 138, 74, 0.02));
+    border: 1px solid rgba(255, 138, 74, 0.28);
+  }
+  .cost-card.flat {
+    background: linear-gradient(160deg, rgba(110, 221, 240, 0.08), rgba(110, 221, 240, 0.02));
+    border-color: rgba(110, 221, 240, 0.30);
+  }
+  .cost-card .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: var(--budget);
+    margin: 0 0 10px;
+  }
+  .cost-card.flat .label { color: var(--calorie); }
+  .cost-card .big {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(28px, 5vw, 36px);
+    line-height: 1.1;
+    color: var(--ink);
+    margin: 0 0 10px;
+  }
+  .cost-card .big em { font-style: italic; color: var(--budget); }
+  .cost-card.flat .big em { color: var(--calorie); }
+  .cost-card .small {
+    color: var(--ink-dim);
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 8px 0 0;
+  }
+
+  /* Math table */
+  .math-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 22px 0;
+    font-size: 14px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(168, 170, 255, 0.03);
+    border: 1px solid rgba(168, 170, 255, 0.10);
+  }
+  .math-table th, .math-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid rgba(168, 170, 255, 0.08);
+  }
+  .math-table tr:last-child th, .math-table tr:last-child td { border-bottom: none; }
+  .math-table th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-low);
+    font-weight: 500;
+  }
+  .math-table td {
+    color: var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .math-table td.label-col {
+    font-family: 'Inter', sans-serif;
+    color: var(--ink-dim);
+  }
+  .math-table tr.total-row td { color: var(--budget); font-weight: 500; }
+  .math-table.flat tr.total-row td { color: var(--calorie); font-weight: 500; }
+
+  /* Comparison bar chart (CSS only) */
+  .chart-wrap {
+    margin: 28px 0;
+    padding: 24px 20px;
+    border-radius: 16px;
+    background: rgba(168, 170, 255, 0.04);
+    border: 1px solid rgba(168, 170, 255, 0.12);
+  }
+  .chart-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-low);
+    margin: 0 0 18px;
+  }
+  .bar-row {
+    margin: 18px 0;
+  }
+  .bar-row .bar-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .bar-row .bar-label .name {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .bar-row .bar-label .value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--ink-dim);
+    font-variant-numeric: tabular-nums;
+  }
+  .bar-track {
+    height: 18px;
+    background: rgba(168, 170, 255, 0.06);
+    border-radius: 9px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 9px;
+    transform-origin: left center;
+    transition: transform 700ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .bar-fill.danger { background: linear-gradient(90deg, var(--budget), #ffb38a); }
+  .bar-fill.flat { background: linear-gradient(90deg, var(--calorie), #a8eef7); }
+  .chart-savings {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(168, 170, 255, 0.10);
+    text-align: center;
+  }
+  .chart-savings .pct {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(36px, 7vw, 56px);
+    color: var(--calorie);
+    line-height: 1;
+    margin: 0;
+  }
+  .chart-savings .pct em { font-style: italic; }
+  .chart-savings .caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-low);
+    margin: 8px 0 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bar-fill { transition: none; }
+  }
+
+  /* Wedge: two columns on tablet+ */
+  .wedge-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin: 22px 0;
+  }
+  @media (min-width: 720px) {
+    .wedge-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+  }
+  .wedge-card {
+    padding: 22px;
+    border-radius: 14px;
+    background: rgba(168, 170, 255, 0.04);
+    border: 1px solid rgba(168, 170, 255, 0.12);
+  }
+  .wedge-card .ttl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: var(--periwinkle);
+    margin: 0 0 10px;
+  }
+  .wedge-card h3 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.25;
+    margin: 0 0 12px;
+    color: var(--ink);
+  }
+  .wedge-card p {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--ink-dim);
+    margin: 0;
+  }
+
+  /* Caveats: lower-key tone */
+  .caveat-list {
+    list-style: none;
+    padding: 0;
+    margin: 18px 0;
+  }
+  .caveat-list li {
+    padding: 18px 20px;
+    border-radius: 12px;
+    background: rgba(168, 170, 255, 0.03);
+    border: 1px solid rgba(168, 170, 255, 0.08);
+    margin-bottom: 12px;
+  }
+  .caveat-list li .ch {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-low);
+    margin: 0 0 8px;
+  }
+  .caveat-list li p {
+    margin: 0;
+    color: var(--ink-dim);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+  .caveat-list li p strong { color: var(--ink); font-weight: 500; }
+
+  /* Switch steps */
+  .switch-steps {
+    list-style: none;
+    padding: 0;
+    margin: 22px 0;
+    counter-reset: step;
+  }
+  .switch-steps li {
+    counter-increment: step;
+    padding: 16px 18px 16px 56px;
+    border-radius: 12px;
+    background: rgba(168, 170, 255, 0.03);
+    border: 1px solid rgba(168, 170, 255, 0.10);
+    margin-bottom: 10px;
+    position: relative;
+    color: var(--ink-dim);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .switch-steps li::before {
+    content: counter(step, decimal-leading-zero);
+    position: absolute;
+    left: 16px;
+    top: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--periwinkle);
+    letter-spacing: 0.10em;
+  }
+  .switch-steps li strong { color: var(--ink); font-weight: 500; }
+
+  /* CTA footer */
+  .cta {
+    margin: 64px 0 0;
+    padding: 36px 24px;
+    border-radius: 18px;
+    background: linear-gradient(160deg, rgba(168, 170, 255, 0.10), rgba(168, 170, 255, 0.02));
+    border: 1px solid rgba(168, 170, 255, 0.22);
+    text-align: center;
+  }
+  .cta h2 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: clamp(28px, 5vw, 40px);
+    line-height: 1.1;
+    margin: 0 0 12px;
+    color: var(--ink);
+  }
+  .cta h2 em { font-style: italic; color: var(--periwinkle); }
+  .cta p {
+    color: var(--ink-dim);
+    font-size: 16px;
+    margin: 0 0 22px;
+  }
+  .cta-row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: center;
+    align-items: stretch;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+  @media (min-width: 520px) {
+    .cta-row { flex-direction: row; align-items: center; }
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    text-decoration: none;
+    transition: background-color 180ms, border-color 180ms, color 180ms;
+    border: 1px solid transparent;
+  }
+  .btn-primary {
+    background: var(--periwinkle);
+    color: var(--bg);
+    border-color: var(--periwinkle);
+  }
+  .btn-primary:hover {
+    background: var(--periwinkle-bright);
+    border-color: var(--periwinkle-bright);
+    text-decoration: none;
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--ink);
+    border-color: rgba(168, 170, 255, 0.35);
+  }
+  .btn-secondary:hover {
+    background: rgba(168, 170, 255, 0.10);
+    border-color: var(--periwinkle);
+    text-decoration: none;
+  }
+  .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+  footer.doc-footer {
+    margin-top: 56px;
+    padding: 22px 0 0;
+    border-top: 1px solid rgba(168, 170, 255, 0.08);
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-low);
+  }
+
+  /* Mobile tightening */
+  @media (max-width: 480px) {
+    main { padding: 24px 16px 72px; }
+    .cost-card, .chart-wrap, .wedge-card { padding: 20px 18px; }
+    .math-table th, .math-table td { padding: 12px 12px; font-size: 13px; }
+    .cta { padding: 28px 18px; }
+  }
+</style>
+
+<!-- CSP: locks down to fonts.googleapis/gstatic only. No third-party JS/img/frames. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; frame-ancestors 'none'; base-uri 'self';">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+</head>
+
+<body>
+
+<div class="internal-banner">Internal document, share only with qualified leads</div>
+
+<header class="appbar">
+  <span class="brand">edible<em>factor</em></span>
+  <span class="doc-stamp">Sales note v1</span>
+</header>
+
+<main>
+
+  <section class="hero">
+    <p class="kicker">Objection handling, restaurant operators</p>
+    <h1 class="display">What about <em>Petpooja?</em></h1>
+    <p class="subhead">Honest answer: <em>it depends on what you are paying for.</em></p>
+  </section>
+
+  <section class="block" id="hidden-cost">
+    <p class="sect-tag">01, the hidden cost</p>
+    <h2>The <em>real</em> Petpooja invoice.</h2>
+    <p>Petpooja lists software at <strong>INR 1,500 to 3,500 per outlet per month</strong>. That number is what wins the demo. It is not the number you actually pay.</p>
+    <p>On top of the software fee, Petpooja charges <strong>1.5 to 2 percent on every transaction routed through their billing</strong>. The bigger the outlet, the bigger this line item gets, and it never stops growing with you.</p>
+
+    <div class="cost-card">
+      <p class="label">For a steakhouse doing INR 17 lakh per outlet per month</p>
+      <p class="big">INR 28,250 <em>per outlet, per month, effective</em></p>
+      <p class="small">Software fee (INR 3,250 mid-range) + transaction fees on 17 lakh in sales at 1.5 percent (INR 25,500). Multiply by every outlet on the brand. Multiply again next year when you grow.</p>
+    </div>
+
+    <table class="math-table" aria-label="Petpooja effective monthly cost per outlet">
+      <tbody>
+        <tr><th>Component</th><th>Amount (INR)</th></tr>
+        <tr><td class="label-col">Software fee (per outlet)</td><td>3,250</td></tr>
+        <tr><td class="label-col">Transaction fee on 17L revenue at 1.5 percent</td><td>25,500</td></tr>
+        <tr class="total-row"><td class="label-col">Effective monthly cost</td><td>28,250</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="block" id="flat-truth">
+    <p class="sect-tag">02, the flat truth</p>
+    <h2>Plate is <em>flat</em>. By design.</h2>
+    <p>One number, no asterisks.</p>
+
+    <div class="cost-card flat">
+      <p class="label">Plate, the entire brand, one price</p>
+      <p class="big">INR 10,000 <em>per month, flat</em></p>
+      <p class="small">Covers every outlet under your brand. Every feature included. No per-transaction take.</p>
+    </div>
+
+    <p>What that INR 10,000 includes:</p>
+    <ul>
+      <li><strong>KOT routing</strong> to kitchen displays, full station logic.</li>
+      <li><strong>GST billing</strong> and compliance, India ready out of the box.</li>
+      <li><strong>RBAC</strong>, manager and steward role separation.</li>
+      <li><strong>Audit trail</strong> on every edit, with operator attribution.</li>
+      <li><strong>Custom domain</strong> for your brand on your menu.</li>
+      <li><strong>All outlets covered</strong>, whether you run two or twenty.</li>
+      <li><strong>No transaction fees</strong>. Not now, not at scale.</li>
+    </ul>
+  </section>
+
+  <section class="block" id="worked-example">
+    <p class="sect-tag">03, worked example</p>
+    <h2>Ninan, <em>4 outlets, the math.</em></h2>
+    <p>A real number for a real lead. Steakhouse brand, four outlets, each doing roughly INR 17.5 lakh per month.</p>
+
+    <table class="math-table" aria-label="Ninan worked example, monthly cost comparison">
+      <tbody>
+        <tr><th>Line item</th><th>Petpooja</th><th>Plate</th></tr>
+        <tr><td class="label-col">Software fee, 4 outlets</td><td>13,000</td><td>10,000 (flat, brand)</td></tr>
+        <tr><td class="label-col">Transaction fee on 70L revenue at 1.5 percent</td><td>1,05,000</td><td>0</td></tr>
+        <tr><td class="label-col">Effective monthly bill</td><td>1,18,000</td><td>10,000</td></tr>
+        <tr class="total-row"><td class="label-col">Round, monthly</td><td>~ 1,13,000</td><td>10,000</td></tr>
+      </tbody>
+    </table>
+
+    <div class="chart-wrap" aria-label="Monthly cost bar chart, Petpooja vs Plate, Ninan example">
+      <p class="chart-title">Monthly bill, Ninan brand</p>
+      <div class="bar-row">
+        <div class="bar-label">
+          <span class="name">Petpooja</span>
+          <span class="value">INR 1,13,000 per month</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill danger" style="width: 100%;"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">
+          <span class="name">Plate</span>
+          <span class="value">INR 10,000 per month</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill flat" style="width: 8.85%;"></div></div>
+      </div>
+      <div class="chart-savings">
+        <p class="pct">11.3<em>x</em></p>
+        <p class="caption">Cheaper, every month, indefinitely</p>
+      </div>
+    </div>
+
+    <p>That is <strong>INR 1,03,000 saved every month</strong>, or <strong>INR 12.36 lakh per year</strong>. At a 12 percent net margin on a 17L outlet, that is the margin on roughly two extra outlets you do not have to open to make the same profit.</p>
+  </section>
+
+  <section class="block" id="wedge">
+    <p class="sect-tag">04, the wedge</p>
+    <h2>Plate plus EF, <em>two layers at once.</em></h2>
+    <p>Petpooja sells software to the operator. That is the whole story. Plate plus EdibleFactor plays a different game: we charge the operator a flat fee, and we also bring you paying diners.</p>
+
+    <div class="wedge-grid">
+      <div class="wedge-card">
+        <p class="ttl">Plate, operator side</p>
+        <h3>Replaces your POS.</h3>
+        <p>Flat INR 10,000 per month per brand. Handles KOT, GST, audit, RBAC, billing. The boring but load-bearing layer.</p>
+      </div>
+      <div class="wedge-card">
+        <p class="ttl">EF, diner side</p>
+        <h3>Sends you guests.</h3>
+        <p>EdibleFactor charges your diners INR 199 to 599 per month. At a 20 percent waitlist to paying conversion, your branded menu becomes a marketing channel you do not pay for. We pay you for it.</p>
+      </div>
+    </div>
+
+    <p style="margin-top: 18px;"><strong>Petpooja: you pay them. We: charge your diners. Different layer entirely.</strong> That is the wedge. No POS vendor in India does both sides.</p>
+  </section>
+
+  <section class="block" id="caveats">
+    <p class="sect-tag">05, honest caveats</p>
+    <h2>Where Plate is <em>not</em> the obvious answer.</h2>
+    <p>If we sold you on math alone we would be lying. Three places to be straight about.</p>
+
+    <ul class="caveat-list">
+      <li>
+        <p class="ch">Small operator</p>
+        <p><strong>Single outlet doing under INR 5 lakh per month.</strong> Plate is roughly the same all-in price as Petpooja at that scale. Our pitch then is the EF diner channel, not raw cost savings. If you are not interested in the diner side, Petpooja is fine.</p>
+      </li>
+      <li>
+        <p class="ch">Maturity gap</p>
+        <p><strong>Petpooja has a 15 year head start.</strong> They know the Indian restaurant operator daily rhythm in a way we will not match for a few years. Their support staff, their banking integrations, their inventory tooling: real. We are newer.</p>
+      </li>
+      <li>
+        <p class="ch">The bet we are making</p>
+        <p><strong>We are betting on design, flat pricing, and dual side revenue.</strong> If you want a vendor with the most outlets in India today, that is Petpooja. If you want a vendor whose incentives stay aligned with yours as you scale, that is us.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="block" id="switching">
+    <p class="sect-tag">06, switching</p>
+    <h2>If you decide to <em>move.</em></h2>
+    <p>Migration is not the moat it used to be. Menu data exports cleanly from Petpooja in a few minutes.</p>
+    <ol class="switch-steps">
+      <li><strong>Export from Petpooja.</strong> CSV export of your menu, categories, modifiers, taxes. Roughly 5 minutes from inside their admin.</li>
+      <li><strong>Import to Plate.</strong> Our get started wizard ingests that CSV directly. Roughly 15 minutes including review (once the wizard ships, currently end of this sprint).</li>
+      <li><strong>No contracts.</strong> Plate is month to month. Cancel any month with 30 days notice. We do not believe in lock in.</li>
+      <li><strong>Outlet by outlet rollout.</strong> You do not have to migrate the whole brand on day one. Pilot one outlet, watch the math, then move the rest.</li>
+    </ol>
+  </section>
+
+  <section class="cta" id="talk">
+    <h2>Want to <em>run the math</em> on your numbers?</h2>
+    <p>Send us your outlet count and average monthly revenue. We will reply with your own table within the same business day.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="mailto:hello@ediblefactor.com?subject=Plate%20vs%20Petpooja%20math%20for%20my%20brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+        Email hello@ediblefactor.com
+      </a>
+      <a class="btn btn-secondary" href="https://wa.me/910000000000?text=Plate%20vs%20Petpooja%20math%20for%20my%20brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+        WhatsApp (number pending)
+      </a>
+    </div>
+  </section>
+
+  <footer class="doc-footer">
+    Internal sales note, edible<em style="font-style:italic;color:var(--periwinkle);">factor</em> &middot; Confidential, do not redistribute
+  </footer>
+
+</main>
+
+</body>
+</html>
