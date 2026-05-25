@@ -15,3 +15,11 @@
 
 /index.html
   Cache-Control: public, max-age=300, must-revalidate
+
+# Private sales document. Belt + braces: HTML <meta robots> on the page
+# itself, this server-side header, and a robots.txt Disallow rule.
+/why-not-petpooja
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+
+/why-not-petpooja.html
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
