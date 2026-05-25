@@ -451,9 +451,35 @@
     border-radius: 30px; overflow: hidden;
     background: var(--bg-2);
   }
-  .deck__screen img {
+  .deck__screen img,
+  .deck__screen video,
+  .deck__screen .deck__media {
     width: 100%; height: 100%; object-fit: cover; display: block;
     user-select: none; -webkit-user-drag: none; pointer-events: none;
+    /* Match the parent's clip so iOS Safari doesn't paint the video past
+       the rounded corners. transform: translateZ(0) promotes to a layer so
+       overflow:hidden actually clips the video on WebKit. */
+    border-radius: inherit;
+    transform: translateZ(0);
+    background: var(--bg-2);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    /* Don't autoplay decorative loops if the user opted out. The poster
+       (still webp) remains visible since we set preload="metadata". */
+    .deck__screen video { display: none; }
+    .deck__card[data-card="0"] .deck__screen::before,
+    .deck__card[data-card="3"] .deck__screen::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      border-radius: inherit;
+    }
+    .deck__card[data-card="0"] .deck__screen::before {
+      background-image: url('/mockups/home-dashboard.webp');
+    }
+    .deck__card[data-card="3"] .deck__screen::before {
+      background-image: url('/mockups/calorie-trend.webp');
+    }
   }
 
   /* Drag visual feedback on the active card */
@@ -462,8 +488,10 @@
     cursor: grabbing;
   }
 
-  /* Chapter text stage · fades between chapters */
-  .deck-text-stage { position: relative; min-height: 280px; }
+  /* Chapter text stage · fades between chapters.
+     min-height = tallest chapter copy + breathing room so the pip row
+     and arrow controls don't jump position as chapters swap. */
+  .deck-text-stage { position: relative; min-height: 320px; }
   .deck-chapter {
     position: absolute; inset: 0;
     opacity: 0; transform: translateY(8px);
@@ -748,7 +776,7 @@
   /* Mobile */
   @media (max-width: 900px) {
     .deck-stage { width: 240px; height: 500px; }
-    .deck-text-stage { min-height: 220px; }
+    .deck-text-stage { min-height: 280px; }
     .marquee__track { font-size: 22px; gap: 36px; }
     /* Hide the inline arrow row on mobile, they live in the fixed
        bottom chrome so they never overlap body copy. */
@@ -1162,23 +1190,23 @@
         <div id="deckText" class="deck-text-stage">
           <div class="deck-chapter active" data-chapter="0">
             <span class="mono text-[11px] tracking-[0.18em] uppercase text-periwinkle">Ch 01 · Your Home</span>
-            <h3 class="display text-5xl md:text-6xl leading-[0.98] mt-3">Your day,<br><span class="accent">on one screen.</span></h3>
-            <p class="mt-4 text-inkdim leading-relaxed max-w-[480px]">Energy in. Money out. Progress toward your target. A single daily summary tells you whether today's eating is on plan, before lunch is over.</p>
+            <h3 class="display text-5xl md:text-6xl leading-[0.98] mt-3">Dine-in mode,<br><span class="accent">on the table.</span></h3>
+            <p class="mt-4 text-inkdim leading-relaxed max-w-[480px]">Calories and budget for the session you're sitting in. Set a target, customize a meal, or ask the AI Chat. The home screen tracks your decision in real time, before the bill arrives.</p>
           </div>
           <div class="deck-chapter" data-chapter="1">
             <span class="mono text-[11px] tracking-[0.18em] uppercase text-periwinkle">Ch 02 · Find The Table</span>
-            <h3 class="display text-5xl md:text-6xl leading-[0.98] mt-3">Every restaurant.<br><span class="accent">Every cuisine.</span></h3>
-            <p class="mt-4 text-inkdim leading-relaxed max-w-[480px]">Browse Bengaluru's menus. Indian, Italian, Mexican, French. All priced, all sortable, all filterable against what your body and wallet can handle tonight.</p>
+            <h3 class="display text-5xl md:text-6xl leading-[0.98] mt-3">A menu that<br><span class="accent">reads you back.</span></h3>
+            <p class="mt-4 text-inkdim leading-relaxed max-w-[480px]">The restaurant's full menu, with veg, non-veg, bestseller filters, calorie tags, and allergen badges baked into every dish. Lite mode keeps it fast even on a hotspot.</p>
           </div>
           <div class="deck-chapter" data-chapter="2">
             <span class="mono text-[11px] tracking-[0.18em] uppercase text-periwinkle">Ch 03 · AI Sommelier</span>
-            <h3 class="display text-5xl md:text-6xl leading-[0.98] mt-3">Pairings worthy of<br><span class="accent">a Michelin nod.</span></h3>
-            <p class="mt-4 text-inkdim leading-relaxed max-w-[480px]">Not just calories. Protein, carbs, fat, prep time, and total price modeled together. Our AI Sommelier suggests what to order, and what to skip, with reasons.</p>
+            <h3 class="display text-5xl md:text-6xl leading-[0.98] mt-3">Pairings with<br><span class="accent">a reason attached.</span></h3>
+            <p class="mt-4 text-inkdim leading-relaxed max-w-[480px]">Tonight's Reasoning explains why the signature cut went first, and offers alternates priced and portioned so the table balances. Tap WHY THIS on any dish for the math.</p>
           </div>
           <div class="deck-chapter" data-chapter="3">
             <span class="mono text-[11px] tracking-[0.18em] uppercase text-periwinkle">Ch 04 · Insights</span>
             <h3 class="display text-5xl md:text-6xl leading-[0.98] mt-3">The patterns<br><span class="accent">behind your plate.</span></h3>
-            <p class="mt-4 text-inkdim leading-relaxed max-w-[480px]">Calorie trend, macro split, metabolic efficiency, goal alignment. All surfaced as gentle nudges, not spreadsheets. Know yourself by how you eat.</p>
+            <p class="mt-4 text-inkdim leading-relaxed max-w-[480px]">Calories across the week, spend held within intention, energy in motion. A quiet rhythm read back to you, not a spreadsheet to wrestle.</p>
           </div>
         </div>
 
@@ -1212,25 +1240,45 @@
           <article class="deck__card" data-card="0" data-pos="0">
             <div class="deck__notch"></div>
             <div class="deck__screen">
-              <img src="/mockups/home-dashboard.webp" alt="EdibleFactor home dashboard" loading="eager">
+              <!-- Video loop captures Dine-in Mode hero + bottom-nav rendering
+                   on first paint. Poster keeps the still rendered until the
+                   webm is ready, so there's no layout shift. role="img" tells
+                   screen readers this is decorative motion, not a media player
+                   that needs controls. -->
+              <video
+                class="deck__media"
+                width="392" height="852"
+                src="/mockups/home-dashboard.webm"
+                poster="/mockups/home-dashboard.webp"
+                autoplay loop muted playsinline preload="metadata"
+                role="img"
+                aria-label="EdibleFactor Dine-in Mode home: calorie target, customize meal, and Try Pro card"></video>
             </div>
           </article>
           <article class="deck__card" data-card="1" data-pos="1">
             <div class="deck__notch"></div>
             <div class="deck__screen">
-              <img src="/mockups/restaurants-browse.webp" alt="Restaurants browse" loading="lazy">
+              <img class="deck__media" width="392" height="852" src="/mockups/restaurants-browse.webp" alt="EdibleFactor restaurant menu: Ninan's Steakhouse with veg, non-veg, bestseller filter chips and a Sommelier reasoning card" loading="lazy">
             </div>
           </article>
           <article class="deck__card" data-card="2" data-pos="2">
             <div class="deck__notch"></div>
             <div class="deck__screen">
-              <img src="/mockups/ai-sommelier.webp" alt="AI Sommelier" loading="lazy">
+              <img class="deck__media" width="392" height="852" src="/mockups/ai-sommelier.webp" alt="EdibleFactor AI Sommelier alternates strip and dish cards with WHY THIS reasoning and allergen badges" loading="lazy">
             </div>
           </article>
           <article class="deck__card" data-card="3" data-pos="3">
             <div class="deck__notch"></div>
             <div class="deck__screen">
-              <img src="/mockups/calorie-trend.webp" alt="Calorie trend and macro split" loading="lazy">
+              <!-- Video loop captures the Insights cards animating in. -->
+              <video
+                class="deck__media"
+                width="392" height="852"
+                src="/mockups/calorie-trend.webm"
+                poster="/mockups/calorie-trend.webp"
+                autoplay loop muted playsinline preload="metadata"
+                role="img"
+                aria-label="EdibleFactor weekly insights: 9,273 kcal across the week, INR 2,800 of intention, energy in motion"></video>
             </div>
           </article>
         </div>
