@@ -187,16 +187,29 @@
     .hero-title-row { gap: 56px; }
   }
 
-  /* Glimpse rotator · square that iris-reveals through 4 app mockups.
-     Mobile keeps a fixed 116px square (absolute, top-right of H1 row).
-     Tablet/desktop roughly doubles those values and switches to a
-     flex-static sibling so the H1 and glimpse read as a paired unit. */
+  /* Glimpse rotator · phone card that iris-reveals through 4 app mockups.
+     Visual language matches the section 02 walkthrough deck card
+     (.deck__card) so the hero sneak peak and the showcase read as the same
+     device, scaled down.
+
+     Mobile: positioned top-right of the H1 row (absolute, ~96px wide). A
+     compact 88:128 ratio (~1:1.45) keeps the phone-card sitting beside the
+     H1 without overlapping the lede that follows the title row in normal
+     flow. The notch + chassis bezel still read as a device.
+
+     Tablet (>=768px): static flex sibling at clamp(180px, 28vw, 360px)
+     wide with the full 88:184 portrait phone ratio (~1:2.09) that mirrors
+     the deck stage's 280:580 (~1:2.07) one-to-one.
+
+     Desktop (>=1024px): hidden via .hero-grid-lg .glimpse {display:none}
+     because the rotating dial + CTA card carry the visual motion. */
   .glimpse {
     position: absolute;
     top: 0;
     right: 0;
-    width: 116px;
-    height: 116px;
+    width: 96px;
+    aspect-ratio: 88 / 128;
+    height: auto;
     z-index: 5;
     pointer-events: none;
   }
@@ -204,21 +217,52 @@
     .glimpse {
       position: static;
       flex-shrink: 0;
-      width: clamp(220px, 36vw, 600px);
-      height: clamp(220px, 36vw, 600px);
+      width: clamp(180px, 28vw, 360px);
+      aspect-ratio: 88 / 184;
+      height: auto;
     }
   }
+  /* Phone chassis · matches .deck__card from section 02. Linear gradient
+     reads as the device body; layered shadow gives the sit-on-the-page
+     depth; inset 1px highlight is the bevel. Padding holds the inner screen
+     inside the chassis the same way the deck card does. */
   .glimpse__frame {
     position: relative;
     width: 100%;
     height: 100%;
-    border-radius: 18px;
+    border-radius: 13%/6%;
+    background: linear-gradient(180deg, #1a1a26, #0c0c12);
+    border: 1px solid rgba(168, 170, 255, 0.16);
+    box-shadow:
+      0 18px 44px rgba(0, 0, 0, 0.55),
+      0 3px 8px rgba(0, 0, 0, 0.45),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+    padding: 3.2%;
+    box-sizing: border-box;
+  }
+  /* Notch · proportional pill matching .deck__notch (118x28 inside a 280-wide
+     card = 42% width). Sits above the screen at ~3.8% from the top. */
+  .glimpse__notch {
+    position: absolute;
+    top: 3.8%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 42%;
+    height: 4.6%;
+    border-radius: 9999px;
+    background: #000;
+    z-index: 2;
+    pointer-events: none;
+  }
+  /* Inner screen · holds the mockup images and clips them to the rounded
+     screen window. Mirrors .deck__screen. */
+  .glimpse__screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 10%/5%;
     overflow: hidden;
     background: var(--bg-2, #0c0c12);
-    border: 1px solid rgba(168, 170, 255, 0.22);
-    box-shadow:
-      0 12px 28px rgba(0, 0, 0, 0.45),
-      inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
   .glimpse__img {
     position: absolute;
@@ -235,6 +279,10 @@
     transition:
       clip-path 900ms cubic-bezier(0.65, 0, 0.35, 1),
       opacity 600ms ease-in-out;
+    /* Match the screen's clip so iOS Safari paints the image inside the
+       rounded screen corners. Same trick as .deck__screen img. */
+    border-radius: inherit;
+    transform: translateZ(0);
   }
   .glimpse__img.is-active {
     opacity: 1;
@@ -246,11 +294,14 @@
       clip-path: circle(75% at 50% 50%);
     }
   }
-  .glimpse::after {
+  /* Subtle vignette inside the screen so the mockup edges fade into the
+     chassis. Sits on the screen, not the chassis, so it never bleeds onto
+     the notch or bezel. */
+  .glimpse__screen::after {
     content: "";
     position: absolute;
     inset: 0;
-    border-radius: 18px;
+    border-radius: inherit;
     background: linear-gradient(180deg, transparent 60%, rgba(7, 7, 11, 0.45));
     pointer-events: none;
   }
@@ -347,7 +398,13 @@
      glimpse is a flex sibling of the H1, so no padding is needed
      (the flex `gap` handles separation). */
   @media (max-width: 767px) {
-    .hero__title { padding-right: 132px; }
+    .hero__title { padding-right: 112px; }
+    /* The hero glimpse phone card extends ~140px tall on mobile (96px x
+       88:128 aspect), which overflows the H1 row's intrinsic height by
+       ~48px. Bump the lede top gap so the phone never lands on top of
+       "The only app that tracks your calories..." copy. Tablet+ doesn't
+       need this because the glimpse becomes a flex sibling. */
+    .hero__lede-block { margin-top: 48px; }
   }
   .hero__title .word {
     display: inline-block;
@@ -974,10 +1031,13 @@
         <div class="hero-title-row">
         <div class="glimpse" aria-hidden="true">
           <div class="glimpse__frame">
-            <img class="glimpse__img is-active" src="/mockups/home-dashboard.webp" alt="" width="200" height="200" loading="eager">
-            <img class="glimpse__img" src="/mockups/restaurants-browse.webp" alt="" width="200" height="200" loading="lazy">
-            <img class="glimpse__img" src="/mockups/ai-sommelier.webp" alt="" width="200" height="200" loading="lazy">
-            <img class="glimpse__img" src="/mockups/calorie-trend.webp" alt="" width="200" height="200" loading="lazy">
+            <div class="glimpse__notch"></div>
+            <div class="glimpse__screen">
+              <img class="glimpse__img is-active" src="/mockups/home-dashboard.webp" alt="" width="392" height="852" loading="eager">
+              <img class="glimpse__img" src="/mockups/restaurants-browse.webp" alt="" width="392" height="852" loading="lazy">
+              <img class="glimpse__img" src="/mockups/ai-sommelier.webp" alt="" width="392" height="852" loading="lazy">
+              <img class="glimpse__img" src="/mockups/calorie-trend.webp" alt="" width="392" height="852" loading="lazy">
+            </div>
           </div>
         </div>
         <h1 class="hero__title display text-[clamp(44px,12vw,160px)]">
@@ -2042,10 +2102,12 @@
     });
   })();
 
-  // Glimpse rotator · cross-fades the 4 mockup screenshots in the
-  // mobile-only square at the top-right of the hero. 2800ms cadence so
-  // it's not synchronized with the rotor word (visually busier
-  // otherwise).
+  // Glimpse rotator · cross-fades the 4 mockup screenshots inside the
+  // mobile/tablet phone card at the top-right of the hero. 2800ms cadence
+  // so it's not synchronized with the rotor word (visually busier
+  // otherwise). The descendant query (.glimpse__img inside .glimpse__frame)
+  // reaches through .glimpse__screen, so adding the inner screen wrapper
+  // for the phone-chrome treatment does not change selector behaviour.
   (function initGlimpses() {
     var frames = document.querySelectorAll('.glimpse__frame');
     frames.forEach(function(frame) {
