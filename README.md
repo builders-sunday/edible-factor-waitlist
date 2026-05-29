@@ -55,7 +55,7 @@ The endpoint defaults to **log-only** (signups appear in `wrangler tail` / dashb
 
 ### Other backends
 
-`functions/api/waitlist.js` has commented templates for **Resend audience**, **Google Sheets webhook**, and **Supabase**. Uncomment one, set the matching env vars in the Pages dashboard, redeploy.
+`functions/api/waitlist.js` has commented templates for **Resend audience** and **Google Sheets webhook**. Uncomment one, set the matching env vars in the Pages dashboard, redeploy.
 
 ---
 
