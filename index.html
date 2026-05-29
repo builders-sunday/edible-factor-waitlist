@@ -571,6 +571,15 @@
   }
   .deck-pip:hover { background: rgba(168,170,255,0.4); }
   .deck-pip.active { background: var(--periwinkle); }
+  /* Expand tap target to ~44pt without altering the visible 2px bar (WCAG 2.5.5). */
+  .deck-pip::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -21px;
+    bottom: -21px;
+  }
   .deck-pip-label {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px; letter-spacing: 0.18em;
@@ -794,6 +803,18 @@
       width: 100%;
       padding: 14px 22px;
       font-size: 12px;
+    }
+  }
+
+  /* iOS Safari zooms when an input's computed font-size is below 16px.
+     Force 16px on every form input at mobile widths so focus never
+     triggers an auto-zoom (covers the visible email field and any
+     non-hidden text inputs that may be added in future). */
+  @media (max-width: 768px) {
+    .wl-form input,
+    input[name="email"],
+    input[name="website"] {
+      font-size: 16px;
     }
   }
 
@@ -1532,7 +1553,7 @@
 <aside class="cookie-banner" id="cookieBanner" role="dialog" aria-label="Cookie preferences">
   <div class="cookie-banner__title">Cookies</div>
   <p class="cookie-banner__body">
-    We use only strictly-necessary cookies — to remember if you've already
+    We use only strictly-necessary cookies: we remember if you've already
     joined the waitlist. No analytics, no cross-site tracking. <a href="legal.html#cookies">Learn more</a>.
   </p>
   <div class="cookie-banner__actions">
