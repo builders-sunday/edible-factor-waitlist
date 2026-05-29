@@ -724,7 +724,7 @@
   .metric-card:hover { border-color: rgba(168,170,255,0.30); transform: translateY(-2px); }
 
   /* === Sticky CTA pill (appears after hero) === */
-  /* z-index: 80 keeps the pill above the cookie banner (z-index: 70) — on
+  /* z-index: 80 keeps the pill above the cookie banner (z-index: 70) - on
      a first-visit mobile session the banner is full-width and would
      otherwise sit on top of the "Reserve My Seat →" CTA. */
   .sticky-cta {
@@ -1561,7 +1561,7 @@
   </div>
 </aside>
 <script>
-  // FE-09 · Cookie consent — first-visit banner with persistent choice
+  // FE-09 · Cookie consent: first-visit banner with persistent choice
   (function() {
     const KEY = 'ef_cookie_consent_v1';
     const banner = document.getElementById('cookieBanner');
@@ -2084,12 +2084,12 @@
           showSuccess();
           form.reset();
         } else if (res.status === 400) {
-          showErr(data?.error === 'Invalid email' ? 'Please enter a valid email.' : 'Something looked off — please try again.');
+          showErr(data?.error === 'Invalid email' ? 'Please enter a valid email.' : 'Something looked off, please try again.');
         } else {
           showErr('Could not save right now. Please try again shortly.');
         }
       } catch {
-        showErr('Network hiccup — check your connection and try again.');
+        showErr('Network hiccup - check your connection and try again.');
       } finally {
         submitBtn && (submitBtn.disabled = false);
       }
