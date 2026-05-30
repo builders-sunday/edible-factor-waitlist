@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-> **Deployment & runtime:** This is the apex waitlist site at `ediblefactor.com`, hosted on **Cloudflare Pages** (project `edible-factor-waitlist`). Auto-deploys from `main` via Pages' Git integration. The rest of the fleet (plate, web, backend) lives elsewhere — backend runs on Abhi's laptop via Cloudflare Tunnel, not in the cloud. Vercel and Supabase have been removed. Full details: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md).
+> **Deployment & runtime:** This is the apex waitlist site at `ediblefactor.com`, hosted on **Cloudflare Pages** (project `edible-factor-waitlist`). Auto-deploys from `main` via Pages' Git integration. The rest of the fleet (plate, web, backend) lives elsewhere - backend runs on Abhi's laptop via Cloudflare Tunnel, not in the cloud. Full details: [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md).
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -60,7 +60,7 @@ Runs on the Cloudflare Workers runtime, **not Node**. Uses Web standard `Request
 - `LOOPS_API_KEY` set → forwards signups to Loops.so.
 - Otherwise → log-only (visible via `wrangler tail` or in the Pages dashboard logs).
 
-Resend / Google Sheets / Supabase are left as commented templates inside the file. Pick one, uncomment, set the matching env var.
+Resend / Google Sheets are left as commented templates inside the file. Pick one, uncomment, set the matching env var.
 
 When editing this file, do not introduce Node-only APIs (`process.env` is replaced with the `env` argument; no `Buffer`, `fs`, etc.).
 

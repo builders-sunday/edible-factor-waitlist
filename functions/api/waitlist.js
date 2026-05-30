@@ -119,15 +119,12 @@ export async function onRequestPost({ request, env, waitUntil }) {
       if (typeof waitUntil === 'function') waitUntil(slackPost);
     }
 
-    /* ─── Alternate backends (uncomment one) ──────────────────────────────────
+    /* --- Alternate backends (uncomment one) ---
     // Resend audience:
     // await fetch(`https://api.resend.com/audiences/${env.RESEND_AUDIENCE_ID}/contacts`, { ... });
     //
     // Google Sheets webhook:
     // await fetch(env.SHEETS_WEBHOOK_URL, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(signup) });
-    //
-    // Supabase:
-    // await fetch(`${env.SUPABASE_URL}/rest/v1/waitlist`, { ... });
     */
 
     return json({ ok: true }, 200, cors);
