@@ -1,4 +1,15 @@
-# EdibleFactor — Waitlist Landing Page
+<p align="center">
+  <img src="./og-image.png" alt="Edible Factor" width="800">
+</p>
+
+<p align="center">
+  <a href="https://ediblefactor.com"><img src="https://img.shields.io/badge/live-ediblefactor.com-4F46E5?style=flat" alt="Live"></a>
+  <img src="https://img.shields.io/badge/host-Cloudflare_Pages-F6821F?logo=cloudflare&logoColor=white" alt="Cloudflare Pages">
+</p>
+
+# EdibleFactor: Waitlist Landing Page
+
+Apex marketing + waitlist for Edible Factor, the AI nutritional concierge for Bangalore diners.
 
 Single-page waitlist site for EdibleFactor. Static HTML + a single Cloudflare Pages Function for the form. No build step required.
 
