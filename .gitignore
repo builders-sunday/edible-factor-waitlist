@@ -29,3 +29,10 @@ pnpm-debug.log*
 
 # Logs
 *.log
+
+# Backup / pre-redesign snapshots (local only)
+*.pre-redesign-bak
+.pre-redesign-bak-*
+
+# One-off capture scripts (not part of the committed tools project)
+tools/capture-mockups/capture-*-fix.mjs

@@ -1,5 +1,5 @@
 /**
- * EdibleFactor — Waitlist endpoint (Cloudflare Pages Function)
+ * EdibleFactor - Waitlist endpoint (Cloudflare Pages Function)
  * -----------------------------------------------------------------------------
  * POST /api/waitlist
  * Body: { email: string, source?: string, ts?: string }
