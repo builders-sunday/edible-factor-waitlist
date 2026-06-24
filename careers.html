@@ -35,6 +35,7 @@
     --periwinkle-bright: #c0c2ff;
     --calorie: #6eddf0;
     --budget: #ff8a4a;
+    --amber: #ffc234;
 
     --border-soft: rgba(168, 170, 255, 0.10);
     --border-mid: rgba(168, 170, 255, 0.16);
@@ -222,6 +223,42 @@
   }
 
   /* ============================================================
+     CONTEXT BANNER + OUTLET SWITCHER (share-code scoped view)
+     ============================================================ */
+  .context-banner {
+    max-width: 1280px; margin: 18px auto 0;
+    padding: 18px 24px 0;
+  }
+  .context-card {
+    border: 1px solid var(--border-mid);
+    border-radius: var(--radius-card);
+    background: linear-gradient(180deg, rgba(168,170,255,0.06), rgba(168,170,255,0.02));
+    padding: 18px 20px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .context-top {
+    display: flex; align-items: baseline; flex-wrap: wrap;
+    gap: 8px 16px; justify-content: space-between;
+  }
+  .context-head { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .context-name {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-weight: 500; letter-spacing: -0.02em;
+    font-size: clamp(20px, 3.4vw, 28px);
+    color: var(--ink); margin: 0; line-height: 1.05;
+  }
+  .context-name .ctx-outlet { color: var(--periwinkle); }
+  .context-clear {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-dim);
+    display: inline-flex; align-items: center; gap: 6px;
+    white-space: nowrap;
+  }
+  .context-clear:hover { color: var(--periwinkle-bright); text-decoration: none; }
+  .outlet-switch { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+  /* ============================================================
      LISTINGS
      ============================================================ */
   main { max-width: 1280px; margin: 0 auto; padding: 28px 24px 96px; }
@@ -316,6 +353,11 @@
     background: rgba(168,170,255,0.08);
   }
   .chip--calorie { color: var(--calorie); border-color: rgba(110,221,240,0.28); background: rgba(110,221,240,0.06); }
+  .chip--applied {
+    color: var(--periwinkle-bright);
+    border-color: rgba(168,170,255,0.45);
+    background: rgba(168,170,255,0.14);
+  }
 
   .job-card__foot {
     margin-top: auto;
@@ -498,6 +540,40 @@
     color: var(--budget);
     font-size: 12px;
     min-height: 0;
+  }
+  .field-hint {
+    font-size: 12px; color: var(--ink-low); line-height: 1.5;
+  }
+
+  /* ---- Resume advisory badge (pure client-side, never blocks submit) ---- */
+  .verify-state {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.08em;
+    min-height: 0;
+  }
+  .verify-state[data-status="ok"] { color: var(--calorie); }
+  .verify-state[data-status="warn"] { color: var(--amber); }
+  .verify-state[data-status="bad"] { color: var(--budget); }
+  .verify-state .vdot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    background: currentColor;
+  }
+
+  /* ---- "Already applied" note in the modal ---- */
+  .applied-note {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid rgba(168,170,255,0.22);
+    border-radius: 11px;
+    background: rgba(168,170,255,0.06);
+    color: var(--ink-dim);
+    font-size: 13px; line-height: 1.5;
+    margin: 0 0 16px;
+  }
+  .applied-note .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--periwinkle); flex-shrink: 0;
   }
 
   .chip-radio-row { display: flex; gap: 8px; }
@@ -682,6 +758,22 @@
 </div>
 
 <!-- ============================================================
+     CONTEXT BANNER + OUTLET SWITCHER (rendered when ?c= scopes the view)
+     ============================================================ -->
+<div class="context-banner" id="contextBanner" hidden>
+  <div class="context-card">
+    <div class="context-top">
+      <div class="context-head">
+        <span class="section-label">Openings</span>
+        <h2 class="context-name" id="contextName"></h2>
+      </div>
+      <a href="/careers" class="context-clear" id="contextClear">&larr; View all restaurants</a>
+    </div>
+    <div class="outlet-switch" id="outletSwitch" role="group" aria-label="Filter by outlet"></div>
+  </div>
+</div>
+
+<!-- ============================================================
      LISTINGS
      ============================================================ -->
 <main>
@@ -731,6 +823,11 @@
       <div id="modalDetail">
         <div class="modal__chips" id="modalChips"></div>
         <p class="modal__desc" id="modalDesc"></p>
+
+        <div class="applied-note" id="appliedNote" hidden>
+          <span class="dot" aria-hidden="true"></span>
+          <span>You already applied to this role on this device. You can submit again if you'd like.</span>
+        </div>
 
         <div id="reqSection" hidden>
           <hr class="modal__divider">
@@ -833,13 +930,25 @@
     part_time: "Part-time"
   };
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  var APPLIED_KEY = "ef_applied_jobs";
 
   // ---- State ----------------------------------------------------------
   var allJobs = [];
   var jobById = {};
   var activeRole = "all";
+  var activeOutlet = "all";      // outlet_id of the selected outlet, or "all"
   var currentJob = null;
   var lastTrigger = null;
+
+  // Share-code scope (decoded from ?c=). ctxRestaurant is a scouter_restaurant_id.
+  var ctxRestaurant = "";
+  var ctxOutlet = "";
+  var appliedSet = loadApplied();
+
+  // Resume field state for the currently open modal. The link check is a pure
+  // client-side advisory (see setResumeAdvisory) - it never blocks submit and
+  // never hits the network. We only track whether the field is shown/required.
+  var resumeState = { required: false };
 
   // ---- DOM refs -------------------------------------------------------
   var $ = function (id) { return document.getElementById(id); };
@@ -861,6 +970,10 @@
   var submitBtn = $("submitBtn");
   var modalDetail = $("modalDetail");
   var modalSuccess = $("modalSuccess");
+  var appliedNote = $("appliedNote");
+  var contextBanner = $("contextBanner");
+  var contextName = $("contextName");
+  var outletSwitch = $("outletSwitch");
 
   // ---- Helpers --------------------------------------------------------
   function esc(s) {
@@ -884,10 +997,60 @@
     return imp === "required" ? "Required" : "Preferred";
   }
 
+  // ---- Applied memory (localStorage) ---------------------------------
+  function loadApplied() {
+    var set = {};
+    try {
+      var raw = window.localStorage.getItem(APPLIED_KEY);
+      if (raw) {
+        var arr = JSON.parse(raw);
+        if (Array.isArray(arr)) {
+          arr.forEach(function (id) { if (id != null) set[String(id)] = true; });
+        }
+      }
+    } catch (e) { /* storage blocked / corrupt; treat as empty */ }
+    return set;
+  }
+  function hasApplied(id) { return id != null && !!appliedSet[String(id)]; }
+  function markApplied(id) {
+    if (id == null) return;
+    appliedSet[String(id)] = true;
+    try {
+      window.localStorage.setItem(APPLIED_KEY, JSON.stringify(Object.keys(appliedSet)));
+    } catch (e) { /* storage blocked; in-memory set still works for this session */ }
+  }
+
+  // ---- Share-code decode ---------------------------------------------
+  // c = base64url(JSON.stringify({ r: scouter_restaurant_id, o?: outlet_id })).
+  // base64url = base64 with + -> -, / -> _, trailing = stripped. Decode
+  // defensively: require r is a non-empty string, o optional string.
+  function decodeShareCode(code) {
+    if (!code || typeof code !== "string") return null;
+    try {
+      var b64 = code.replace(/-/g, "+").replace(/_/g, "/");
+      while (b64.length % 4 !== 0) b64 += "=";
+      var jsonStr = decodeURIComponent(escape(window.atob(b64)));
+      var obj = JSON.parse(jsonStr);
+      if (!obj || typeof obj !== "object") return null;
+      if (typeof obj.r !== "string" || obj.r.trim() === "") return null;
+      var out = { r: obj.r.trim() };
+      if (typeof obj.o === "string" && obj.o.trim() !== "") out.o = obj.o.trim();
+      return out;
+    } catch (e) {
+      return null;
+    }
+  }
+
   // ---- Fetch + render -------------------------------------------------
   function loadJobs() {
     showState("loading");
-    fetch("/api/jobs", { headers: { "Accept": "application/json" } })
+    // When scoped by a share code, fetch restaurant-scoped so the outlet
+    // switcher has every outlet that has openings; otherwise fetch all.
+    var endpoint = "/api/jobs";
+    if (ctxRestaurant) {
+      endpoint += "?scouter_restaurant_id=" + encodeURIComponent(ctxRestaurant);
+    }
+    fetch(endpoint, { headers: { "Accept": "application/json" } })
       .then(function (res) {
         if (!res.ok) throw new Error("HTTP " + res.status);
         return res.json();
@@ -901,6 +1064,7 @@
         jobById = {};
         allJobs.forEach(function (j) { if (j && j.id != null) jobById[String(j.id)] = j; });
         updateHeroMeta();
+        renderContext();
         render();
       })
       .catch(function (err) {
@@ -924,8 +1088,82 @@
   }
 
   function filteredJobs() {
-    if (activeRole === "all") return allJobs;
-    return allJobs.filter(function (j) { return j.role === activeRole; });
+    return allJobs.filter(function (j) {
+      if (activeRole !== "all" && j.role !== activeRole) return false;
+      if (activeOutlet !== "all" && String(j.outlet_id == null ? "" : j.outlet_id) !== activeOutlet) return false;
+      return true;
+    });
+  }
+
+  // ---- Context banner + outlet switcher (share-code scoped view) ------
+  function renderContext() {
+    // Only show the banner when scoped to a restaurant via ?c=.
+    if (!ctxRestaurant) {
+      contextBanner.hidden = true;
+      return;
+    }
+
+    // Derive the restaurant name from the returned jobs (all share it).
+    var restaurantName = "";
+    for (var i = 0; i < allJobs.length; i++) {
+      if (allJobs[i].restaurant_name) { restaurantName = allJobs[i].restaurant_name; break; }
+    }
+    if (!restaurantName) restaurantName = "Partner restaurant";
+
+    // Distinct outlets present in this restaurant's jobs: id -> name.
+    var outlets = [];
+    var seen = {};
+    allJobs.forEach(function (j) {
+      var oid = String(j.outlet_id == null ? "" : j.outlet_id);
+      if (oid === "" || seen[oid]) return;
+      seen[oid] = true;
+      outlets.push({ id: oid, name: j.outlet_name || "Outlet", area: j.outlet_area || "" });
+    });
+
+    // Default-select the outlet from the share code if it matches one present.
+    if (ctxOutlet && seen[ctxOutlet]) activeOutlet = ctxOutlet;
+    else if (!seen[activeOutlet]) activeOutlet = "all";
+
+    // Banner name: "Restaurant" plus " · Outlet" when a specific outlet is active.
+    contextName.innerHTML = "";
+    contextName.appendChild(document.createTextNode(restaurantName));
+    if (activeOutlet !== "all") {
+      var oname = "";
+      outlets.forEach(function (o) { if (o.id === activeOutlet) oname = o.name; });
+      if (oname) {
+        contextName.appendChild(document.createTextNode(" · "));
+        var span = el("span", "ctx-outlet", oname);
+        contextName.appendChild(span);
+      }
+    }
+
+    // Outlet switcher pills: "All outlets" + one per distinct outlet.
+    outletSwitch.innerHTML = "";
+    if (outlets.length > 1) {
+      outletSwitch.appendChild(outletPill("all", "All outlets"));
+      outlets.forEach(function (o) {
+        outletSwitch.appendChild(outletPill(o.id, o.area ? (o.name + " · " + o.area) : o.name));
+      });
+    }
+
+    contextBanner.hidden = false;
+  }
+
+  function outletPill(value, label) {
+    var b = el("button", "chip-toggle", label);
+    b.type = "button";
+    b.setAttribute("aria-pressed", activeOutlet === value ? "true" : "false");
+    b.dataset.outlet = value;
+    b.addEventListener("click", function () {
+      activeOutlet = value;
+      var pills = outletSwitch.querySelectorAll(".chip-toggle");
+      Array.prototype.forEach.call(pills, function (p) {
+        p.setAttribute("aria-pressed", p === b ? "true" : "false");
+      });
+      renderContext();
+      render();
+    });
+    return b;
   }
 
   function render() {
@@ -1009,10 +1247,13 @@
 
     card.appendChild(el("h3", "job-card__title display", job.title || roleLabel(job.role)));
 
+    var applied = hasApplied(job.id);
+
     var chips = el("div", "job-card__chips");
     chips.appendChild(el("span", "chip chip--role", roleLabel(job.role)));
     if (job.employment_type) chips.appendChild(el("span", "chip", employmentLabel(job.employment_type)));
     if (job.shift) chips.appendChild(el("span", "chip chip--calorie", job.shift));
+    if (applied) chips.appendChild(el("span", "chip chip--applied", "Applied"));
     card.appendChild(chips);
 
     var foot = el("div", "job-card__foot");
@@ -1022,7 +1263,7 @@
     openings.innerHTML = "<b>" + n + "</b> " + (n === 1 ? "opening" : "openings");
     foot.appendChild(openings);
     var cta = el("span", "job-card__cta");
-    cta.innerHTML = "Apply &rarr;";
+    cta.innerHTML = applied ? "Applied &rarr;" : "Apply &rarr;";
     foot.appendChild(cta);
     card.appendChild(foot);
 
@@ -1115,10 +1356,13 @@
     modalDesc.textContent = job.description || "";
     modalDesc.style.display = job.description ? "" : "none";
 
-    // Requirements + dynamic fields
+    // "Already applied on this device" note (still allows re-submit).
+    appliedNote.hidden = !hasApplied(job.id);
+
+    // Requirements + dynamic fields (incl. the conditional resume field).
     var reqs = activeRequirements(job);
     buildReqList(reqs);
-    buildDynamicFields(reqs);
+    buildDynamicFields(reqs, job);
 
     // Show
     overlay.hidden = false;
@@ -1145,8 +1389,12 @@
     });
   }
 
-  function buildDynamicFields(reqs) {
+  function buildDynamicFields(reqs, job) {
     dynamicFields.innerHTML = "";
+
+    // Reset resume state for this open.
+    resumeState = { required: !!(job && job.resume_required === true) };
+
     reqs.forEach(function (rq) {
       if (rq.key === "experience") {
         dynamicFields.appendChild(numberField("experience_years", "Years of experience", 0));
@@ -1160,6 +1408,82 @@
         dynamicFields.appendChild(textField("cuisines", "Cuisines you've worked with", "e.g. North Indian, Continental", "comma separated"));
       }
     });
+
+    // Conditional, required + verified resume field.
+    if (resumeState.required) {
+      dynamicFields.appendChild(resumeField());
+    }
+  }
+
+  function resumeField() {
+    var w = fieldWrap("resume_url");
+    var lab = el("label", null, "Resume (public PDF link)");
+    lab.setAttribute("for", "f-resume_url");
+    var inp = document.createElement("input");
+    inp.type = "text"; inp.id = "f-resume_url"; inp.name = "resume_url";
+    inp.placeholder = "Google Drive / Dropbox / direct PDF link";
+    inp.autocomplete = "off";
+    inp.setAttribute("inputmode", "url");
+
+    var hint = el("div", "field-hint", "Set sharing to 'anyone with the link' and point it at the PDF.");
+
+    // Advisory badge - pure client-side hint, never blocks submit, no network.
+    var verify = el("div", "verify-state");
+    verify.id = "resumeVerify";
+    verify.setAttribute("aria-live", "polite");
+    verify.dataset.status = "";
+
+    inp.addEventListener("input", function () { setResumeAdvisory(inp.value); });
+    inp.addEventListener("blur", function () { setResumeAdvisory(inp.value); });
+
+    w.appendChild(lab); w.appendChild(inp); w.appendChild(hint);
+    w.appendChild(verify); w.appendChild(errSlot("resume_url"));
+    return w;
+  }
+
+  function setVerifyState(status, text) {
+    var node = document.getElementById("resumeVerify");
+    if (!node) return;
+    node.dataset.status = status || "";
+    node.innerHTML = "";
+    if (!status) return;
+    node.appendChild(el("span", "vdot"));
+    node.appendChild(document.createTextNode(text || ""));
+  }
+
+  // Pure client-side heuristic: does this look like a public PDF link? No network.
+  // Recognises Google Drive / Docs file links (and ?id=), any Dropbox host, and
+  // any URL whose path ends in .pdf. Anything else is "could not confirm".
+  function looksLikePdfLink(raw) {
+    try {
+      var u = new URL(String(raw || "").trim());
+      if (u.protocol !== "http:" && u.protocol !== "https:") return false;
+      var h = u.hostname.toLowerCase();
+      var p = u.pathname.toLowerCase();
+      if ((h === "drive.google.com" || h === "docs.google.com") && (/\/file\/d\//.test(p) || u.searchParams.get("id"))) return true;
+      if (h === "dropbox.com" || h.endsWith(".dropbox.com")) return true;
+      if (p.endsWith(".pdf")) return true;
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // Advisory only - sets the badge, never blocks submit, never hits the network.
+  //   empty            -> clear the badge
+  //   looksLikePdfLink -> green "ok" badge
+  //   otherwise        -> amber "warn" badge (we still submit whatever was typed)
+  function setResumeAdvisory(value) {
+    var v = (value == null ? "" : String(value)).trim();
+    if (!v) {
+      setVerifyState("", "");
+      return;
+    }
+    if (looksLikePdfLink(v)) {
+      setVerifyState("ok", "Looks like a PDF link");
+    } else {
+      setVerifyState("warn", "We could not confirm this is a PDF - we will still submit it");
+    }
   }
 
   function fieldWrap(name) {
@@ -1304,6 +1628,9 @@
     if (cuis && cuis.value.trim() !== "") {
       v.cuisines = cuis.value.split(",").map(function (s) { return s.trim(); }).filter(Boolean);
     }
+
+    var resume = document.getElementById("f-resume_url");
+    if (resume && resume.value.trim() !== "") v.resume_url = resume.value.trim();
     return v;
   }
 
@@ -1315,6 +1642,8 @@
     if (typeof values.age === "number" && !isNaN(values.age)) p.age = values.age;
     if (values.cuisines && values.cuisines.length) p.cuisines = values.cuisines;
     if (values.note) p.note = values.note;
+    // Only send resume_url when the field is shown (resume_required) and filled.
+    if (resumeState.required && values.resume_url) p.resume_url = values.resume_url;
     return p;
   }
 
@@ -1342,7 +1671,22 @@
       return;
     }
 
-    var payload = buildPayload(values);
+    // Resume gate: when the role requires a resume, the field must be non-empty.
+    // The PDF-link check is advisory only (see setResumeAdvisory) - it never
+    // blocks submit, so we send whatever the applicant typed.
+    if (resumeState.required) {
+      var resumeVal = values.resume_url || "";
+      if (!resumeVal) {
+        setFieldError("resume_url", "This role requires a public resume PDF link.");
+        formStatus.textContent = "Please add a public resume PDF link.";
+        return;
+      }
+    }
+
+    doApply(buildPayload(values));
+  });
+
+  function doApply(payload) {
     submitBtn.disabled = true;
     var originalLabel = submitBtn.textContent;
     submitBtn.textContent = "Sending...";
@@ -1359,6 +1703,7 @@
       })
       .then(function (result) {
         if (result.ok) {
+          if (currentJob && currentJob.id != null) markApplied(currentJob.id);
           showSuccess();
         } else {
           formStatus.textContent = readError(result.json);
@@ -1371,11 +1716,13 @@
         submitBtn.disabled = false;
         submitBtn.textContent = originalLabel;
       });
-  });
+  }
 
   function showSuccess() {
     modalDetail.hidden = true;
     modalSuccess.hidden = false;
+    // Reflect the new "Applied" state on the cards behind the modal.
+    render();
     var btn = document.getElementById("successClose");
     if (btn) setTimeout(function () { btn.focus(); }, 30);
   }
@@ -1421,6 +1768,19 @@
   }
 
   // ---- Boot -----------------------------------------------------------
+  // Parse the share code (?c=) and set the scoped context before fetching.
+  (function readShareCode() {
+    var code = "";
+    try {
+      code = new URLSearchParams(window.location.search).get("c") || "";
+    } catch (e) { code = ""; }
+    var ctx = decodeShareCode(code);
+    if (ctx) {
+      ctxRestaurant = ctx.r;
+      ctxOutlet = ctx.o || "";
+    }
+  })();
+
   observeReveals();
   loadJobs();
 })();
