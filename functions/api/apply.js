@@ -14,6 +14,7 @@ const DEFAULT_BACKEND = 'https://api.ediblefactor.com';
 const OBJECT_ID = /^[a-f0-9]{24}$/i;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const GENDERS = new Set(['any', 'male', 'female']);
+const IP_LITERAL = /^\d{1,3}(\.\d{1,3}){3}$/;
 
 function json(body, status) {
   return new Response(JSON.stringify(body), {
@@ -24,6 +25,27 @@ function json(body, status) {
 
 function str(v, max) {
   return (v == null ? '' : String(v)).trim().slice(0, max);
+}
+
+// Basic SSRF hygiene: accept only http(s) URLs whose host is a real domain,
+// never an IP literal, localhost, *.internal, or the cloud metadata IP. The
+// backend stores this link verbatim and never fetches it; verify-resume does.
+function safeHttpUrl(raw) {
+  const v = str(raw, 1000);
+  if (!v) return '';
+  let u;
+  try {
+    u = new URL(v);
+  } catch {
+    return '';
+  }
+  if (u.protocol !== 'http:' && u.protocol !== 'https:') return '';
+  const host = u.hostname.toLowerCase();
+  if (!host) return '';
+  if (host === 'localhost' || host.endsWith('.internal')) return '';
+  if (host === '169.254.169.254') return '';
+  if (IP_LITERAL.test(host) || host.includes(':')) return ''; // IPv4 / IPv6 literal
+  return u.toString();
 }
 
 function strArray(v, maxItems, maxLen) {
@@ -93,6 +115,10 @@ export async function onRequestPost({ request, env }) {
 
   const note = str(body?.note, 1000);
   if (note) payload.note = note;
+
+  // resume_url: only forward a syntactically valid, non-private http(s) URL.
+  const resumeUrl = safeHttpUrl(body?.resume_url);
+  if (resumeUrl) payload.resume_url = resumeUrl;
 
   try {
     const upstream = await fetch(`${base}/v1/public/jobs/${jobId}/applications`, {
