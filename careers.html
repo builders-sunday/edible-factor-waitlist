@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#07070b">
+<title>Careers · edible·factor</title>
+<meta name="description" content="Hospitality jobs at edible·factor partner restaurants in Bengaluru. Chef, bartender, server and manager roles - apply in a couple of minutes.">
+<meta name="robots" content="index, follow">
+<meta name="author" content="edible·factor">
+<link rel="canonical" href="https://ediblefactor.com/careers">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ediblefactor.com/careers">
+<meta property="og:title" content="Careers at edible·factor partner restaurants">
+<meta property="og:description" content="Work the floors and kitchens of Bengaluru's best restaurants. Open roles, one quick application.">
+<meta property="og:site_name" content="edible·factor">
+<meta property="og:locale" content="en_IN">
+
+<!-- Fonts: same stack as the rest of the site -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #07070b;
+    --bg-2: #0c0c12;
+    --bg-3: #13131c;
+    --ink: #eceaf3;
+    --ink-dim: #9693ac;
+    --ink-low: #6b6885;
+    --periwinkle: #a8aaff;
+    --periwinkle-bright: #c0c2ff;
+    --calorie: #6eddf0;
+    --budget: #ff8a4a;
+
+    --border-soft: rgba(168, 170, 255, 0.10);
+    --border-mid: rgba(168, 170, 255, 0.16);
+    --surface: var(--bg-2);
+    --radius-card: 18px;
+    --radius-pill: 9999px;
+    --t-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --t-med: 0.45s cubic-bezier(0.32, 1.1, 0.36, 1);
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+  body.is-locked { overflow: hidden; }
+
+  ::selection { background: var(--periwinkle); color: var(--bg); }
+
+  a { color: var(--periwinkle); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  :focus-visible {
+    outline: 2px solid var(--periwinkle);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  /* ---- Type primitives ---- */
+  .display {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-weight: 500;
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+  }
+  .accent { font-weight: 700; color: var(--periwinkle); }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+  .section-label {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--periwinkle);
+    display: inline-flex; align-items: center; gap: 14px;
+  }
+  .section-label::before {
+    content: ""; width: 40px; height: 1px; background: var(--periwinkle);
+  }
+
+  /* ---- Faint grid backdrop ---- */
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(168,170,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(168,170,255,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+
+  /* ---- Pills / buttons ---- */
+  .pill-cta {
+    background: var(--periwinkle);
+    color: var(--bg);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+    padding: 12px 22px; border-radius: var(--radius-pill);
+    border: none; cursor: pointer;
+    transition: transform var(--t-fast), background var(--t-fast);
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .pill-cta:hover { background: var(--periwinkle-bright); transform: translateY(-1px); text-decoration: none; }
+
+  .pill-ghost {
+    border: 1px solid rgba(168,170,255,0.35);
+    color: var(--ink); background: transparent;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 10px 18px; border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast), transform var(--t-fast);
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .pill-ghost:hover { border-color: var(--periwinkle); color: var(--periwinkle-bright); text-decoration: none; }
+
+  /* ============================================================
+     NAV
+     ============================================================ */
+  nav.appbar {
+    position: sticky; top: 0; z-index: 40;
+    backdrop-filter: blur(14px);
+    background: rgba(7,7,11,0.72);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .appbar__inner {
+    max-width: 1280px; margin: 0 auto;
+    padding: 0 24px; height: 68px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .ef-logo-link { display: inline-flex; align-items: center; }
+  .ef-logo-link img { display: block; border-radius: 12px; }
+  .appbar__right { display: flex; align-items: center; gap: 16px; }
+  .nav-current {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink-dim);
+    display: inline-flex; align-items: center; gap: 9px;
+  }
+  .nav-current .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--periwinkle);
+  }
+  @media (max-width: 540px) {
+    .nav-current { display: none; }
+  }
+
+  /* ============================================================
+     HERO
+     ============================================================ */
+  .hero {
+    position: relative;
+    padding: 64px 24px 40px;
+    overflow: hidden;
+  }
+  .hero__inner { max-width: 1280px; margin: 0 auto; position: relative; z-index: 1; }
+  .hero__glow {
+    position: absolute; z-index: 0; pointer-events: none;
+    top: -180px; left: 50%; transform: translateX(-50%);
+    width: 720px; height: 480px;
+    background: radial-gradient(closest-side, rgba(168,170,255,0.16), transparent 70%);
+    filter: blur(10px);
+  }
+  .hero h1 {
+    margin: 22px 0 0;
+    font-size: clamp(40px, 7.5vw, 88px);
+    max-width: 16ch;
+  }
+  .hero__lede {
+    margin: 24px 0 0;
+    max-width: 56ch;
+    color: var(--ink-dim);
+    font-size: clamp(15px, 2.4vw, 18px);
+    line-height: 1.6;
+  }
+  .hero__meta {
+    margin-top: 26px;
+    display: flex; flex-wrap: wrap; gap: 10px 22px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-low);
+  }
+  .hero__meta b { color: var(--periwinkle); font-weight: 500; }
+
+  /* ============================================================
+     FILTER ROW
+     ============================================================ */
+  .controls {
+    max-width: 1280px; margin: 0 auto;
+    padding: 8px 24px 0;
+    display: flex; flex-wrap: wrap; gap: 8px;
+    align-items: center;
+  }
+  .filter-label {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink-low); margin-right: 6px;
+  }
+  .chip-toggle {
+    background: rgba(168,170,255,0.05);
+    border: 1px solid var(--border-soft);
+    color: var(--ink-dim);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 8px 15px; border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast);
+  }
+  .chip-toggle:hover { border-color: var(--border-mid); color: var(--ink); }
+  .chip-toggle[aria-pressed="true"] {
+    background: rgba(168,170,255,0.14);
+    border-color: rgba(168,170,255,0.45);
+    color: var(--periwinkle-bright);
+  }
+
+  /* ============================================================
+     LISTINGS
+     ============================================================ */
+  main { max-width: 1280px; margin: 0 auto; padding: 28px 24px 96px; }
+
+  .restaurant-block { margin-top: 56px; }
+  .restaurant-block:first-child { margin-top: 28px; }
+
+  .restaurant-head {
+    display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .restaurant-head h2 {
+    margin: 0;
+    font-size: clamp(26px, 4vw, 38px);
+  }
+  .restaurant-head .count-badge {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-low);
+  }
+
+  .outlet-block { margin-top: 28px; }
+  .outlet-head {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px;
+  }
+  .outlet-head .outlet-name {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--periwinkle);
+  }
+  .outlet-head .outlet-area {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-low);
+  }
+  .outlet-head .sep { color: var(--ink-low); }
+
+  .job-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .job-card {
+    text-align: left;
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-card);
+    padding: 22px;
+    cursor: pointer;
+    display: flex; flex-direction: column; gap: 14px;
+    transition: transform var(--t-fast), border-color var(--t-fast), background var(--t-fast);
+    position: relative;
+    overflow: hidden;
+  }
+  .job-card::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: radial-gradient(120% 80% at 100% 0%, rgba(168,170,255,0.07), transparent 60%);
+    opacity: 0; transition: opacity var(--t-fast);
+    pointer-events: none;
+  }
+  .job-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--border-mid);
+    background: var(--bg-3);
+  }
+  .job-card:hover::after { opacity: 1; }
+  .job-card:focus-visible { outline: 2px solid var(--periwinkle); outline-offset: 2px; }
+
+  .job-card__title {
+    font-size: 21px;
+    margin: 0;
+    color: var(--ink);
+  }
+  .job-card__chips { display: flex; flex-wrap: wrap; gap: 7px; }
+
+  .chip {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 5px 10px; border-radius: var(--radius-pill);
+    border: 1px solid var(--border-soft);
+    color: var(--ink-dim);
+    background: rgba(168,170,255,0.04);
+    white-space: nowrap;
+  }
+  .chip--role {
+    color: var(--periwinkle);
+    border-color: rgba(168,170,255,0.30);
+    background: rgba(168,170,255,0.08);
+  }
+  .chip--calorie { color: var(--calorie); border-color: rgba(110,221,240,0.28); background: rgba(110,221,240,0.06); }
+
+  .job-card__foot {
+    margin-top: auto;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+    padding-top: 4px;
+  }
+  .job-card__openings {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-low);
+  }
+  .job-card__openings b { color: var(--ink); font-weight: 500; }
+  .job-card__cta {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--periwinkle);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+
+  /* ---- States ---- */
+  .state-box {
+    text-align: center;
+    padding: 64px 24px;
+    border: 1px dashed var(--border-soft);
+    border-radius: var(--radius-card);
+    background: rgba(168,170,255,0.02);
+    margin-top: 12px;
+  }
+  .state-box .state-eyebrow {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--periwinkle);
+  }
+  .state-box .state-title { font-size: 26px; margin: 14px 0 8px; }
+  .state-box p { color: var(--ink-dim); margin: 0; line-height: 1.6; }
+  .state-box.state-error .state-eyebrow { color: var(--budget); }
+
+  .spinner {
+    width: 26px; height: 26px; margin: 0 auto 18px;
+    border: 2px solid rgba(168,170,255,0.18);
+    border-top-color: var(--periwinkle);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---- Reveal on scroll ---- */
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .spinner { animation: none; }
+  }
+
+  /* ============================================================
+     MODAL
+     ============================================================ */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 60;
+    display: none;
+    background: rgba(4,4,8,0.74);
+    backdrop-filter: blur(6px);
+    padding: 24px;
+    overflow-y: auto;
+  }
+  .modal-overlay.is-open { display: flex; align-items: center; justify-content: center; }
+
+  .modal {
+    width: 100%; max-width: 560px;
+    background: var(--bg-2);
+    border: 1px solid var(--border-mid);
+    border-radius: 20px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    max-height: calc(100vh - 48px);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    animation: modal-in var(--t-med);
+  }
+  @keyframes modal-in {
+    from { opacity: 0; transform: translateY(18px) scale(0.985); }
+    to { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .modal { animation: none; } }
+
+  .modal__bar {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 16px;
+    padding: 22px 24px 0;
+  }
+  .modal__close {
+    flex-shrink: 0;
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--border-soft);
+    background: rgba(168,170,255,0.04);
+    color: var(--ink-dim);
+    font-size: 18px; line-height: 1; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: color var(--t-fast), border-color var(--t-fast), background var(--t-fast);
+  }
+  .modal__close:hover { color: var(--ink); border-color: var(--border-mid); background: rgba(168,170,255,0.10); }
+
+  .modal__scroll { overflow-y: auto; padding: 12px 24px 24px; }
+
+  .modal__title { font-size: clamp(24px, 5vw, 30px); margin: 0; }
+  .modal__where {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-dim);
+    margin: 10px 0 0;
+  }
+  .modal__chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+  .modal__desc {
+    color: var(--ink-dim); line-height: 1.65; margin: 16px 0 0;
+    font-size: 14.5px;
+  }
+
+  .modal__divider { height: 1px; background: var(--border-soft); margin: 22px 0; border: 0; }
+
+  .modal__sub {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--periwinkle);
+    margin: 0 0 14px;
+  }
+
+  .req-list { display: flex; flex-direction: column; gap: 10px; margin: 0; }
+  .req-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    background: rgba(168,170,255,0.03);
+  }
+  .req-row .req-text { color: var(--ink); font-size: 14px; }
+  .badge {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 4px 9px; border-radius: var(--radius-pill);
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .badge--required { color: var(--budget); border: 1px solid rgba(255,138,74,0.32); background: rgba(255,138,74,0.08); }
+  .badge--preferred { color: var(--calorie); border: 1px solid rgba(110,221,240,0.30); background: rgba(110,221,240,0.07); }
+
+  /* ---- Form ---- */
+  .apply-form { display: flex; flex-direction: column; gap: 16px; }
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .field > label {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  .field > label .opt { color: var(--ink-low); text-transform: none; letter-spacing: 0; }
+  .field input[type="text"],
+  .field input[type="email"],
+  .field input[type="tel"],
+  .field input[type="number"],
+  .field textarea {
+    width: 100%;
+    background: var(--bg-3);
+    border: 1px solid var(--border-soft);
+    border-radius: 11px;
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 15px;
+    padding: 12px 14px;
+    transition: border-color var(--t-fast), box-shadow var(--t-fast);
+  }
+  .field textarea { resize: vertical; min-height: 78px; }
+  .field input::placeholder, .field textarea::placeholder { color: var(--ink-low); }
+  .field input:focus, .field textarea:focus {
+    outline: none;
+    border-color: rgba(168,170,255,0.55);
+    box-shadow: 0 0 0 3px rgba(168,170,255,0.18);
+  }
+  .field.has-error input, .field.has-error textarea { border-color: rgba(255,138,74,0.6); }
+  .field-error {
+    color: var(--budget);
+    font-size: 12px;
+    min-height: 0;
+  }
+
+  .chip-radio-row { display: flex; gap: 8px; }
+  .chip-radio {
+    flex: 1;
+    text-align: center;
+    background: var(--bg-3);
+    border: 1px solid var(--border-soft);
+    color: var(--ink-dim);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 12px; letter-spacing: 0.10em; text-transform: uppercase;
+    padding: 11px 12px; border-radius: 11px;
+    cursor: pointer;
+    transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast);
+  }
+  .chip-radio[aria-pressed="true"] {
+    border-color: rgba(168,170,255,0.5);
+    background: rgba(168,170,255,0.12);
+    color: var(--periwinkle-bright);
+  }
+
+  /* visually-hidden honeypot */
+  .hp {
+    position: absolute !important;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  .form-foot { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+  .submit-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 15px 22px;
+    font-size: 13px;
+  }
+  .submit-btn[disabled] { opacity: 0.55; cursor: not-allowed; }
+  .form-status {
+    color: var(--budget);
+    font-size: 13px;
+    line-height: 1.5;
+    min-height: 0;
+  }
+  .form-note {
+    font-size: 12px; color: var(--ink-low); line-height: 1.5; text-align: center;
+  }
+
+  /* ---- Success state ---- */
+  .success-box { text-align: center; padding: 26px 8px 8px; }
+  .success-box .tick {
+    width: 56px; height: 56px; margin: 0 auto 18px;
+    border-radius: 50%;
+    background: rgba(168,170,255,0.12);
+    border: 1px solid rgba(168,170,255,0.4);
+    color: var(--periwinkle);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 26px;
+  }
+  .success-box h3 { font-size: 26px; margin: 0 0 10px; }
+  .success-box p { color: var(--ink-dim); line-height: 1.6; margin: 0 0 22px; }
+
+  /* ---- Mobile bottom-sheet ---- */
+  @media (max-width: 600px) {
+    .modal-overlay { padding: 0; }
+    .modal-overlay.is-open { align-items: flex-end; }
+    .modal {
+      max-width: 100%;
+      border-radius: 22px 22px 0 0;
+      max-height: 92vh;
+      animation: sheet-in var(--t-med);
+    }
+    @keyframes sheet-in {
+      from { transform: translateY(100%); }
+      to { transform: none; }
+    }
+  }
+  @media (max-width: 600px) and (prefers-reduced-motion: reduce) {
+    .modal { animation: none; }
+  }
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding: 40px 0 36px;
+    overflow: hidden;
+    position: relative;
+  }
+  .footer__mark {
+    position: absolute; bottom: -24px; left: -8px;
+    font-size: clamp(140px, 22vw, 360px);
+    line-height: 1;
+    color: rgba(255,255,255,0.025);
+    pointer-events: none; user-select: none; white-space: nowrap;
+  }
+  .footer__inner {
+    position: relative;
+    max-width: 1280px; margin: 0 auto; padding: 0 24px;
+    display: flex; flex-direction: column; gap: 18px;
+  }
+  .footer__row {
+    display: flex; flex-direction: column; gap: 16px;
+    align-items: center; justify-content: space-between;
+  }
+  .footer__brand {
+    display: flex; align-items: center; gap: 12px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  .footer__brand .wm { font-family: 'Space Grotesk', sans-serif; font-size: 18px; letter-spacing: -0.02em; color: var(--ink); }
+  .footer__links {
+    display: flex; flex-wrap: wrap; gap: 10px 22px;
+    justify-content: center;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .footer__links a { color: var(--ink); }
+  .footer__links a:hover { color: var(--periwinkle); text-decoration: none; }
+  @media (min-width: 720px) {
+    .footer__row { flex-direction: row; }
+  }
+</style>
+
+<link rel="icon" type="image/svg+xml" href="/ef-mark.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self';">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+</head>
+
+<body>
+
+<!-- ============================================================
+     NAV
+     ============================================================ -->
+<nav class="appbar">
+  <div class="appbar__inner">
+    <a href="/" class="ef-logo-link" aria-label="edible·factor home">
+      <img src="/ef-mark.svg" alt="edible·factor" width="44" height="44" loading="eager">
+    </a>
+    <div class="appbar__right">
+      <span class="nav-current" aria-current="page">
+        <span class="dot"></span>
+        Careers
+      </span>
+      <a href="/#waitlist-hero" class="pill-cta">Join Waitlist</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<header class="hero bg-grid">
+  <div class="hero__glow" aria-hidden="true"></div>
+  <div class="hero__inner reveal">
+    <span class="section-label">Careers · partner restaurants</span>
+    <h1 class="display">Work the floors and kitchens of Bengaluru's <span class="accent">best.</span></h1>
+    <p class="hero__lede">
+      Our partner restaurants are hiring chefs, bartenders, servers and managers across the city.
+      Browse open roles below and apply in a couple of minutes - the restaurant reaches out directly.
+    </p>
+    <div class="hero__meta" id="heroMeta" aria-live="polite">
+      <span><b id="metaJobs">-</b> open roles</span>
+      <span><b id="metaPlaces">-</b> restaurants</span>
+      <span>Bengaluru</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     FILTER ROW
+     ============================================================ -->
+<div class="controls reveal" role="group" aria-label="Filter roles by type">
+  <span class="filter-label">Filter</span>
+  <button type="button" class="chip-toggle" data-role="all" aria-pressed="true">All</button>
+  <button type="button" class="chip-toggle" data-role="chef" aria-pressed="false">Chef</button>
+  <button type="button" class="chip-toggle" data-role="bartender" aria-pressed="false">Bartender</button>
+  <button type="button" class="chip-toggle" data-role="server" aria-pressed="false">Server</button>
+  <button type="button" class="chip-toggle" data-role="manager" aria-pressed="false">Manager</button>
+</div>
+
+<!-- ============================================================
+     LISTINGS
+     ============================================================ -->
+<main>
+  <!-- Loading -->
+  <div class="state-box" id="stateLoading">
+    <div class="spinner" aria-hidden="true"></div>
+    <div class="state-eyebrow">Loading</div>
+    <p>Fetching open roles at partner restaurants...</p>
+  </div>
+
+  <!-- Error -->
+  <div class="state-box state-error" id="stateError" hidden>
+    <div class="state-eyebrow">Something went wrong</div>
+    <h2 class="state-title display">Couldn't load roles.</h2>
+    <p id="stateErrorMsg">Please try again in a moment.</p>
+    <div style="margin-top:22px;">
+      <button type="button" class="pill-ghost" id="retryBtn">Retry</button>
+    </div>
+  </div>
+
+  <!-- Empty -->
+  <div class="state-box" id="stateEmpty" hidden>
+    <div class="state-eyebrow">No vacancies</div>
+    <h2 class="state-title display">No open roles right now.</h2>
+    <p>No open roles right now - check back soon. New positions get posted as partners scale up.</p>
+  </div>
+
+  <!-- Rendered listings land here -->
+  <div id="listings" aria-live="polite"></div>
+</main>
+
+<!-- ============================================================
+     APPLY MODAL
+     ============================================================ -->
+<div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+  <div class="modal" role="document">
+    <div class="modal__bar">
+      <div style="min-width:0;">
+        <h2 class="modal__title display" id="modalTitle">Role</h2>
+        <p class="modal__where" id="modalWhere"></p>
+      </div>
+      <button type="button" class="modal__close" id="modalClose" aria-label="Close dialog">&times;</button>
+    </div>
+
+    <div class="modal__scroll">
+      <!-- Job detail (filled by JS) -->
+      <div id="modalDetail">
+        <div class="modal__chips" id="modalChips"></div>
+        <p class="modal__desc" id="modalDesc"></p>
+
+        <div id="reqSection" hidden>
+          <hr class="modal__divider">
+          <p class="modal__sub">Who we're looking for</p>
+          <div class="req-list" id="reqList"></div>
+        </div>
+
+        <hr class="modal__divider">
+
+        <!-- Apply form -->
+        <p class="modal__sub">Apply for this role</p>
+        <form class="apply-form" id="applyForm" novalidate>
+          <div class="field" data-field="full_name">
+            <label for="f-name">Full name</label>
+            <input type="text" id="f-name" name="full_name" autocomplete="name" required>
+            <div class="field-error" data-error-for="full_name" aria-live="polite"></div>
+          </div>
+
+          <div class="field" data-field="email">
+            <label for="f-email">Email</label>
+            <input type="email" id="f-email" name="email" autocomplete="email" inputmode="email" required>
+            <div class="field-error" data-error-for="email" aria-live="polite"></div>
+          </div>
+
+          <div class="field" data-field="phone">
+            <label for="f-phone">Phone</label>
+            <input type="tel" id="f-phone" name="phone" autocomplete="tel" inputmode="tel" required>
+            <div class="field-error" data-error-for="phone" aria-live="polite"></div>
+          </div>
+
+          <!-- Conditional answer fields injected here -->
+          <div id="dynamicFields"></div>
+
+          <div class="field" data-field="note">
+            <label for="f-note">Anything else? <span class="opt">(optional)</span></label>
+            <textarea id="f-note" name="note" placeholder="A line about why you're a good fit, availability, anything."></textarea>
+          </div>
+
+          <!-- Honeypot -->
+          <div class="hp" aria-hidden="true">
+            <label for="f-website">Leave this empty</label>
+            <input type="text" id="f-website" name="website" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="form-foot">
+            <div class="form-status" id="formStatus" role="alert"></div>
+            <button type="submit" class="pill-cta submit-btn" id="submitBtn">Send application</button>
+            <p class="form-note">Your details go to the restaurant. By applying you agree to our
+              <a href="legal.html#privacy">privacy policy</a>.</p>
+          </div>
+        </form>
+      </div>
+
+      <!-- Success (toggled) -->
+      <div class="success-box" id="modalSuccess" hidden>
+        <div class="tick" aria-hidden="true">&#10003;</div>
+        <h3 class="display">Application received.</h3>
+        <p>Application received - the restaurant will reach out. Keep an eye on your email and phone.</p>
+        <button type="button" class="pill-ghost" id="successClose">Browse more roles</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer>
+  <div class="footer__mark display" aria-hidden="true">edible<span style="font-style:italic">factor</span></div>
+  <div class="footer__inner">
+    <div class="footer__row">
+      <div class="footer__brand">
+        <span class="wm display">edible<span class="accent">factor</span></span>
+        <span>·</span>
+        <span>© 2026 · Made in Bengaluru</span>
+      </div>
+      <nav class="footer__links" aria-label="Footer">
+        <a href="/">Home</a>
+        <a href="legal.html#privacy">Privacy</a>
+        <a href="legal.html#terms">Terms</a>
+        <a href="/#waitlist-hero">Join Waitlist</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---- Constants ------------------------------------------------------
+  var ROLE_LABELS = {
+    chef: "Chef / Cook",
+    bartender: "Bartender",
+    server: "Server / Waitstaff",
+    manager: "Manager"
+  };
+  var EMPLOYMENT_LABELS = {
+    full_time: "Full-time",
+    part_time: "Part-time"
+  };
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  // ---- State ----------------------------------------------------------
+  var allJobs = [];
+  var jobById = {};
+  var activeRole = "all";
+  var currentJob = null;
+  var lastTrigger = null;
+
+  // ---- DOM refs -------------------------------------------------------
+  var $ = function (id) { return document.getElementById(id); };
+  var listings = $("listings");
+  var stateLoading = $("stateLoading");
+  var stateError = $("stateError");
+  var stateErrorMsg = $("stateErrorMsg");
+  var stateEmpty = $("stateEmpty");
+  var overlay = $("modalOverlay");
+  var modalTitle = $("modalTitle");
+  var modalWhere = $("modalWhere");
+  var modalChips = $("modalChips");
+  var modalDesc = $("modalDesc");
+  var reqSection = $("reqSection");
+  var reqList = $("reqList");
+  var applyForm = $("applyForm");
+  var dynamicFields = $("dynamicFields");
+  var formStatus = $("formStatus");
+  var submitBtn = $("submitBtn");
+  var modalDetail = $("modalDetail");
+  var modalSuccess = $("modalSuccess");
+
+  // ---- Helpers --------------------------------------------------------
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function roleLabel(r) { return ROLE_LABELS[r] || (r ? r : "Role"); }
+  function employmentLabel(t) { return EMPLOYMENT_LABELS[t] || (t ? t.replace(/_/g, " ") : ""); }
+  function importanceBadge(imp) {
+    // imp === "required" -> Required; anything else -> Preferred
+    return imp === "required" ? "Required" : "Preferred";
+  }
+
+  // ---- Fetch + render -------------------------------------------------
+  function loadJobs() {
+    showState("loading");
+    fetch("/api/jobs", { headers: { "Accept": "application/json" } })
+      .then(function (res) {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return res.json();
+      })
+      .then(function (json) {
+        var data = (json && json.data) || [];
+        if (!Array.isArray(data)) data = [];
+        allJobs = data.filter(function (j) { return j && (j.status === undefined || j.status === "open" || j.status === "active" || j.status === "published"); });
+        // If status filtering nuked everything but there were jobs, fall back to raw list.
+        if (allJobs.length === 0 && data.length > 0) allJobs = data;
+        jobById = {};
+        allJobs.forEach(function (j) { if (j && j.id != null) jobById[String(j.id)] = j; });
+        updateHeroMeta();
+        render();
+      })
+      .catch(function (err) {
+        stateErrorMsg.textContent = "Please try again in a moment. (" + (err && err.message ? err.message : "network error") + ")";
+        showState("error");
+      });
+  }
+
+  function updateHeroMeta() {
+    var places = {};
+    allJobs.forEach(function (j) { if (j.restaurant_name) places[j.restaurant_name] = true; });
+    $("metaJobs").textContent = String(allJobs.length);
+    $("metaPlaces").textContent = String(Object.keys(places).length);
+  }
+
+  function showState(which) {
+    stateLoading.hidden = which !== "loading";
+    stateError.hidden = which !== "error";
+    stateEmpty.hidden = which !== "empty";
+    listings.innerHTML = "";
+  }
+
+  function filteredJobs() {
+    if (activeRole === "all") return allJobs;
+    return allJobs.filter(function (j) { return j.role === activeRole; });
+  }
+
+  function render() {
+    var jobs = filteredJobs();
+    listings.innerHTML = "";
+
+    if (allJobs.length === 0) { showState("empty"); return; }
+    if (jobs.length === 0) {
+      // Filter produced nothing, but other roles exist.
+      stateLoading.hidden = true;
+      stateError.hidden = true;
+      stateEmpty.hidden = true;
+      var box = el("div", "state-box");
+      box.appendChild(el("div", "state-eyebrow", "No matches"));
+      box.appendChild(el("h2", "state-title display", "Nothing under that filter."));
+      box.appendChild(el("p", null, "No open " + roleLabel(activeRole) + " roles right now - try another filter or check back soon."));
+      listings.appendChild(box);
+      return;
+    }
+
+    // Hide global state boxes when we have content.
+    stateLoading.hidden = true;
+    stateError.hidden = true;
+    stateEmpty.hidden = true;
+
+    // Group: restaurant_name -> outlet (outlet_id|outlet_name) -> [jobs]
+    var byRestaurant = [];
+    var rIndex = {};
+    jobs.forEach(function (j) {
+      var rname = j.restaurant_name || "Partner restaurant";
+      if (!(rname in rIndex)) {
+        rIndex[rname] = byRestaurant.length;
+        byRestaurant.push({ name: rname, outlets: [], oIndex: {}, total: 0 });
+      }
+      var r = byRestaurant[rIndex[rname]];
+      var oKey = (j.outlet_id != null ? String(j.outlet_id) : "") + "::" + (j.outlet_name || "");
+      if (!(oKey in r.oIndex)) {
+        r.oIndex[oKey] = r.outlets.length;
+        r.outlets.push({ name: j.outlet_name || "", area: j.outlet_area || "", jobs: [] });
+      }
+      r.outlets[r.oIndex[oKey]].jobs.push(j);
+      r.total += 1;
+    });
+
+    byRestaurant.forEach(function (r) {
+      var block = el("div", "restaurant-block reveal");
+
+      var head = el("div", "restaurant-head");
+      head.appendChild(el("h2", "display", r.name));
+      head.appendChild(el("span", "count-badge", r.total + (r.total === 1 ? " open role" : " open roles")));
+      block.appendChild(head);
+
+      r.outlets.forEach(function (o) {
+        var ob = el("div", "outlet-block");
+
+        if (o.name || o.area) {
+          var oh = el("div", "outlet-head");
+          if (o.name) oh.appendChild(el("span", "outlet-name", o.name));
+          if (o.name && o.area) oh.appendChild(el("span", "sep", "·"));
+          if (o.area) oh.appendChild(el("span", "outlet-area", o.area));
+          ob.appendChild(oh);
+        }
+
+        var grid = el("div", "job-grid");
+        o.jobs.forEach(function (j) { grid.appendChild(buildCard(j)); });
+        ob.appendChild(grid);
+        block.appendChild(ob);
+      });
+
+      listings.appendChild(block);
+    });
+
+    requestAnimationFrame(observeReveals);
+  }
+
+  function buildCard(job) {
+    var card = el("button", "job-card");
+    card.type = "button";
+    card.setAttribute("aria-label", "Apply for " + (job.title || roleLabel(job.role)) + " at " + (job.restaurant_name || "partner restaurant"));
+    card.dataset.jobId = String(job.id);
+
+    card.appendChild(el("h3", "job-card__title display", job.title || roleLabel(job.role)));
+
+    var chips = el("div", "job-card__chips");
+    chips.appendChild(el("span", "chip chip--role", roleLabel(job.role)));
+    if (job.employment_type) chips.appendChild(el("span", "chip", employmentLabel(job.employment_type)));
+    if (job.shift) chips.appendChild(el("span", "chip chip--calorie", job.shift));
+    card.appendChild(chips);
+
+    var foot = el("div", "job-card__foot");
+    var openings = el("span", "job-card__openings");
+    var n = parseInt(job.openings, 10);
+    if (isNaN(n) || n < 1) n = 1;
+    openings.innerHTML = "<b>" + n + "</b> " + (n === 1 ? "opening" : "openings");
+    foot.appendChild(openings);
+    var cta = el("span", "job-card__cta");
+    cta.innerHTML = "Apply &rarr;";
+    foot.appendChild(cta);
+    card.appendChild(foot);
+
+    card.addEventListener("click", function () { openModal(job, card); });
+    return card;
+  }
+
+  // ---- Requirements model --------------------------------------------
+  // Returns a list of active requirements derived from a job's requirements.
+  function activeRequirements(job) {
+    var rq = job.requirements || {};
+    var out = [];
+
+    var expYears = parseInt(rq.min_experience_years, 10);
+    if (!isNaN(expYears) && expYears > 0) {
+      out.push({
+        key: "experience",
+        text: expYears + "+ years experience",
+        importance: rq.experience_importance
+      });
+    }
+
+    if (Array.isArray(rq.languages) && rq.languages.length > 0) {
+      out.push({
+        key: "languages",
+        text: rq.languages.join(", "),
+        importance: rq.languages_importance
+      });
+    }
+
+    if (rq.gender && rq.gender !== "any") {
+      out.push({
+        key: "gender",
+        text: "Prefers " + rq.gender + " candidates",
+        importance: "preferred",
+        forcePreferred: true
+      });
+    }
+
+    var ageMin = parseInt(rq.age_min, 10); if (isNaN(ageMin)) ageMin = 0;
+    var ageMax = parseInt(rq.age_max, 10); if (isNaN(ageMax)) ageMax = 0;
+    if (ageMin > 0 || ageMax > 0) {
+      var ageText;
+      if (ageMin > 0 && ageMax > 0) ageText = "Age " + ageMin + "-" + ageMax;
+      else if (ageMin > 0) ageText = "Age " + ageMin + "+";
+      else ageText = "Up to age " + ageMax;
+      out.push({
+        key: "age",
+        text: ageText,
+        importance: rq.age_importance
+      });
+    }
+
+    if (Array.isArray(rq.cuisines) && rq.cuisines.length > 0) {
+      out.push({
+        key: "cuisines",
+        text: rq.cuisines.join(", "),
+        importance: rq.cuisines_importance
+      });
+    }
+
+    return out;
+  }
+
+  // ---- Modal ----------------------------------------------------------
+  function openModal(job, trigger) {
+    currentJob = job;
+    lastTrigger = trigger || document.activeElement;
+
+    // Reset to detail view (not success)
+    modalDetail.hidden = false;
+    modalSuccess.hidden = true;
+    formStatus.textContent = "";
+    applyForm.reset();
+    clearFieldErrors();
+
+    // Header
+    modalTitle.textContent = job.title || roleLabel(job.role);
+    var where = [job.restaurant_name, job.outlet_name, job.outlet_area].filter(Boolean).join(" · ");
+    modalWhere.textContent = where;
+
+    // Chips
+    modalChips.innerHTML = "";
+    modalChips.appendChild(el("span", "chip chip--role", roleLabel(job.role)));
+    if (job.employment_type) modalChips.appendChild(el("span", "chip", employmentLabel(job.employment_type)));
+    var n = parseInt(job.openings, 10); if (isNaN(n) || n < 1) n = 1;
+    modalChips.appendChild(el("span", "chip", n + (n === 1 ? " opening" : " openings")));
+    if (job.shift) modalChips.appendChild(el("span", "chip chip--calorie", job.shift));
+
+    modalDesc.textContent = job.description || "";
+    modalDesc.style.display = job.description ? "" : "none";
+
+    // Requirements + dynamic fields
+    var reqs = activeRequirements(job);
+    buildReqList(reqs);
+    buildDynamicFields(reqs);
+
+    // Show
+    overlay.hidden = false;
+    overlay.classList.add("is-open");
+    document.body.classList.add("is-locked");
+    document.addEventListener("keydown", onKeydown);
+
+    // Focus first input
+    var firstInput = document.getElementById("f-name");
+    if (firstInput) setTimeout(function () { firstInput.focus(); }, 30);
+  }
+
+  function buildReqList(reqs) {
+    reqList.innerHTML = "";
+    if (!reqs.length) { reqSection.hidden = true; return; }
+    reqSection.hidden = false;
+    reqs.forEach(function (rq) {
+      var row = el("div", "req-row");
+      row.appendChild(el("span", "req-text", rq.text));
+      var label = rq.forcePreferred ? "Preferred" : importanceBadge(rq.importance);
+      var badge = el("span", "badge " + (label === "Required" ? "badge--required" : "badge--preferred"), label);
+      row.appendChild(badge);
+      reqList.appendChild(row);
+    });
+  }
+
+  function buildDynamicFields(reqs) {
+    dynamicFields.innerHTML = "";
+    reqs.forEach(function (rq) {
+      if (rq.key === "experience") {
+        dynamicFields.appendChild(numberField("experience_years", "Years of experience", 0));
+      } else if (rq.key === "languages") {
+        dynamicFields.appendChild(textField("languages", "Languages you speak", "e.g. English, Hindi, Kannada", "comma separated"));
+      } else if (rq.key === "gender") {
+        dynamicFields.appendChild(genderField());
+      } else if (rq.key === "age") {
+        dynamicFields.appendChild(numberField("age", "Age", 14));
+      } else if (rq.key === "cuisines") {
+        dynamicFields.appendChild(textField("cuisines", "Cuisines you've worked with", "e.g. North Indian, Continental", "comma separated"));
+      }
+    });
+  }
+
+  function fieldWrap(name) {
+    var w = el("div", "field");
+    w.setAttribute("data-field", name);
+    return w;
+  }
+  function errSlot(name) {
+    var e = el("div", "field-error");
+    e.setAttribute("data-error-for", name);
+    e.setAttribute("aria-live", "polite");
+    return e;
+  }
+  function textField(name, labelText, placeholder, hint) {
+    var w = fieldWrap(name);
+    var lab = el("label", null);
+    lab.setAttribute("for", "f-" + name);
+    lab.innerHTML = esc(labelText) + (hint ? ' <span class="opt">(' + esc(hint) + ')</span>' : "");
+    var inp = document.createElement("input");
+    inp.type = "text"; inp.id = "f-" + name; inp.name = name;
+    if (placeholder) inp.placeholder = placeholder;
+    inp.autocomplete = "off";
+    w.appendChild(lab); w.appendChild(inp); w.appendChild(errSlot(name));
+    return w;
+  }
+  function numberField(name, labelText, min) {
+    var w = fieldWrap(name);
+    var lab = el("label", null, labelText);
+    lab.setAttribute("for", "f-" + name);
+    var inp = document.createElement("input");
+    inp.type = "number"; inp.id = "f-" + name; inp.name = name;
+    inp.inputMode = "numeric";
+    if (min != null) inp.min = String(min);
+    inp.autocomplete = "off";
+    w.appendChild(lab); w.appendChild(inp); w.appendChild(errSlot(name));
+    return w;
+  }
+  function genderField() {
+    var w = fieldWrap("gender");
+    var lab = el("label", null, "Your gender");
+    var row = el("div", "chip-radio-row");
+    ["male", "female"].forEach(function (g) {
+      var b = el("button", "chip-radio", g.charAt(0).toUpperCase() + g.slice(1));
+      b.type = "button";
+      b.setAttribute("aria-pressed", "false");
+      b.dataset.value = g;
+      b.addEventListener("click", function () {
+        Array.prototype.forEach.call(row.children, function (c) { c.setAttribute("aria-pressed", "false"); });
+        b.setAttribute("aria-pressed", "true");
+        w.dataset.value = g;
+      });
+      row.appendChild(b);
+    });
+    w.appendChild(lab); w.appendChild(row); w.appendChild(errSlot("gender"));
+    return w;
+  }
+
+  function closeModal() {
+    overlay.classList.remove("is-open");
+    overlay.hidden = true;
+    document.body.classList.remove("is-locked");
+    document.removeEventListener("keydown", onKeydown);
+    currentJob = null;
+    if (lastTrigger && typeof lastTrigger.focus === "function") {
+      lastTrigger.focus();
+    }
+  }
+
+  function onKeydown(e) {
+    if (e.key === "Escape") { e.preventDefault(); closeModal(); return; }
+    if (e.key === "Tab") trapFocus(e);
+  }
+
+  function trapFocus(e) {
+    var focusables = overlay.querySelectorAll(
+      'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    );
+    var visible = Array.prototype.filter.call(focusables, function (n) {
+      return n.offsetParent !== null || n === document.activeElement;
+    });
+    if (!visible.length) return;
+    var first = visible[0];
+    var last = visible[visible.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault(); last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault(); first.focus();
+    }
+  }
+
+  // ---- Validation -----------------------------------------------------
+  function clearFieldErrors() {
+    var fields = applyForm.querySelectorAll(".field");
+    Array.prototype.forEach.call(fields, function (f) { f.classList.remove("has-error"); });
+    var errs = applyForm.querySelectorAll(".field-error");
+    Array.prototype.forEach.call(errs, function (e) { e.textContent = ""; });
+  }
+  function setFieldError(name, msg) {
+    var wrap = applyForm.querySelector('.field[data-field="' + name + '"]');
+    var slot = applyForm.querySelector('.field-error[data-error-for="' + name + '"]');
+    if (wrap) wrap.classList.add("has-error");
+    if (slot) slot.textContent = msg;
+  }
+
+  function validate(values) {
+    clearFieldErrors();
+    var ok = true;
+    if (!values.full_name) { setFieldError("full_name", "Please enter your name."); ok = false; }
+    if (!values.email) { setFieldError("email", "Please enter your email."); ok = false; }
+    else if (!EMAIL_RE.test(values.email)) { setFieldError("email", "That email doesn't look right."); ok = false; }
+    var digits = (values.phone || "").replace(/\D/g, "");
+    if (!values.phone) { setFieldError("phone", "Please enter your phone number."); ok = false; }
+    else if (digits.length < 10) { setFieldError("phone", "Enter a valid phone number (at least 10 digits)."); ok = false; }
+    return ok;
+  }
+
+  // ---- Submit ---------------------------------------------------------
+  function gatherValues() {
+    var v = {};
+    v.full_name = (document.getElementById("f-name").value || "").trim();
+    v.email = (document.getElementById("f-email").value || "").trim();
+    v.phone = (document.getElementById("f-phone").value || "").trim();
+    var note = document.getElementById("f-note");
+    v.note = note ? (note.value || "").trim() : "";
+    v.website = (document.getElementById("f-website").value || "").trim(); // honeypot
+
+    var exp = document.getElementById("f-experience_years");
+    if (exp && exp.value !== "") v.experience_years = parseInt(exp.value, 10);
+
+    var langs = document.getElementById("f-languages");
+    if (langs && langs.value.trim() !== "") {
+      v.languages = langs.value.split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+    }
+
+    var genderWrap = applyForm.querySelector('.field[data-field="gender"]');
+    if (genderWrap && genderWrap.dataset.value) v.gender = genderWrap.dataset.value;
+
+    var age = document.getElementById("f-age");
+    if (age && age.value !== "") v.age = parseInt(age.value, 10);
+
+    var cuis = document.getElementById("f-cuisines");
+    if (cuis && cuis.value.trim() !== "") {
+      v.cuisines = cuis.value.split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+    }
+    return v;
+  }
+
+  function buildPayload(values) {
+    var p = { job_id: currentJob.id, full_name: values.full_name, email: values.email, phone: values.phone };
+    if (typeof values.experience_years === "number" && !isNaN(values.experience_years)) p.experience_years = values.experience_years;
+    if (values.languages && values.languages.length) p.languages = values.languages;
+    if (values.gender) p.gender = values.gender;
+    if (typeof values.age === "number" && !isNaN(values.age)) p.age = values.age;
+    if (values.cuisines && values.cuisines.length) p.cuisines = values.cuisines;
+    if (values.note) p.note = values.note;
+    return p;
+  }
+
+  function readError(json) {
+    if (!json) return "Something went wrong";
+    if (json.error && json.error.message) return json.error.message;
+    if (typeof json.error === "string") return json.error;
+    return "Something went wrong";
+  }
+
+  applyForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    formStatus.textContent = "";
+
+    var values = gatherValues();
+
+    // Honeypot: silently accept, do not submit.
+    if (values.website) {
+      showSuccess();
+      return;
+    }
+
+    if (!validate(values)) {
+      formStatus.textContent = "Please fix the highlighted fields.";
+      return;
+    }
+
+    var payload = buildPayload(values);
+    submitBtn.disabled = true;
+    var originalLabel = submitBtn.textContent;
+    submitBtn.textContent = "Sending...";
+
+    fetch("/api/apply", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify(payload)
+    })
+      .then(function (res) {
+        return res.json().catch(function () { return null; }).then(function (json) {
+          return { ok: res.ok, json: json };
+        });
+      })
+      .then(function (result) {
+        if (result.ok) {
+          showSuccess();
+        } else {
+          formStatus.textContent = readError(result.json);
+        }
+      })
+      .catch(function () {
+        formStatus.textContent = "Couldn't reach the server. Check your connection and try again.";
+      })
+      .then(function () {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
+      });
+  });
+
+  function showSuccess() {
+    modalDetail.hidden = true;
+    modalSuccess.hidden = false;
+    var btn = document.getElementById("successClose");
+    if (btn) setTimeout(function () { btn.focus(); }, 30);
+  }
+
+  // ---- Wiring ---------------------------------------------------------
+  $("modalClose").addEventListener("click", closeModal);
+  $("successClose").addEventListener("click", closeModal);
+  overlay.addEventListener("mousedown", function (e) {
+    // backdrop click (only when the press starts on the overlay itself)
+    if (e.target === overlay) closeModal();
+  });
+  $("retryBtn").addEventListener("click", loadJobs);
+
+  // Filter toggles
+  var toggles = document.querySelectorAll(".chip-toggle");
+  Array.prototype.forEach.call(toggles, function (t) {
+    t.addEventListener("click", function () {
+      activeRole = t.dataset.role;
+      Array.prototype.forEach.call(toggles, function (x) {
+        x.setAttribute("aria-pressed", x === t ? "true" : "false");
+      });
+      render();
+    });
+  });
+
+  // ---- Reveal on scroll ----------------------------------------------
+  var revealObserver = null;
+  function observeReveals() {
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var items = document.querySelectorAll(".reveal:not(.in-view)");
+    if (reduce || !("IntersectionObserver" in window)) {
+      Array.prototype.forEach.call(items, function (i) { i.classList.add("in-view"); });
+      return;
+    }
+    if (!revealObserver) {
+      revealObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { en.target.classList.add("in-view"); revealObserver.unobserve(en.target); }
+        });
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+    }
+    Array.prototype.forEach.call(items, function (i) { revealObserver.observe(i); });
+  }
+
+  // ---- Boot -----------------------------------------------------------
+  observeReveals();
+  loadJobs();
+})();
+</script>
+
+</body>
+</html>

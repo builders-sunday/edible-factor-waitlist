@@ -16,6 +16,12 @@
 /index.html
   Cache-Control: public, max-age=300, must-revalidate
 
+/careers
+  Cache-Control: public, max-age=300, must-revalidate
+
+/careers.html
+  Cache-Control: public, max-age=300, must-revalidate
+
 # Private sales document. Belt + braces: HTML <meta robots> on the page
 # itself, this server-side header, and a robots.txt Disallow rule.
 /why-not-petpooja
