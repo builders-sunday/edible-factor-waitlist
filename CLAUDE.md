@@ -87,3 +87,7 @@ To add or change a mockup, edit the `TARGETS` array in `capture.mjs`, run `npm r
 - **The deck choreography** (`data-pos`, `flipAway` / `rise` keyframes, drag thresholds) is tightly coupled — modifying the JS without matching CSS, or vice versa, will desync the animation.
 - **Form endpoint stays relative** (`/api/waitlist`). The CF Function lives at the same origin; do not reintroduce absolute URLs.
 - **Mockups are immutable per filename.** `_headers` sets `Cache-Control: immutable` on them. To replace a screenshot, use a new filename and update the `<img src>` reference, or the old one will stay cached on visitors' browsers for a year.
+
+## Clarifying questions
+
+When a request is ambiguous or underspecified, don't guess — ask a clarifying question, and with it propose 2–4 concrete candidate answers you generate yourself (distinct options covering the likely intent) so I can pick or redirect. Before asking, double-check the question and its options **twice**: confirm the question is the real blocker and that each option is accurate, distinct, and plausible. If a sensible default clearly exists, state your assumption and proceed instead of asking.
