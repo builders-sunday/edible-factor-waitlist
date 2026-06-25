@@ -223,6 +223,82 @@
   }
 
   /* ============================================================
+     NOTIFY ("Get notified when new roles are posted")
+     ============================================================ */
+  .notify {
+    max-width: 1280px; margin: 22px auto 0;
+    padding: 0 24px;
+  }
+  .notify-card {
+    border: 1px solid var(--border-mid);
+    border-radius: var(--radius-card);
+    background: linear-gradient(180deg, rgba(168,170,255,0.06), rgba(168,170,255,0.02));
+    padding: 22px 22px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .notify-head { display: flex; flex-direction: column; gap: 6px; }
+  .notify-title {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-weight: 500; letter-spacing: -0.02em;
+    font-size: clamp(20px, 3.2vw, 26px);
+    color: var(--ink); margin: 0; line-height: 1.1;
+  }
+  .notify-sub { color: var(--ink-dim); font-size: 14.5px; line-height: 1.5; margin: 0; }
+  .notify-form {
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-start;
+  }
+  .notify-form .notify-input {
+    flex: 1 1 220px;
+    min-width: 0;
+    background: var(--bg-3);
+    border: 1px solid var(--border-soft);
+    border-radius: 11px;
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 15px;
+    padding: 12px 14px;
+    transition: border-color var(--t-fast), box-shadow var(--t-fast);
+  }
+  .notify-form .notify-phone { flex: 1 1 160px; }
+  .notify-form .notify-input::placeholder { color: var(--ink-low); }
+  .notify-form .notify-input:focus {
+    outline: none;
+    border-color: rgba(168,170,255,0.55);
+    box-shadow: 0 0 0 3px rgba(168,170,255,0.18);
+  }
+  .notify-form.has-error .notify-input[aria-invalid="true"] { border-color: rgba(255,138,74,0.6); }
+  .notify-btn { flex: 0 0 auto; padding: 13px 22px; font-size: 12px; }
+  .notify-btn[disabled] { opacity: 0.55; cursor: not-allowed; }
+  .notify-error {
+    color: var(--budget);
+    font-size: 13px; line-height: 1.5;
+    min-height: 0;
+  }
+  /* Success state swapped in after a signup (this page load only). */
+  .notify-done {
+    display: flex; align-items: center; gap: 12px;
+    color: var(--ink);
+  }
+  .notify-done .notify-tick {
+    width: 34px; height: 34px; flex-shrink: 0;
+    border-radius: 50%;
+    background: rgba(168,170,255,0.12);
+    border: 1px solid rgba(168,170,255,0.4);
+    color: var(--periwinkle);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 17px;
+  }
+  .notify-done .notify-done-text strong {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-weight: 500; color: var(--ink);
+    display: block; font-size: 16px; line-height: 1.2;
+  }
+  .notify-done .notify-done-text span { color: var(--ink-dim); font-size: 13.5px; line-height: 1.5; }
+  @media (max-width: 540px) {
+    .notify-btn { flex: 1 1 100%; justify-content: center; }
+  }
+
+  /* ============================================================
      CONTEXT BANNER + OUTLET SWITCHER (share-code scoped view)
      ============================================================ */
   .context-banner {
@@ -744,6 +820,36 @@
     </div>
   </div>
 </header>
+
+<!-- ============================================================
+     NOTIFY ("Get notified when new roles are posted")
+     ============================================================ -->
+<section class="notify reveal" aria-labelledby="notifyTitle">
+  <div class="notify-card">
+    <div class="notify-head">
+      <h2 class="notify-title" id="notifyTitle">Get notified when new roles are posted</h2>
+      <p class="notify-sub">Drop your email and we will ping you when partner restaurants post fresh openings. Phone is optional.</p>
+    </div>
+
+    <form class="notify-form" id="notifyForm" novalidate>
+      <input type="email" id="notifyEmail" name="email" class="notify-input"
+             placeholder="you@email.com" autocomplete="email" inputmode="email"
+             aria-label="Email" required>
+      <input type="tel" id="notifyPhone" name="phone" class="notify-input notify-phone"
+             placeholder="Phone (optional)" autocomplete="tel" inputmode="tel"
+             aria-label="Phone (optional)">
+      <button type="submit" class="pill-cta notify-btn" id="notifyBtn">Get notified</button>
+
+      <!-- Honeypot -->
+      <div class="hp" aria-hidden="true">
+        <label for="notifyWebsite">Leave this empty</label>
+        <input type="text" id="notifyWebsite" name="website" tabindex="-1" autocomplete="off">
+      </div>
+
+      <div class="notify-error" id="notifyError" role="alert" aria-live="polite" style="flex:1 1 100%;"></div>
+    </form>
+  </div>
+</section>
 
 <!-- ============================================================
      FILTER ROW
@@ -1779,6 +1885,103 @@
       ctxRestaurant = ctx.r;
       ctxOutlet = ctx.o || "";
     }
+  })();
+
+  // ---- Notify ("Get notified when new roles are posted") --------------
+  // Captures an email (phone optional) and POSTs same-origin to /api/notify.
+  // On success the form is swapped for a small "You're on the list" state for
+  // THIS page load only - we deliberately do not persist a hide, so a reload
+  // re-shows the form (a friend can add theirs).
+  (function initNotify() {
+    var form = $("notifyForm");
+    if (!form) return;
+    var emailInput = $("notifyEmail");
+    var phoneInput = $("notifyPhone");
+    var honeypot = $("notifyWebsite");
+    var btn = $("notifyBtn");
+    var errSlot = $("notifyError");
+
+    function showError(msg) {
+      errSlot.textContent = msg || "";
+      form.classList.add("has-error");
+      emailInput.setAttribute("aria-invalid", "true");
+    }
+    function clearError() {
+      errSlot.textContent = "";
+      form.classList.remove("has-error");
+      emailInput.removeAttribute("aria-invalid");
+    }
+
+    function showDone() {
+      // Swap the form for a success state (this page load only; not persisted).
+      var done = el("div", "notify-done");
+      done.setAttribute("role", "status");
+      var tick = el("div", "notify-tick");
+      tick.innerHTML = "&#10003;";
+      tick.setAttribute("aria-hidden", "true");
+      var textWrap = el("div", "notify-done-text");
+      textWrap.appendChild(el("strong", null, "You're on the list"));
+      textWrap.appendChild(el("span", null, "We will email you when new roles go up. Reload to add another address."));
+      done.appendChild(tick);
+      done.appendChild(textWrap);
+      form.replaceWith(done);
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      clearError();
+
+      var email = (emailInput.value || "").trim().toLowerCase();
+      var phone = (phoneInput.value || "").trim();
+      var website = (honeypot.value || "").trim(); // honeypot
+
+      // Honeypot: silently "succeed" without sending.
+      if (website) { showDone(); return; }
+
+      if (!email) { showError("Please enter your email."); emailInput.focus(); return; }
+      if (!EMAIL_RE.test(email)) { showError("That email doesn't look right."); emailInput.focus(); return; }
+      // Phone is optional and lightly checked: if given, expect at least a few digits.
+      if (phone && phone.replace(/\D/g, "").length < 6) {
+        showError("That phone number doesn't look right. Leave it blank if unsure.");
+        phoneInput.focus();
+        return;
+      }
+
+      btn.disabled = true;
+      var originalLabel = btn.textContent;
+      btn.textContent = "Sending...";
+
+      fetch("/api/notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          email: email,
+          phone: phone,
+          source: "careers",
+          url: location.href,
+          website: website
+        })
+      })
+        .then(function (res) {
+          return res.json().catch(function () { return null; }).then(function (json) {
+            return { ok: res.ok, json: json };
+          });
+        })
+        .then(function (result) {
+          if (result.ok) {
+            showDone();
+          } else {
+            showError(readError(result.json));
+            btn.disabled = false;
+            btn.textContent = originalLabel;
+          }
+        })
+        .catch(function () {
+          showError("Couldn't reach the server. Check your connection and try again.");
+          btn.disabled = false;
+          btn.textContent = originalLabel;
+        });
+    });
   })();
 
   observeReveals();
