@@ -954,41 +954,6 @@
     right: max(24px, env(safe-area-inset-right, 24px));
   }
 </style>
-<style>
-  .cookie-banner {
-    position: fixed; left: 16px; right: 16px; bottom: 16px;
-    z-index: 70;
-    background: var(--bg-2);
-    border: 1px solid rgba(168,170,255,0.20);
-    border-radius: 14px;
-    padding: 16px 18px;
-    box-shadow: 0 16px 40px rgba(0,0,0,0.55);
-    display: none;
-    max-width: 420px;
-  }
-  @media (min-width: 700px) { .cookie-banner { left: auto; right: 24px; bottom: 80px; } }
-  .cookie-banner.show { display: block; animation: cookieIn .3s ease; }
-  @keyframes cookieIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-  .cookie-banner__title {
-    font-family:'JetBrains Mono', monospace;
-    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--periwinkle); margin-bottom: 8px;
-  }
-  .cookie-banner__body {
-    font-family: 'Inter', sans-serif; font-size: 12.5px; line-height: 1.55;
-    color: var(--ink-dim); margin-bottom: 12px;
-  }
-  .cookie-banner__body a { color: var(--periwinkle); }
-  .cookie-banner__actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .cookie-banner__btn {
-    padding: 10px; border-radius: 10px;
-    font-family:'JetBrains Mono',monospace; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
-    cursor: pointer; border: 1px solid;
-  }
-  .cookie-banner__btn--accept { background: var(--periwinkle); color: var(--bg); border-color: var(--periwinkle); }
-  .cookie-banner__btn--decline { background: rgba(255,255,255,0.04); color: var(--ink); border-color: rgba(255,255,255,0.10); }
-</style>
-
 <!-- FE-launch · favicon + PWA basics -->
 <link rel="icon" type="image/svg+xml" href="/ef-mark.svg">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -1334,7 +1299,7 @@
                 width="392" height="852"
                 src="/mockups/home-dashboard.webm"
                 poster="/mockups/home-dashboard.webp"
-                autoplay loop muted playsinline preload="metadata"
+                loop muted playsinline preload="none" data-lazyvideo
                 role="img"
                 aria-label="EdibleFactor Dine-in Mode home: calorie target, customize meal, and Try Pro card"></video>
             </div>
@@ -1360,7 +1325,7 @@
                 width="392" height="852"
                 src="/mockups/calorie-trend.webm"
                 poster="/mockups/calorie-trend.webp"
-                autoplay loop muted playsinline preload="metadata"
+                loop muted playsinline preload="none" data-lazyvideo
                 role="img"
                 aria-label="EdibleFactor weekly insights: 9,273 kcal across the week, INR 2,800 of intention, energy in motion"></video>
             </div>
@@ -1550,31 +1515,27 @@
   Reserve My Seat →
 </a>
 
-<!-- FE-09 · Cookie consent banner -->
-<!-- moved to head -->
-<aside class="cookie-banner" id="cookieBanner" role="dialog" aria-label="Cookie preferences">
-  <div class="cookie-banner__title">Cookies</div>
-  <p class="cookie-banner__body">
-    We use only strictly-necessary cookies: we remember if you've already
-    joined the waitlist. No analytics, no cross-site tracking. <a href="legal.html#cookies">Learn more</a>.
-  </p>
-  <div class="cookie-banner__actions">
-    <button type="button" class="cookie-banner__btn cookie-banner__btn--accept" id="cookieAccept" style="grid-column: 1 / -1;">Got it</button>
-  </div>
-</aside>
+<!-- Cookie consent banner removed: the site sets no tracking cookies (only a
+     functional localStorage record of the consent choice itself), so a consent
+     banner was both unnecessary and covering the CTA on mobile. The cookie
+     detail stays on legal.html#cookies, linked from the footer. -->
+
+<!-- Lazy-load the walkthrough deck videos: preload="none" + play only when the
+     deck scrolls into view, which defers ~360KB off first paint. Under
+     prefers-reduced-motion the poster still stays and the webm is never fetched. -->
 <script>
-  // FE-09 · Cookie consent: first-visit banner with persistent choice
-  (function() {
-    const KEY = 'ef_cookie_consent_v1';
-    const banner = document.getElementById('cookieBanner');
-    let consent = null;
-    try { consent = localStorage.getItem(KEY); } catch (e) {}
-    if (!consent) setTimeout(() => banner?.classList.add('show'), 800);
-    function set(value) {
-      try { localStorage.setItem(KEY, JSON.stringify({ value, at: new Date().toISOString() })); } catch (e) {}
-      banner?.classList.remove('show');
-    }
-    document.getElementById('cookieAccept')?.addEventListener('click', () => set('essential-only'));
+  (function () {
+    var vids = document.querySelectorAll('video[data-lazyvideo]');
+    if (!vids.length) return;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) e.target.play().catch(function () {});
+        else e.target.pause();
+      });
+    }, { threshold: 0.25 });
+    vids.forEach(function (v) { io.observe(v); });
   })();
 </script>
 
