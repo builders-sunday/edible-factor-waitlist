@@ -155,7 +155,7 @@
     function makeGaugeDial(el, opts) {
       var knob = el.querySelector(".gknob"), ptr = el.querySelector(".gp");
       var cv = el.querySelector("canvas"), ctx = cv && cv.getContext("2d"), box = cv && fitCanvas(cv);
-      var min = -135, max = 135, angle = lerp(min, max, opts.init), dragging = false, startA = 0, startAng = 0;
+      var min = -135, max = 135, targetAngle = lerp(min, max, opts.init), angle = min, dragging = false, startA = 0, startAng = 0, introDone = false;
       function center() { var r = knob.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }
       function pAng(e, c) { return Math.atan2(e.clientY - c.y, e.clientX - c.x) * 180 / Math.PI; }
       function draw(v) {
@@ -173,23 +173,32 @@
       // keyboard a11y (no wheel-trap: arrows only, and only when focused)
       el.setAttribute("tabindex", "0"); el.setAttribute("role", "slider");
       el.addEventListener("keydown", function (e) { if (e.key === "ArrowRight" || e.key === "ArrowUp") { angle += 8; apply(); e.preventDefault(); } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") { angle -= 8; apply(); e.preventDefault(); } });
-      apply();
+      apply(); // rest at 0% until the panel scrolls into view, then calibrate up
+      function runIntro() {
+        if (introDone) return; introDone = true;
+        if (reduce) { angle = targetAngle; apply(); return; }
+        var t0 = null, from = min, dur = opts.dur || 1500;
+        function step(ts) { if (t0 === null) t0 = ts; var k = Math.min(1, (ts - t0) / dur); var e = 1 - Math.pow(1 - k, 3); angle = from + (targetAngle - from) * e; apply(); if (k < 1 && !dragging) requestAnimationFrame(step); }
+        requestAnimationFrame(step);
+      }
+      if (!("IntersectionObserver" in window)) { runIntro(); }
+      else { var gio = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { runIntro(); gio.disconnect(); } }); }, { threshold: 0.45 }); gio.observe(el); }
     }
 
     var GD = document.querySelector('[data-gauge="metabolic"]');
-    if (GD) makeGaugeDial(GD, { init: 0.72, color: CAL, onChange: function (v) {
+    if (GD) makeGaugeDial(GD, { init: 0.72, dur: 1500, color: CAL, onChange: function (v) {
       var rd = GD.querySelector(".rd"); rd.childNodes[0].nodeValue = Math.round(v * 100) + "%";
       rd.querySelector("small").textContent = "METABOLIC EFFICIENCY";
       var _pm = Math.round(v * 100); GD.querySelector(".rn").textContent = _pm === 100 ? "Perfection. Unison. Brilliance." : _pm >= 90 ? "Top 1%. Metabolically Efficient" : _pm >= 70 ? "Great progress. Nearly there!" : _pm >= 40 ? "Healthier. On track." : "LOW. WE CAN DO BETTER!";
     }});
     var GG = document.querySelector('[data-gauge="goal"]');
-    if (GG) makeGaugeDial(GG, { init: 0.6, color: PERI, onChange: function (v) {
+    if (GG) makeGaugeDial(GG, { init: 0.91, dur: 1850, color: PERI, onChange: function (v) {
       var rd = GG.querySelector(".rd"); rd.childNodes[0].nodeValue = Math.round(v * 100) + "%";
       rd.querySelector("small").textContent = "GOAL ALIGNMENT";
       var _pg = Math.round(v * 100); GG.querySelector(".rn").textContent = _pg === 100 ? "Precision. Perfection." : _pg >= 90 ? "Top 1%. Goals Achieved." : _pg >= 45 ? "A little off plan. Good pace." : "Off plan. We can improve!";
     }});
     var GB = document.querySelector('[data-gauge="precision"]');
-    if (GB) makeGaugeDial(GB, { init: 0.82, color: BUD, onChange: function (v) {
+    if (GB) makeGaugeDial(GB, { init: 1.0, dur: 1250, color: BUD, onChange: function (v) {
       var rd = GB.querySelector(".rd"); rd.childNodes[0].nodeValue = Math.round(v * 100) + "%";
       rd.querySelector("small").textContent = "BUDGET PRECISION";
       var _pb = Math.round(v * 100); GB.querySelector(".rn").textContent = _pb === 100 ? "Perfect. To the paisa." : _pb >= 90 ? "Top 1%. On the money." : _pb >= 45 ? "Close. Keep going!" : "Over budget. Recalibrate a smidge.";
