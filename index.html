@@ -91,8 +91,10 @@
     color: var(--ink);
     font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
   }
+  /* Clip horizontal overflow WITHOUT making body a scroll container
+     (overflow-x:hidden would; clip does not) so position:sticky keeps working. */
+  body { overflow-x: clip; }
 
   ::selection { background: var(--periwinkle); color: var(--bg); }
 
@@ -316,9 +318,6 @@
     font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
     color: var(--periwinkle);
     display: inline-flex; align-items: center; gap: 14px;
-  }
-  .section-label::before {
-    content: ""; width: 40px; height: 1px; background: var(--periwinkle);
   }
 
   /* Pill button (CTA) */
@@ -996,6 +995,97 @@
 <link rel="manifest" href="manifest.webmanifest">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self';">
 <meta name="referrer" content="strict-origin-when-cross-origin">
+<style id="efmod-styles">
+/* ============================================================================
+   Interactive modules ported from the v2 redesign:
+   (a) the dual-budget "two budgets, one plate" scroll-scrub, and
+   (b) the instrument dials ("Numbers that mean something").
+   Everything is scoped under .efmod (own CSS vars, no external deps, native
+   scroll) so it cannot leak into or inherit from the rest of the page.
+   ========================================================================== */
+.efmod{
+  --void:#07070b;--coal:#0c0c12;--panel:#101018;--panel2:#15151f;--ash:#232333;
+  --ink:#eceaf3;--ink-72:rgba(236,234,243,.72);--ink-dim:#9693ac;--ink-low:#6b6885;--ink-28:rgba(236,234,243,.28);
+  --line:rgba(236,234,243,.09);--line-2:rgba(236,234,243,.16);
+  --peri:#a8aaff;--peri-bright:#c0c2ff;--calorie:#6eddf0;--budget:#ff8a4a;
+  --ease:cubic-bezier(.19,1,.22,1);
+}
+.efmod canvas{display:block;}
+.efmod .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-low);}
+.efmod .cal{color:var(--calorie);}.efmod .bud{color:var(--budget);}.efmod .peri{color:var(--peri-bright);}
+/* ---- the signature: two budgets, one plate ---- */
+.efmod .plate{position:relative;height:520vh;background:var(--void);}
+.efmod .plate .pin{position:sticky;top:0;height:100svh;overflow:hidden;display:flex;align-items:center;}
+.efmod .plate-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;}
+.efmod .plate .frame{position:relative;z-index:2;width:100%;pointer-events:none;}
+.efmod .plate .frame .wrap{position:relative;width:min(100% - 44px,1200px);margin-inline:auto;height:100svh;}
+.efmod .plate .heading{position:absolute;top:9vh;left:0;max-width:min(560px,58%);}
+.efmod .plate .heading .eyebrow{margin-bottom:12px;}
+.efmod .plate .heading h2{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;letter-spacing:-.03em;line-height:.98;font-size:clamp(32px,5.2vw,66px);color:var(--ink);}
+.efmod .plate .heading h2 .cal{color:var(--calorie);}.efmod .plate .heading h2 .bud{color:var(--budget);}
+.efmod .courses{position:absolute;left:0;bottom:13vh;display:flex;flex-direction:column;gap:2px;}
+.efmod .courses .c{display:grid;grid-template-columns:20px 1fr;gap:13px;align-items:center;width:210px;padding:12px 0;opacity:.3;transition:opacity .5s var(--ease);}
+.efmod .courses .c.on{opacity:1;}
+.efmod .courses .c .n{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--peri);}
+.efmod .courses .c .t{font-family:'Space Grotesk';font-weight:600;font-size:15px;letter-spacing:-.01em;color:var(--ink);}
+.efmod .courses .c .t b{display:block;font-family:'JetBrains Mono';font-weight:400;font-size:9.5px;letter-spacing:.1em;color:var(--ink-low);text-transform:uppercase;margin-top:4px;}
+.efmod .budgets{position:absolute;right:0;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:26px;text-align:right;}
+.efmod .budgets .b .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-low);margin-bottom:8px;}
+.efmod .budgets .b .v{font-family:'Space Grotesk';font-weight:700;font-size:clamp(26px,3.6vw,44px);letter-spacing:-.02em;line-height:1;color:var(--ink);}
+.efmod .budgets .b.calv .v{color:var(--calorie);}.efmod .budgets .b.budv .v{color:var(--budget);}
+.efmod .budgets .b .of{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-dim);margin-top:6px;}
+.efmod .scrub{position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--line);z-index:3;}
+.efmod .scrub i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--calorie),var(--budget));}
+/* ---- instrument dials ---- */
+.efmod .gauges{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;border:1px solid var(--line);background:var(--line);}
+.efmod .gauge{background:var(--panel);padding:40px 32px;text-align:center;position:relative;}
+.efmod .gauge .cap{position:absolute;top:20px;left:22px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-low);}
+.efmod .gauge .idx{position:absolute;top:20px;right:22px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-28);}
+.efmod .gwrap{position:relative;width:180px;height:180px;margin:24px auto 26px;touch-action:none;}
+.efmod .gwrap canvas{position:absolute;inset:0;width:100%;height:100%;}
+.efmod .gknob{position:absolute;inset:52px;border-radius:50%;cursor:grab;background:radial-gradient(60% 60% at 38% 32%,#2a2a3a,#14141d 60%,#0c0c12);box-shadow:inset 0 2px 3px rgba(192,194,255,.16),inset 0 -12px 22px rgba(0,0,0,.7),0 16px 34px -16px #000;border:1px solid #050508;}
+.efmod .gknob:active{cursor:grabbing;}
+.efmod .gknob .gp{position:absolute;left:50%;top:8px;width:3px;height:26%;border-radius:2px;background:var(--peri);transform:translateX(-50%);box-shadow:0 0 8px var(--peri);transform-origin:50% calc(100% + 18px);}
+.efmod .gauge .rd{font-family:'Space Grotesk';font-weight:700;font-size:38px;letter-spacing:-.02em;line-height:1;min-height:1em;color:var(--ink);}
+.efmod .gauge .rd small{display:block;font-family:'JetBrains Mono';font-weight:400;font-size:11px;color:var(--peri-bright);letter-spacing:.06em;margin-top:9px;text-transform:uppercase;}
+.efmod .gauge .rn{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.05em;color:var(--ink-dim);margin-top:15px;min-height:2.2em;line-height:1.6;text-transform:uppercase;}
+/* ---- responsive ---- */
+@media (min-width:681px) and (max-height:720px){ .efmod .plate .courses{display:none;} .efmod .plate .heading{top:6vh;} }
+@media (max-width:960px){ .efmod .gauges{grid-template-columns:1fr;} .efmod .plate{height:440vh;} }
+@media (max-width:680px){
+  /* PLATE: full desktop-level detail on one dense screen (heading -> rings -> both meters -> full rail) */
+  .efmod .plate .pin{flex-direction:column;justify-content:center;align-items:stretch;gap:12px;padding:92px 20px 26px;height:100svh;overflow:hidden;}
+  .efmod .plate .frame{position:static;display:contents;}
+  .efmod .plate .frame .wrap{position:static;height:auto;display:contents;}
+  .efmod .plate-canvas{position:relative;order:2;width:100%;height:min(50vw,196px);flex:0 0 auto;margin:2px 0;}
+  .efmod .plate .heading{position:static;order:1;max-width:none;text-align:left;padding:0;}
+  .efmod .plate .heading .eyebrow{font-size:9px;letter-spacing:.16em;}
+  .efmod .plate .heading h2{font-size:clamp(24px,7.2vw,31px);margin-top:5px;}
+  .efmod .budgets{position:static;order:3;transform:none;flex-direction:row;justify-content:space-between;gap:16px;text-align:left;}
+  .efmod .budgets .b{flex:1;}
+  .efmod .budgets .b .lbl{font-size:8.5px;letter-spacing:.11em;margin-bottom:3px;}
+  .efmod .budgets .b .v{font-size:clamp(25px,8vw,32px);}
+  .efmod .budgets .b .of{font-size:9px;margin-top:3px;}
+  .efmod .budgets .b:nth-child(3){display:none;}
+  .efmod .courses{position:static;order:4;transform:none;flex-direction:column;gap:0;}
+  .efmod .courses .c{width:100%;grid-template-columns:20px 1fr;gap:12px;padding:6px 0;border-top:1px solid var(--line);opacity:.4;}
+  .efmod .courses .c.on{opacity:1;}
+  .efmod .courses .c .n{font-size:10px;}
+  .efmod .courses .c .t{font-size:13px;}
+  .efmod .courses .c .t b{display:block;font-size:8.5px;margin-top:1px;}
+  .efmod .courses .c.on .t b{color:var(--ink-dim);}
+  .efmod .scrub{z-index:5;}
+  /* DIALS: all three together, compact rows, each still draggable */
+  .efmod .gauges{grid-template-columns:1fr;gap:1px;}
+  .efmod .gauge{display:grid;grid-template-columns:112px 1fr;align-items:center;gap:16px;text-align:left;padding:16px 18px;}
+  .efmod .gauge .cap,.efmod .gauge .idx{display:none;}
+  .efmod .gwrap{width:112px;height:112px;margin:0;}
+  .efmod .gknob{inset:33px;}
+  .efmod .gauge .rd{font-size:30px;min-height:0;}
+  .efmod .gauge .rd small{margin-top:5px;font-size:10px;}
+  .efmod .gauge .rn{margin-top:7px;min-height:0;font-size:10px;line-height:1.5;}
+}
+</style>
 </head>
 
 <body class="bg-bg text-ink font-body">
@@ -1214,7 +1304,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-8 lg:gap-14 items-start">
       <!-- Left: section header -->
       <div class="reveal lg:sticky lg:top-28">
-        <div class="section-label mb-6"><span class="ml-3">01 · The real problem</span></div>
+        <div class="section-label mb-6"><span class="ml-3">The real problem</span></div>
         <h2 class="display text-5xl md:text-6xl leading-[0.98]">
           You've always<br>had to <span class="accent">choose.</span>
         </h2>
@@ -1260,6 +1350,38 @@
 </section>
 
 <!-- ============================================================
+     03  ·  TWO BUDGETS, ONE PLATE  (dual tracker)
+     ============================================================ -->
+<section class="efmod" aria-label="Two budgets, one plate">
+  <div class="plate">
+    <div class="pin">
+      <canvas class="plate-canvas" id="efmPlateGauge" aria-hidden="true"></canvas>
+      <div class="frame">
+        <div class="wrap">
+          <div class="heading">
+            <div class="eyebrow">One dinner, watched two ways</div>
+            <h2>Two budgets,<br>one <span class="cal">plate</span><span class="bud">.</span></h2>
+          </div>
+          <div class="courses" aria-hidden="true">
+            <div class="c on"><span class="n">01</span><span class="t">Amuse<b>Sparkling kombucha</b></span></div>
+            <div class="c"><span class="n">02</span><span class="t">Starter<b>Burrata, tomato</b></span></div>
+            <div class="c"><span class="n">03</span><span class="t">Main<b>Grilled seabass</b></span></div>
+            <div class="c"><span class="n">04</span><span class="t">Dessert<b>Chocolate tart</b></span></div>
+            <div class="c"><span class="n">05</span><span class="t">The bill<b>Both budgets</b></span></div>
+          </div>
+          <div class="budgets">
+            <div class="b calv"><div class="lbl">Calories left</div><div class="v" data-cal>2,000</div><div class="of">of 2,000 kcal today</div></div>
+            <div class="b budv"><div class="lbl">Budget left</div><div class="v" data-bud>₹1,800</div><div class="of">of ₹1,800 tonight</div></div>
+            <div class="b"><div class="lbl">Now serving</div><div class="of" data-dish style="font-size:13px;color:var(--ink);">Sparkling kombucha</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="scrub" aria-hidden="true"><i></i></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
      02  ·  WALKTHROUGH  ·  CARD-DECK FLIP
      No pinned scroll. Tap, drag, ←→ keys, or click pips to advance.
      ============================================================ -->
@@ -1269,7 +1391,7 @@
 
       <!-- LEFT: section label + chapter text + controls + pips -->
       <div class="relative">
-        <div class="section-label mb-5"><span class="ml-3">02 · The walkthrough</span></div>
+        <div class="section-label mb-5"><span class="ml-3">The walkthrough</span></div>
 
         <div id="deckText" class="deck-text-stage">
           <div class="deck-chapter active" data-chapter="0">
@@ -1390,68 +1512,7 @@
   </div>
 </section>
 
-<!-- ============================================================
-     03  ·  TWO BUDGETS, ONE PLATE  (dual tracker)
-     ============================================================ -->
-<section class="py-12 md:py-16">
-  <div class="max-w-[1400px] mx-auto px-6 md:px-10">
 
-    <div class="reveal max-w-[760px] mb-8 md:mb-10">
-      <div class="section-label mb-6"><span class="ml-3">03 · The core</span></div>
-      <h2 class="display text-5xl md:text-7xl leading-[0.98]">
-        Two budgets,<br><span class="accent">one plate.</span>
-      </h2>
-      <p class="mt-6 text-inkdim leading-relaxed max-w-[560px]">
-        We watch both in real time. Stay under your calorie cap, stay under your wallet cap, and let the app redistribute headroom across the week when life happens.
-      </p>
-    </div>
-
-    <div class="relative grid grid-cols-1 md:grid-cols-2 gap-5 reveal">
-      <!-- Calorie column -->
-      <div class="tracker__col" style="--pct: 0.83;">
-        <div class="mono text-[11px] tracking-[0.18em] uppercase text-calorie">Track · 01</div>
-        <h3 class="display text-4xl mt-2">The <span class="accent">calories</span></h3>
-        <div class="mt-6">
-          <div class="flex justify-between text-sm text-inkdim mb-2"><span>Today</span><span>1,702 kcal target</span></div>
-          <div class="display text-5xl mb-3"><span class="dual-count" data-target="1420" data-format="comma">0</span></div>
-          <div class="meter__bar"><div class="meter__fill meter__fill--cal"></div></div>
-        </div>
-        <div class="mt-6 space-y-2">
-          <div class="flex justify-between text-sm border-b border-white/5 py-2"><span>Poha · filter coffee</span><span class="text-inkdim">320 kcal</span></div>
-          <div class="flex justify-between text-sm border-b border-white/5 py-2"><span>Rajma chawal</span><span class="text-inkdim">640 kcal</span></div>
-          <div class="flex justify-between text-sm border-b border-white/5 py-2"><span>Masala chai · biscuits</span><span class="text-inkdim">200 kcal</span></div>
-          <div class="flex justify-between text-sm py-2"><span>Apple</span><span class="text-inkdim">90 kcal</span></div>
-        </div>
-      </div>
-
-      <!-- Budget column -->
-      <div class="tracker__col" style="--pct: 0.71;">
-        <div class="mono text-[11px] tracking-[0.18em] uppercase text-budget">Track · 02</div>
-        <h3 class="display text-4xl mt-2">The <span class="accent">budget</span></h3>
-        <div class="mt-6">
-          <div class="flex justify-between text-sm text-inkdim mb-2"><span>Today</span><span>₹900 daily</span></div>
-          <div class="display text-5xl mb-3"><span class="dual-count" data-target="640" data-prefix="₹">₹0</span></div>
-          <div class="meter__bar"><div class="meter__fill meter__fill--bud"></div></div>
-        </div>
-        <div class="mt-6 space-y-2">
-          <div class="flex justify-between text-sm border-b border-white/5 py-2"><span>Poha · filter coffee</span><span class="text-inkdim">₹45</span></div>
-          <div class="flex justify-between text-sm border-b border-white/5 py-2"><span>Rajma chawal</span><span class="text-inkdim">₹180</span></div>
-          <div class="flex justify-between text-sm border-b border-white/5 py-2"><span>Masala chai · biscuits</span><span class="text-inkdim">₹40</span></div>
-          <div class="flex justify-between text-sm py-2"><span>Apple</span><span class="text-inkdim">₹25</span></div>
-        </div>
-      </div>
-
-      <!-- Inter-card divider intentionally removed: the previous "&"
-           medallion (absolute-positioned at the grid mid-point) read as a
-           floating glyph artifact between the two tracker columns on
-           desktop side-by-side layout. The two cards now communicate their
-           relationship purely through the section heading ("Two budgets,
-           one plate."), the parallel TRACK · 01 / TRACK · 02 labels, and
-           the matching meter geometry. No layout shift; the grid was
-           already `relative` only to host the now-removed absolute child. -->
-    </div>
-  </div>
-</section>
 
 <!-- ============================================================
      04  ·  NUMBERS THAT MEAN SOMETHING  (3 metric cards)
@@ -1460,53 +1521,32 @@
   <div class="max-w-[1400px] mx-auto px-6 md:px-10">
 
     <div class="reveal max-w-[720px] mb-8 md:mb-10">
-      <div class="section-label mb-6"><span class="ml-3">04 · Instruments of a new discipline</span></div>
+      <div class="section-label mb-6"><span class="ml-3">Instruments of a new discipline</span></div>
       <h2 class="display text-5xl md:text-7xl leading-[0.98]">
         Numbers that<br><span class="accent">mean something.</span>
       </h2>
       <p class="mt-6 text-inkdim leading-relaxed max-w-[560px]">
-        We don't just show calories. We grade them against your body, your wallet, and your goals. Three signals, updated daily, that tell you if today's eating served tomorrow's you.
+        Not another calorie counter. Three readings that actually change how you order, graded against your body, your wallet, and your goals. Drag them.
       </p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-      <!-- Metric 1 -->
-      <div class="metric-card reveal" data-metric-value="94.2">
-        <div class="flex items-start justify-between">
-          <div class="w-10 h-10 rounded-xl bg-periwinkle/10 flex items-center justify-center text-periwinkle">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M13 3 4 14h7l-1 7 9-11h-7l1-7z" stroke="currentColor" stroke-linejoin="round" stroke-width="1.5"/></svg>
-          </div>
-          <span class="mono text-xs text-calorie">+2.4%</span>
+    <div class="efmod reveal">
+      <div class="gauges">
+        <div class="gauge" data-gauge="metabolic">
+          <div class="gwrap"><canvas></canvas><div class="gknob"><span class="gp"></span></div></div>
+          <div class="rd">72%<small>METABOLIC EFFICIENCY</small></div>
+          <div class="rn">Great progress. Nearly there!</div>
         </div>
-        <div class="mono text-[11px] tracking-[0.18em] uppercase text-inkdim mt-6">Metabolic Efficiency</div>
-        <div class="display text-6xl mt-2"><span class="count" data-target="94.2">0.0</span><span class="text-periwinkle">%</span></div>
-        <p class="text-sm text-inkdim mt-4 leading-relaxed">How well your body converts what you eat into what you need. Protein uptake, macro balance, hydration. Graded daily.</p>
-      </div>
-
-      <!-- Metric 2 -->
-      <div class="metric-card reveal" data-metric-value="88.0">
-        <div class="flex items-start justify-between">
-          <div class="w-10 h-10 rounded-xl bg-periwinkle/10 flex items-center justify-center text-periwinkle">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 17 9 11l4 4 8-8M15 7h6v6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/></svg>
-          </div>
-          <span class="mono text-xs text-calorie">+5.0%</span>
+        <div class="gauge" data-gauge="goal">
+          <div class="gwrap"><canvas></canvas><div class="gknob"><span class="gp"></span></div></div>
+          <div class="rd">91%<small>GOAL ALIGNMENT</small></div>
+          <div class="rn">Top 1%. Goals Achieved.</div>
         </div>
-        <div class="mono text-[11px] tracking-[0.18em] uppercase text-inkdim mt-6">Goal Alignment</div>
-        <div class="display text-6xl mt-2"><span class="count" data-target="88.0">0.0</span><span class="text-periwinkle">%</span></div>
-        <p class="text-sm text-inkdim mt-4 leading-relaxed">Did today's eating serve tomorrow's goal? Every meal scored against what you're actually trying to do.</p>
-      </div>
-
-      <!-- Metric 3 -->
-      <div class="metric-card reveal" data-metric-value="91.5">
-        <div class="flex items-start justify-between">
-          <div class="w-10 h-10 rounded-xl bg-periwinkle/10 flex items-center justify-center text-periwinkle">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 3h8c2 0 4 1.5 4 4s-2 4-4 4H6M6 11h10c2 0 4 1.5 4 4s-2 4-4 4H6M10 3v18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/></svg>
-          </div>
-          <span class="mono text-xs text-budget">−1.2%</span>
+        <div class="gauge" data-gauge="precision">
+          <div class="gwrap"><canvas></canvas><div class="gknob"><span class="gp"></span></div></div>
+          <div class="rd">100%<small>BUDGET PRECISION</small></div>
+          <div class="rn">Perfect. To the paisa.</div>
         </div>
-        <div class="mono text-[11px] tracking-[0.18em] uppercase text-inkdim mt-6">Budget Precision</div>
-        <div class="display text-6xl mt-2"><span class="count" data-target="91.5">0.0</span><span class="text-periwinkle">%</span></div>
-        <p class="text-sm text-inkdim mt-4 leading-relaxed">Scanned. Categorized. Rolled up. Know how much of your wallet each cuisine, each craving, is taking.</p>
       </div>
     </div>
   </div>
@@ -2145,6 +2185,131 @@
       }, 2800);
     });
   })();
+</script>
+
+<script id="efmod-js">
+/* Interactive homepage modules: the dual-budget "two budgets, one plate"
+   scroll-scrub + the instrument dials. Scoped to .efmod, native scroll,
+   reduced-motion aware (idle motion frozen; the scrub still tracks scroll),
+   no external dependencies. */
+(function () {
+  "use strict";
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var TAU = Math.PI * 2;
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  var CAL = "#6eddf0", BUD = "#ff8a4a", PERI = "#a8aaff";
+  function fitCanvas(cv) {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var r = cv.getBoundingClientRect();
+    cv.width = Math.max(1, Math.round(r.width * dpr));
+    cv.height = Math.max(1, Math.round(r.height * dpr));
+    cv.getContext("2d").setTransform(dpr, 0, 0, dpr, 0, 0);
+    return r;
+  }
+  function drawArc(ctx, cx, cy, r, frac, color, width, glow) {
+    var a0 = Math.PI * 0.75, a1 = a0 + Math.PI * 1.5;
+    ctx.beginPath(); ctx.arc(cx, cy, r, a0, a1); ctx.strokeStyle = "rgba(236,234,243,.08)"; ctx.lineWidth = width; ctx.lineCap = "round"; ctx.stroke();
+    for (var i = 0; i <= 30; i++) {
+      var a = a0 + (a1 - a0) * (i / 30), on = (i / 30) <= frac;
+      ctx.strokeStyle = on ? color : "rgba(236,234,243,.10)"; ctx.globalAlpha = on ? 0.9 : 1; ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(a) * (r - width * 0.5 - 3), cy + Math.sin(a) * (r - width * 0.5 - 3));
+      ctx.lineTo(cx + Math.cos(a) * (r + width * 0.5 + 3), cy + Math.sin(a) * (r + width * 0.5 + 3));
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    var ae = a0 + (a1 - a0) * clamp(frac, 0, 1);
+    ctx.save(); ctx.shadowColor = color; ctx.shadowBlur = glow ? 16 : 0;
+    ctx.beginPath(); ctx.arc(cx, cy, r, a0, ae); ctx.strokeStyle = color; ctx.lineWidth = width; ctx.lineCap = "round"; ctx.stroke(); ctx.restore();
+    ctx.beginPath(); ctx.arc(cx + Math.cos(ae) * r, cy + Math.sin(ae) * r, width * 0.55, 0, TAU); ctx.fillStyle = "#fff"; ctx.fill();
+  }
+  function drawDual(ctx, cx, cy, R, calFrac, budFrac, big) {
+    drawArc(ctx, cx, cy, R, calFrac, CAL, big ? 9 : 7, true);
+    drawArc(ctx, cx, cy, R * 0.66, budFrac, BUD, big ? 9 : 7, true);
+    var g = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.5);
+    g.addColorStop(0, "rgba(168,170,255,.10)"); g.addColorStop(1, "rgba(168,170,255,0)");
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R * 0.5, 0, TAU); ctx.fill();
+  }
+  var CAL_BUDGET = 2000, MONEY_BUDGET = 1800;
+  var COURSES = [
+    { t: "Amuse", d: "Sparkling kombucha", kcal: 40, cost: 120 },
+    { t: "Starter", d: "Burrata, tomato", kcal: 320, cost: 380 },
+    { t: "Main", d: "Grilled seabass", kcal: 540, cost: 620 },
+    { t: "Dessert", d: "Chocolate tart", kcal: 410, cost: 290 },
+    { t: "The bill", d: "Both budgets", kcal: 0, cost: 0 }
+  ];
+  var cumK = [0], cumC = [0];
+  for (var ci = 0; ci < COURSES.length; ci++) { cumK.push(cumK[ci] + COURSES[ci].kcal); cumC.push(cumC[ci] + COURSES[ci].cost); }
+  function mealAt(p) { var band = clamp(p, 0, 0.999) * COURSES.length, i = Math.floor(band), f = band - i; return { i: Math.min(i, COURSES.length - 1), kcal: lerp(cumK[i], cumK[i + 1], f), cost: lerp(cumC[i], cumC[i + 1], f) }; }
+  function ready(fn) { document.readyState !== "loading" ? fn() : document.addEventListener("DOMContentLoaded", fn); }
+  ready(function () {
+    /* ---- the plate scrub ---- */
+    var plateCv = document.getElementById("efmPlateGauge"), plateCtx = plateCv && plateCv.getContext("2d"), plateBox = plateCv && fitCanvas(plateCv);
+    var plate = document.querySelector(".efmod .plate");
+    var courses = Array.prototype.slice.call(document.querySelectorAll(".efmod .courses .c"));
+    var calV = document.querySelector(".efmod [data-cal]"), budV = document.querySelector(".efmod [data-bud]");
+    var calDish = document.querySelector(".efmod [data-dish]"), scrubFill = document.querySelector(".efmod .scrub i");
+    var lastBand = -1, forcedP = null;
+    try { var q = new URLSearchParams(location.search).get("p"); if (q !== null) forcedP = clamp(parseFloat(q), 0, 1); } catch (e) {}
+    function plateProgress() { if (forcedP !== null) return forcedP; if (!plate) return 0; var r = plate.getBoundingClientRect(); return clamp(-r.top / (r.height - window.innerHeight), 0, 1); }
+    function setPlateUI(p) {
+      var m = mealAt(p), calLeft = Math.max(0, CAL_BUDGET - m.kcal), budLeft = Math.max(0, MONEY_BUDGET - m.cost);
+      if (calV) calV.textContent = Math.round(calLeft).toLocaleString();
+      if (budV) budV.textContent = "₹" + Math.round(budLeft).toLocaleString();
+      if (m.i !== lastBand) { lastBand = m.i; courses.forEach(function (c, i) { c.classList.toggle("on", i === m.i); }); if (calDish) calDish.textContent = COURSES[m.i].d; }
+      if (scrubFill) scrubFill.style.width = (p * 100) + "%";
+      return { calFrac: calLeft / CAL_BUDGET, budFrac: budLeft / MONEY_BUDGET };
+    }
+    window.addEventListener("resize", function () { if (plateCv) plateBox = fitCanvas(plateCv); });
+    function frame() {
+      if (plateCtx && plate) {
+        var r = plate.getBoundingClientRect();
+        if (r.bottom > 0 && r.top < window.innerHeight) {
+          if (!plateBox || plateBox.width === 0) plateBox = fitCanvas(plateCv);
+          var p = plateProgress(), fr = setPlateUI(p);
+          plateCtx.clearRect(0, 0, plateBox.width, plateBox.height);
+          var mob = plateBox.width < 680, cx = plateBox.width * 0.5, cy = plateBox.height * 0.5;
+          var pR = Math.min(plateBox.width, plateBox.height) * (mob ? 0.42 : 0.30);
+          drawDual(plateCtx, cx, cy, pR, fr.calFrac, fr.budFrac, true);
+        }
+      }
+      requestAnimationFrame(frame);
+    }
+    if (plateCv) { setPlateUI(plateProgress()); requestAnimationFrame(frame); }
+    /* ---- instrument dials ---- */
+    function makeGaugeDial(el, opts) {
+      var knob = el.querySelector(".gknob"), ptr = el.querySelector(".gp"), cv = el.querySelector("canvas"), ctx = cv && cv.getContext("2d"), box = cv && fitCanvas(cv);
+      var min = -135, max = 135, targetAngle = lerp(min, max, opts.init), angle = min, dragging = false, startA = 0, startAng = 0, introDone = false;
+      function center() { var r = knob.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }
+      function pAng(e, c) { return Math.atan2(e.clientY - c.y, e.clientX - c.x) * 180 / Math.PI; }
+      function draw(v) { if (!ctx) return; ctx.clearRect(0, 0, box.width, box.height); drawArc(ctx, box.width / 2, box.height / 2, Math.min(box.width, box.height) * 0.42, v, opts.color, 6, true); }
+      function apply() { angle = clamp(angle, min, max); ptr.style.transform = "translateX(-50%) rotate(" + angle + "deg)"; var v = (angle - min) / (max - min); opts.onChange(v); draw(v); }
+      knob.addEventListener("pointerdown", function (e) { dragging = true; knob.setPointerCapture(e.pointerId); startA = pAng(e, center()); startAng = angle; });
+      knob.addEventListener("pointermove", function (e) { if (!dragging) return; var d = pAng(e, center()) - startA; if (d > 180) d -= 360; if (d < -180) d += 360; angle = startAng + d; apply(); });
+      function up() { dragging = false; } knob.addEventListener("pointerup", up); knob.addEventListener("pointercancel", up);
+      el.setAttribute("tabindex", "0"); el.setAttribute("role", "slider");
+      el.addEventListener("keydown", function (e) { if (e.key === "ArrowRight" || e.key === "ArrowUp") { angle += 8; apply(); e.preventDefault(); } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") { angle -= 8; apply(); e.preventDefault(); } });
+      window.addEventListener("resize", function () { if (cv) { box = fitCanvas(cv); apply(); } });
+      apply(); // rest at 0% until the panel scrolls into view, then calibrate up
+      function runIntro() {
+        if (introDone) return; introDone = true;
+        if (reduce) { angle = targetAngle; apply(); return; }
+        var t0 = null, from = min, dur = opts.dur || 1500;
+        function step(ts) { if (t0 === null) t0 = ts; var k = Math.min(1, (ts - t0) / dur); var e = 1 - Math.pow(1 - k, 3); angle = from + (targetAngle - from) * e; apply(); if (k < 1 && !dragging) requestAnimationFrame(step); }
+        requestAnimationFrame(step);
+      }
+      if (!("IntersectionObserver" in window)) { runIntro(); }
+      else { var gio = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { runIntro(); gio.disconnect(); } }); }, { threshold: 0.45 }); gio.observe(el); }
+    }
+    var GD = document.querySelector('.efmod [data-gauge="metabolic"]');
+    if (GD) makeGaugeDial(GD, { init: 0.72, dur: 1500, color: CAL, onChange: function (v) { var rd = GD.querySelector(".rd"); rd.childNodes[0].nodeValue = Math.round(v * 100) + "%"; rd.querySelector("small").textContent = "METABOLIC EFFICIENCY"; var p = Math.round(v * 100); GD.querySelector(".rn").textContent = p === 100 ? "Perfection. Unison. Brilliance." : p >= 90 ? "Top 1%. Metabolically Efficient" : p >= 70 ? "Great progress. Nearly there!" : p >= 40 ? "Healthier. On track." : "LOW. WE CAN DO BETTER!"; } });
+    var GG = document.querySelector('.efmod [data-gauge="goal"]');
+    if (GG) makeGaugeDial(GG, { init: 0.91, dur: 1850, color: PERI, onChange: function (v) { var rd = GG.querySelector(".rd"); rd.childNodes[0].nodeValue = Math.round(v * 100) + "%"; rd.querySelector("small").textContent = "GOAL ALIGNMENT"; var p = Math.round(v * 100); GG.querySelector(".rn").textContent = p === 100 ? "Precision. Perfection." : p >= 90 ? "Top 1%. Goals Achieved." : p >= 45 ? "A little off plan. Good pace." : "Off plan. We can improve!"; } });
+    var GB = document.querySelector('.efmod [data-gauge="precision"]');
+    if (GB) makeGaugeDial(GB, { init: 1.0, dur: 1250, color: BUD, onChange: function (v) { var rd = GB.querySelector(".rd"); rd.childNodes[0].nodeValue = Math.round(v * 100) + "%"; rd.querySelector("small").textContent = "BUDGET PRECISION"; var p = Math.round(v * 100); GB.querySelector(".rn").textContent = p === 100 ? "Perfect. To the paisa." : p >= 90 ? "Top 1%. On the money." : p >= 45 ? "Close. Keep going!" : "Over budget. Recalibrate a smidge."; } });
+  });
+})();
 </script>
 
 </body>
