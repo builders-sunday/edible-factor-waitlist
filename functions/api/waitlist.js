@@ -13,8 +13,41 @@
  * left as commented templates below.
  */
 
-const ALLOWED_ORIGIN = /^https?:\/\/([a-z0-9-]+\.)*pages\.dev$|^https?:\/\/(www\.)?ediblefactor\.(com|app|in)$/i;
+// CORS: only this waitlist Pages project (incl. its branch previews) + the real
+// domains. Tightened off the old `*.pages.dev` regex (waitlist#7) so an arbitrary
+// Cloudflare Pages project can no longer call the signup endpoint.
+const ALLOWED_ORIGIN = /^https?:\/\/([a-z0-9-]+\.)?(edible-factor-waitlist|ediblefactor-waitlist)\.pages\.dev$|^https?:\/\/(www\.)?ediblefactor\.(com|app|in)$/i;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Rate limit (waitlist#6): 3 signups / hour / IP via a KV counter. Bind a KV
+// namespace as RATE_LIMIT in the Pages project to enable; degrades to no-op if
+// unbound so signups never break before the binding exists.
+const RL_MAX = 3, RL_WINDOW = 3600;
+async function isRateLimited(env, ip) {
+  const kv = env.RATE_LIMIT;
+  if (!kv || !ip || ip === 'unknown') return false;
+  const key = `wl:${ip}`;
+  const n = parseInt((await kv.get(key)) || '0', 10);
+  if (n >= RL_MAX) return true;
+  await kv.put(key, String(n + 1), { expirationTtl: RL_WINDOW });
+  return false;
+}
+
+// Turnstile (waitlist#8): verify the widget token server-side. Set TURNSTILE_SECRET
+// in the Pages env to enable; degrades to skip (honeypot still guards) if unset.
+async function turnstileOK(env, token, ip) {
+  if (!env.TURNSTILE_SECRET) return true;
+  if (!token) return false;
+  try {
+    const form = new URLSearchParams();
+    form.append('secret', env.TURNSTILE_SECRET);
+    form.append('response', token);
+    if (ip && ip !== 'unknown') form.append('remoteip', ip);
+    const r = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body: form });
+    const d = await r.json();
+    return !!(d && d.success);
+  } catch { return false; }
+}
 
 function corsHeaders(origin) {
   const headers = { 'Vary': 'Origin' };
@@ -49,6 +82,8 @@ export async function onRequestPost({ request, env, waitUntil }) {
 
   const email = (body?.email || '').toString().trim().toLowerCase();
   const source = (body?.source || 'unknown').toString().slice(0, 50);
+  const token = (body?.['cf-turnstile-response'] || body?.turnstile || '').toString();
+  const ip = (request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || '').split(',')[0].trim() || 'unknown';
 
   if (!email || !EMAIL_RE.test(email) || email.length > 200) {
     return json({ error: 'Invalid email' }, 400, cors);
@@ -59,12 +94,22 @@ export async function onRequestPost({ request, env, waitUntil }) {
     return json({ ok: true }, 200, cors);
   }
 
+  // Rate limit: 3 signups / hour / IP (waitlist#6).
+  if (await isRateLimited(env, ip)) {
+    return json({ error: 'Too many signups from here. Please try again in a bit.' }, 429, cors);
+  }
+
+  // Bot check: verify the Turnstile token if configured (waitlist#8).
+  if (!(await turnstileOK(env, token, ip))) {
+    return json({ error: 'Could not verify you are human. Please try again.' }, 403, cors);
+  }
+
   const signup = {
     email,
     source,
     ts: new Date().toISOString(),
     ua: (request.headers.get('user-agent') || '').slice(0, 200),
-    ip: (request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || '').split(',')[0].trim() || 'unknown',
+    ip,
   };
 
   try {

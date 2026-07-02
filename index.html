@@ -968,7 +968,7 @@
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/ef-mark-180.png">
 <link rel="manifest" href="manifest.webmanifest">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; frame-ancestors 'none'; base-uri 'self';">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <style id="efmod-styles">
 /* ============================================================================
@@ -2056,6 +2056,28 @@
 
   // (meter-fill observer removed with the old dual-tracker section)
 
+  // Cloudflare Turnstile (waitlist#8): set EF_TURNSTILE_SITE_KEY to your public
+  // Turnstile SITE key to turn on bot verification (also set TURNSTILE_SECRET in
+  // the Pages env so the server verifies). Empty string = off; the form works
+  // exactly as before, so this ships dormant with no UX cost until you enable it.
+  const EF_TURNSTILE_SITE_KEY = '';
+  if (EF_TURNSTILE_SITE_KEY) {
+    window.__efTsRender = () => {
+      document.querySelectorAll('form.wl-form').forEach(form => {
+        if (form.dataset.tsId != null || !window.turnstile) return;
+        const holder = document.createElement('div');
+        holder.className = 'wl-turnstile';
+        holder.style.cssText = 'flex-basis:100%;margin-top:10px';
+        form.appendChild(holder);
+        form.dataset.tsId = window.turnstile.render(holder, { sitekey: EF_TURNSTILE_SITE_KEY, theme: 'dark' });
+      });
+    };
+    const ts = document.createElement('script');
+    ts.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=__efTsRender';
+    ts.async = true; ts.defer = true;
+    document.head.appendChild(ts);
+  }
+
   // Form: client-side validate, then POST to /api/waitlist (Cloudflare Pages function → Loops)
   document.querySelectorAll('form.wl-form').forEach(form => {
     const submitBtn = form.querySelector('button[type=submit]');
@@ -2080,17 +2102,22 @@
         return;
       }
 
+      const tsToken = (window.turnstile && form.dataset.tsId != null) ? (window.turnstile.getResponse(form.dataset.tsId) || '') : '';
       submitBtn && (submitBtn.disabled = true);
       try {
         const res = await fetch('/api/waitlist', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, source: form.dataset.form || 'hero', website: honey }),
+          body: JSON.stringify({ email, source: form.dataset.form || 'hero', website: honey, 'cf-turnstile-response': tsToken }),
         });
         const data = await res.json().catch(() => ({}));
         if (res.ok && data?.ok) {
           showSuccess();
           form.reset();
+        } else if (res.status === 429) {
+          showErr('Too many signups from here. Please try again in a bit.');
+        } else if (res.status === 403) {
+          showErr('Could not verify you are human. Please try again.');
         } else if (res.status === 400) {
           showErr(data?.error === 'Invalid email' ? 'Please enter a valid email.' : 'Something looked off, please try again.');
         } else {
@@ -2100,6 +2127,7 @@
         showErr('Network hiccup - check your connection and try again.');
       } finally {
         submitBtn && (submitBtn.disabled = false);
+        if (window.turnstile && form.dataset.tsId != null) window.turnstile.reset(form.dataset.tsId);
       }
     });
   });
