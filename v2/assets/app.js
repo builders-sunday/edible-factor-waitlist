@@ -180,19 +180,19 @@
     if (GD) makeGaugeDial(GD, { init: 0.72, color: CAL, onChange: function (v) {
       var rd = GD.querySelector(".rd"); rd.childNodes[0].nodeValue = Math.round(v * 100) + "%";
       rd.querySelector("small").textContent = "METABOLIC EFFICIENCY";
-      GD.querySelector(".rn").textContent = v > 0.7 ? "BURNING CLEAN. ON TARGET." : v > 0.4 ? "STEADY. ROOM TO PUSH." : "SLUGGISH. MOVE MORE.";
+      var _pm = Math.round(v * 100); GD.querySelector(".rn").textContent = _pm === 100 ? "Perfection. Unison. Brilliance." : _pm >= 90 ? "Top 1%. On Target." : "LOW. WE CAN DO BETTER!";
     }});
     var GG = document.querySelector('[data-gauge="goal"]');
     if (GG) makeGaugeDial(GG, { init: 0.6, color: PERI, onChange: function (v) {
       var rd = GG.querySelector(".rd"); rd.childNodes[0].nodeValue = Math.round(v * 100) + "%";
       rd.querySelector("small").textContent = "GOAL ALIGNMENT";
-      GG.querySelector(".rn").textContent = v > 0.66 ? "THIS MEAL FITS THE PLAN." : v > 0.33 ? "A LITTLE OFF PLAN." : "OFF PLAN TODAY.";
+      var _pg = Math.round(v * 100); GG.querySelector(".rn").textContent = _pg === 100 ? "Precision. Perfection." : _pg >= 90 ? "Top 1%. Goals Achieved." : _pg >= 45 ? "A little off plan. Good pace." : "Off plan. We can improve!";
     }});
     var GB = document.querySelector('[data-gauge="precision"]');
     if (GB) makeGaugeDial(GB, { init: 0.82, color: BUD, onChange: function (v) {
       var rd = GB.querySelector(".rd"); rd.childNodes[0].nodeValue = Math.round(v * 100) + "%";
       rd.querySelector("small").textContent = "BUDGET PRECISION";
-      GB.querySelector(".rn").textContent = v > 0.75 ? "SPOT ON THE RUPEE." : v > 0.45 ? "CLOSE. WATCH THE DRINKS." : "OVER BUDGET.";
+      var _pb = Math.round(v * 100); GB.querySelector(".rn").textContent = _pb === 100 ? "Perfect. To the paisa." : _pb >= 90 ? "Top 1%. On the money." : _pb >= 45 ? "Close. Keep going!" : "Over budget. Recalibrate a smidge.";
     }});
 
     /* anchors */
