@@ -695,32 +695,7 @@
     }
   }
 
-  /* === Dual tracker meters === */
-  .tracker__col {
-    border: 1px solid rgba(168,170,255,0.10);
-    background: var(--bg-2);
-    border-radius: 22px;
-    padding: 32px;
-  }
-  .meter__bar { height: 8px; background: rgba(255,255,255,0.05); border-radius: 999px; overflow: hidden; }
-  .meter__fill {
-    height: 100%; border-radius: 999px;
-    width: 0;
-    transition: width 2.5s cubic-bezier(.2,.7,.2,1);
-  }
-  .tracker__col.in-view .meter__fill { width: calc(var(--pct, 0.7) * 100%); }
-  .meter__fill--cal { background: linear-gradient(90deg, #6eddf0, #a8aaff); }
-  .meter__fill--bud { background: linear-gradient(90deg, #ff8a4a, #ffc18a); }
-
-  /* === Metric cards === */
-  .metric-card {
-    border: 1px solid rgba(168,170,255,0.10);
-    background: linear-gradient(180deg, rgba(168,170,255,0.04), rgba(168,170,255,0.00));
-    border-radius: 22px;
-    padding: 32px;
-    transition: border-color .25s ease, transform .25s ease;
-  }
-  .metric-card:hover { border-color: rgba(168,170,255,0.30); transform: translateY(-2px); }
+  /* (dual-tracker + metric-card styles removed: those sections are now the .efmod interactive modules) */
 
   /* === Sticky CTA pill (appears after hero) === */
   /* z-index: 80 keeps the pill above the cookie banner (z-index: 70) - on
@@ -1014,7 +989,7 @@
 .efmod .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-low);}
 .efmod .cal{color:var(--calorie);}.efmod .bud{color:var(--budget);}.efmod .peri{color:var(--peri-bright);}
 /* ---- the signature: two budgets, one plate ---- */
-.efmod .plate{position:relative;height:520vh;background:var(--void);}
+.efmod .plate{position:relative;height:360vh;background:var(--void);}
 .efmod .plate .pin{position:sticky;top:0;height:100svh;overflow:hidden;display:flex;align-items:center;}
 .efmod .plate-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;}
 .efmod .plate .frame{position:relative;z-index:2;width:100%;pointer-events:none;}
@@ -1051,7 +1026,7 @@
 .efmod .gauge .rn{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.05em;color:var(--ink-dim);margin-top:15px;min-height:2.2em;line-height:1.6;text-transform:uppercase;}
 /* ---- responsive ---- */
 @media (min-width:681px) and (max-height:720px){ .efmod .plate .courses{display:none;} .efmod .plate .heading{top:6vh;} }
-@media (max-width:960px){ .efmod .gauges{grid-template-columns:1fr;} .efmod .plate{height:440vh;} }
+@media (max-width:960px){ .efmod .gauges{grid-template-columns:1fr;} .efmod .plate{height:300vh;} }
 @media (max-width:680px){
   /* PLATE: full desktop-level detail on one dense screen (heading -> rings -> both meters -> full rail) */
   .efmod .plate .pin{flex-direction:column;justify-content:center;align-items:stretch;gap:12px;padding:92px 20px 26px;height:100svh;overflow:hidden;}
@@ -2079,16 +2054,7 @@
     });
   })();
 
-  // Animated meter fill on enter
-  const meterIo = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('in-view');
-        meterIo.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.3 });
-  document.querySelectorAll('.tracker__col').forEach(el => meterIo.observe(el));
+  // (meter-fill observer removed with the old dual-tracker section)
 
   // Form: client-side validate, then POST to /api/waitlist (Cloudflare Pages function → Loops)
   document.querySelectorAll('form.wl-form').forEach(form => {
