@@ -180,6 +180,7 @@ h1,h2,h3{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;letter
    ordered heading -> rings -> both meters -> full 5-course rail (with dishes). */
 @media (max-width:680px){
   .nav{display:none;}
+  .hero-art{display:none;}
   .plate .pin{flex-direction:column;justify-content:center;align-items:stretch;gap:12px;padding:92px 20px 26px;height:100svh;overflow:hidden;}
   .plate .frame{position:static;display:contents;}
   .plate .frame .wrap{position:static;height:auto;display:contents;}
