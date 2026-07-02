@@ -91,8 +91,10 @@
     color: var(--ink);
     font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
   }
+  /* Clip horizontal overflow WITHOUT making body a scroll container
+     (overflow-x:hidden would; clip does not) so position:sticky keeps working. */
+  body { overflow-x: clip; }
 
   ::selection { background: var(--periwinkle); color: var(--bg); }
 
@@ -316,9 +318,6 @@
     font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
     color: var(--periwinkle);
     display: inline-flex; align-items: center; gap: 14px;
-  }
-  .section-label::before {
-    content: ""; width: 40px; height: 1px; background: var(--periwinkle);
   }
 
   /* Pill button (CTA) */
@@ -1305,7 +1304,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-8 lg:gap-14 items-start">
       <!-- Left: section header -->
       <div class="reveal lg:sticky lg:top-28">
-        <div class="section-label mb-6"><span class="ml-3">01 · The real problem</span></div>
+        <div class="section-label mb-6"><span class="ml-3">The real problem</span></div>
         <h2 class="display text-5xl md:text-6xl leading-[0.98]">
           You've always<br>had to <span class="accent">choose.</span>
         </h2>
@@ -1360,7 +1359,7 @@
 
       <!-- LEFT: section label + chapter text + controls + pips -->
       <div class="relative">
-        <div class="section-label mb-5"><span class="ml-3">02 · The walkthrough</span></div>
+        <div class="section-label mb-5"><span class="ml-3">The walkthrough</span></div>
 
         <div id="deckText" class="deck-text-stage">
           <div class="deck-chapter active" data-chapter="0">
@@ -1491,7 +1490,7 @@
       <div class="frame">
         <div class="wrap">
           <div class="heading">
-            <div class="eyebrow">The core &middot; one dinner, watched two ways</div>
+            <div class="eyebrow">One dinner, watched two ways</div>
             <h2>Two budgets,<br>one <span class="cal">plate</span><span class="bud">.</span></h2>
           </div>
           <div class="courses" aria-hidden="true">
@@ -1520,7 +1519,7 @@
   <div class="max-w-[1400px] mx-auto px-6 md:px-10">
 
     <div class="reveal max-w-[720px] mb-8 md:mb-10">
-      <div class="section-label mb-6"><span class="ml-3">04 &middot; Instruments of a new discipline</span></div>
+      <div class="section-label mb-6"><span class="ml-3">Instruments of a new discipline</span></div>
       <h2 class="display text-5xl md:text-7xl leading-[0.98]">
         Numbers that<br><span class="accent">mean something.</span>
       </h2>
@@ -1532,19 +1531,16 @@
     <div class="efmod reveal">
       <div class="gauges">
         <div class="gauge" data-gauge="metabolic">
-          <span class="cap">Reading 01</span><span class="idx">%</span>
           <div class="gwrap"><canvas></canvas><div class="gknob"><span class="gp"></span></div></div>
           <div class="rd">72%<small>METABOLIC EFFICIENCY</small></div>
           <div class="rn">Great progress. Nearly there!</div>
         </div>
         <div class="gauge" data-gauge="goal">
-          <span class="cap">Reading 02</span><span class="idx">%</span>
           <div class="gwrap"><canvas></canvas><div class="gknob"><span class="gp"></span></div></div>
           <div class="rd">60%<small>GOAL ALIGNMENT</small></div>
           <div class="rn">A little off plan. Good pace.</div>
         </div>
         <div class="gauge" data-gauge="precision">
-          <span class="cap">Reading 03</span><span class="idx">%</span>
           <div class="gwrap"><canvas></canvas><div class="gknob"><span class="gp"></span></div></div>
           <div class="rd">82%<small>BUDGET PRECISION</small></div>
           <div class="rn">Close. Keep going!</div>
