@@ -176,23 +176,31 @@ h1,h2,h3{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;letter
   .prob-grid{grid-template-columns:1fr;gap:34px;} .gauges{grid-template-columns:1fr;}
   .plate{height:440vh;}
 }
-/* PHONES: everything on one screen, compact — heading, rings, both budgets, now-serving, Amuse->Bill rail */
+/* PHONES: full desktop-level detail on one dense screen. Flow layout via display:contents,
+   ordered heading -> rings -> both meters -> full 5-course rail (with dishes). */
 @media (max-width:680px){
   .nav{display:none;}
-  .plate .heading{position:absolute;top:3.2vh;left:0;right:0;max-width:none;text-align:center;padding:0 18px;}
+  .plate .pin{flex-direction:column;justify-content:center;align-items:stretch;gap:12px;padding:92px 20px 26px;height:100svh;overflow:hidden;}
+  .plate .frame{position:static;display:contents;}
+  .plate .frame .wrap{position:static;height:auto;display:contents;}
+  .plate-canvas{position:relative;order:2;width:100%;height:min(50vw,196px);flex:0 0 auto;margin:2px 0;}
+  .plate .heading{position:static;order:1;max-width:none;text-align:left;padding:0;}
   .plate .heading .eyebrow{font-size:9px;letter-spacing:.16em;}
-  .plate .heading h2{font-size:clamp(23px,7vw,30px);margin-top:5px;}
-  /* two budget numbers side by side, high up; "now serving" centered just under them */
-  .budgets{position:absolute;top:15vh;left:0;right:0;transform:none;flex-direction:row;justify-content:center;gap:30px;text-align:center;}
-  .budgets .b .lbl{font-size:8px;letter-spacing:.12em;margin-bottom:2px;}
-  .budgets .b .v{font-size:clamp(23px,7.5vw,30px);}
-  .budgets .b .of{font-size:8.5px;margin-top:2px;}
-  .budgets .b:nth-child(3){position:absolute;top:100%;left:0;right:0;margin-top:12px;}
-  /* course rail as a 5-step strip pinned to the bottom, highlights as you scroll */
-  .courses{position:absolute;left:0;right:0;bottom:3vh;top:auto;transform:none;flex-direction:row;justify-content:center;gap:0;padding:0 6px;}
-  .courses .c{width:auto;flex:1;max-width:66px;grid-template-columns:1fr;gap:3px;padding:9px 4px 0;text-align:center;justify-items:center;border-top:1px solid var(--line);}
-  .courses .c.on{border-top-color:var(--peri);}
-  .courses .c .n{font-size:9.5px;}
-  .courses .c .t{font-family:'Space Grotesk';font-weight:600;font-size:10.5px;letter-spacing:0;}
-  .courses .c .t b{display:none;}
+  .plate .heading h2{font-size:clamp(24px,7.2vw,31px);margin-top:5px;}
+  /* both meters, compact 2-col row, with their sublines */
+  .budgets{position:static;order:3;transform:none;flex-direction:row;justify-content:space-between;gap:16px;text-align:left;}
+  .budgets .b{flex:1;}
+  .budgets .b .lbl{font-size:8.5px;letter-spacing:.11em;margin-bottom:3px;}
+  .budgets .b .v{font-size:clamp(25px,8vw,32px);}
+  .budgets .b .of{font-size:9px;margin-top:3px;}
+  .budgets .b:nth-child(3){display:none;}   /* de-dupe: active dish is shown by the lit rail row */
+  /* full 5-course rail WITH dishes, dense vertical list, active row highlighted */
+  .courses{position:static;order:4;transform:none;flex-direction:column;gap:0;}
+  .courses .c{width:100%;grid-template-columns:20px 1fr;gap:12px;padding:6px 0;border-top:1px solid var(--line);opacity:.4;}
+  .courses .c.on{opacity:1;}
+  .courses .c .n{font-size:10px;}
+  .courses .c .t{font-family:'Space Grotesk';font-weight:600;font-size:13px;letter-spacing:-.01em;}
+  .courses .c .t b{display:block;font-family:'JetBrains Mono';font-weight:400;font-size:8.5px;letter-spacing:.06em;color:var(--ink-low);text-transform:uppercase;margin-top:1px;}
+  .courses .c.on .t b{color:var(--ink-dim);}
+  .scrub{z-index:5;}
 }

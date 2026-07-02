@@ -143,8 +143,8 @@
         var p = plateProgress(); var fr = setPlateUI(p);
         plateCtx.clearRect(0, 0, plateBox.width, plateBox.height);
         var mob = plateBox.width < 680;
-        var cx = plateBox.width * 0.5, cy = plateBox.height * (mob ? 0.52 : 0.5);
-        var pR = Math.min(plateBox.width, plateBox.height) * (mob ? 0.27 : 0.30);
+        var cx = plateBox.width * 0.5, cy = plateBox.height * 0.5;
+        var pR = Math.min(plateBox.width, plateBox.height) * (mob ? 0.42 : 0.30);
         drawDual(plateCtx, cx, cy, pR, fr.calFrac, fr.budFrac, t, true);
       }
       requestAnimationFrame(frame);
