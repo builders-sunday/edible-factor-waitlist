@@ -127,7 +127,18 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
 .sec-head p b{color:var(--ink);font-weight:500;}
 
 /* ---------------- logo cards ---------------- */
-.logo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.mode-label{
+  display:flex;align-items:center;gap:12px;
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--ink-dim);
+  margin:clamp(30px,4vw,48px) 0 18px;
+}
+.mode-label:first-of-type{margin-top:0;}
+.mode-label .pip{width:6px;height:6px;border-radius:50%;background:var(--peri);flex:none;}
+.mode-label--light .pip{background:var(--paper);}
+.mode-label::after{content:"";flex:1;height:1px;background:var(--line);}
+.logo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+.logo-grid + .mode-label{margin-top:clamp(30px,4vw,48px);}
 .logo-card{
   border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--panel);
   transition:transform .5s var(--ease),border-color .5s var(--ease),box-shadow .5s var(--ease);
@@ -147,6 +158,8 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
 .stage-paper .mark{box-shadow:0 20px 40px -18px rgba(10,11,16,.55);}
 .stage-peri{background:var(--peri);}
 .stage-peri .mark{box-shadow:0 20px 42px -16px rgba(10,11,16,.5);}
+.stage-light{background:radial-gradient(45% 55% at 50% 45%,rgba(168,170,255,.18),transparent 62%),#e9e8f2;}
+.stage-light .mark{box-shadow:0 20px 40px -18px rgba(10,11,16,.35);}
 .card-foot{
   display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
   padding:16px 18px;border-top:1px solid var(--line);
@@ -186,6 +199,10 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
   font-family:'Space Grotesk';font-weight:700;
   font-size:clamp(28px,5.4vw,56px);letter-spacing:-.035em;line-height:1;
 }
+.lockup--light .lockup-stage{
+  background:radial-gradient(60% 120% at 12% 30%,rgba(168,170,255,.2),transparent 60%),var(--paper);
+}
+.lockup--light .lockup-stage b{color:#101018;}
 
 /* ---------------- colours ---------------- */
 .sw-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
@@ -322,38 +339,28 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
     <header class="sec-head rise">
       <span class="idx">01 / logo</span>
       <h2>The mark, in Space Grotesk.</h2>
-      <p>One tile: the <b>E</b> and <b>F</b> set in Space Grotesk 700, four periwinkle registration dots, and a single budget orange hairline splitting the letters. It is self contained, so it drops cleanly onto any surface. Three colourways cover everything we ship against.</p>
+      <p>One tile: the <b>E</b> and <b>F</b> set in Space Grotesk 700, four periwinkle registration dots, and a single budget orange hairline splitting the letters. It ships in <b>two cuts</b>: a dark cut for dark surfaces and a light cut, its clean inversion, for pale ones. Same geometry, same motion, inverted ink. Reach for whichever holds contrast on the surface you are placing it against.</p>
     </header>
 
+    <div class="mode-label mode-label--dark rise"><span class="pip" aria-hidden="true"></span>Dark cut</div>
     <div class="logo-grid">
       <figure class="logo-card rise">
-        <div class="stage stage-void"><img class="mark" src="assets/ef-mark.svg" alt="Edible Factor mark on void" /></div>
+        <div class="stage stage-void"><img class="mark" src="assets/ef-mark.svg" alt="Edible Factor dark mark on void" /></div>
         <figcaption class="card-foot">
           <span class="card-name">On void</span>
           <div class="acts">
-            <button class="act" type="button" data-copy-svg aria-label="Copy the Edible Factor mark as SVG"><span class="dot" aria-hidden="true"></span><span class="t">Copy SVG</span></button>
+            <button class="act" type="button" data-copy-svg data-svg="assets/ef-mark.svg" aria-label="Copy the dark Edible Factor mark as SVG"><span class="dot" aria-hidden="true"></span><span class="t">Copy SVG</span></button>
             <a class="act" href="assets/ef-mark.svg" download="ef-mark.svg">Download SVG</a>
           </div>
         </figcaption>
       </figure>
 
       <figure class="logo-card rise">
-        <div class="stage stage-paper"><img class="mark" src="assets/ef-mark.svg" alt="Edible Factor mark on paper" /></div>
-        <figcaption class="card-foot">
-          <span class="card-name">On paper</span>
-          <div class="acts">
-            <button class="act" type="button" data-copy-svg aria-label="Copy the Edible Factor mark as SVG"><span class="dot" aria-hidden="true"></span><span class="t">Copy SVG</span></button>
-            <a class="act" href="assets/ef-mark.svg" download="ef-mark.svg">Download SVG</a>
-          </div>
-        </figcaption>
-      </figure>
-
-      <figure class="logo-card rise">
-        <div class="stage stage-peri"><img class="mark" src="assets/ef-mark.svg" alt="Edible Factor mark on periwinkle" /></div>
+        <div class="stage stage-peri"><img class="mark" src="assets/ef-mark.svg" alt="Edible Factor dark mark on periwinkle" /></div>
         <figcaption class="card-foot">
           <span class="card-name">On periwinkle</span>
           <div class="acts">
-            <button class="act" type="button" data-copy-svg aria-label="Copy the Edible Factor mark as SVG"><span class="dot" aria-hidden="true"></span><span class="t">Copy SVG</span></button>
+            <button class="act" type="button" data-copy-svg data-svg="assets/ef-mark.svg" aria-label="Copy the dark Edible Factor mark as SVG"><span class="dot" aria-hidden="true"></span><span class="t">Copy SVG</span></button>
             <a class="act" href="assets/ef-mark.svg" download="ef-mark.svg">Download SVG</a>
           </div>
         </figcaption>
@@ -361,14 +368,53 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
 
       <figure class="lockup rise">
         <div class="lockup-stage">
-          <img src="assets/ef-mark.svg" alt="Edible Factor mark" />
+          <img src="assets/ef-mark.svg" alt="Edible Factor dark mark" />
           <b>Edible Factor</b>
         </div>
         <figcaption class="card-foot">
-          <span class="card-name">Wordmark lockup</span>
+          <span class="card-name">Wordmark lockup, dark</span>
           <div class="acts">
-            <button class="act" type="button" data-copy-svg aria-label="Copy the Edible Factor mark as SVG"><span class="dot" aria-hidden="true"></span><span class="t">Copy SVG</span></button>
+            <button class="act" type="button" data-copy-svg data-svg="assets/ef-mark.svg" aria-label="Copy the dark Edible Factor mark as SVG"><span class="dot" aria-hidden="true"></span><span class="t">Copy SVG</span></button>
             <a class="act" href="assets/ef-mark.svg" download="ef-mark.svg">Download SVG</a>
+          </div>
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="mode-label mode-label--light rise"><span class="pip" aria-hidden="true"></span>Light cut</div>
+    <div class="logo-grid">
+      <figure class="logo-card rise">
+        <div class="stage stage-paper"><img class="mark" src="assets/ef-mark-light.svg" alt="Edible Factor light mark on paper" /></div>
+        <figcaption class="card-foot">
+          <span class="card-name">On paper</span>
+          <div class="acts">
+            <button class="act" type="button" data-copy-svg data-svg="assets/ef-mark-light.svg" aria-label="Copy the light Edible Factor mark as SVG"><span class="dot" aria-hidden="true"></span><span class="t">Copy SVG</span></button>
+            <a class="act" href="assets/ef-mark-light.svg" download="ef-mark-light.svg">Download SVG</a>
+          </div>
+        </figcaption>
+      </figure>
+
+      <figure class="logo-card rise">
+        <div class="stage stage-light"><img class="mark" src="assets/ef-mark-light.svg" alt="Edible Factor light mark on a light panel" /></div>
+        <figcaption class="card-foot">
+          <span class="card-name">On light panel</span>
+          <div class="acts">
+            <button class="act" type="button" data-copy-svg data-svg="assets/ef-mark-light.svg" aria-label="Copy the light Edible Factor mark as SVG"><span class="dot" aria-hidden="true"></span><span class="t">Copy SVG</span></button>
+            <a class="act" href="assets/ef-mark-light.svg" download="ef-mark-light.svg">Download SVG</a>
+          </div>
+        </figcaption>
+      </figure>
+
+      <figure class="lockup lockup--light rise">
+        <div class="lockup-stage">
+          <img src="assets/ef-mark-light.svg" alt="Edible Factor light mark" />
+          <b>Edible Factor</b>
+        </div>
+        <figcaption class="card-foot">
+          <span class="card-name">Wordmark lockup, light</span>
+          <div class="acts">
+            <button class="act" type="button" data-copy-svg data-svg="assets/ef-mark-light.svg" aria-label="Copy the light Edible Factor mark as SVG"><span class="dot" aria-hidden="true"></span><span class="t">Copy SVG</span></button>
+            <a class="act" href="assets/ef-mark-light.svg" download="ef-mark-light.svg">Download SVG</a>
           </div>
         </figcaption>
       </figure>
@@ -516,13 +562,14 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
     return Promise.resolve(legacyCopy(text));
   }
 
-  // ---- Copy SVG (the mark, fetched once per click) ----
+  // ---- Copy SVG (each card copies its own cut, fetched once per click) ----
   document.querySelectorAll('[data-copy-svg]').forEach(function(btn){
     var t = btn.querySelector('.t');
+    var url = btn.getAttribute('data-svg') || MARK_URL;
     btn.addEventListener('click', function(){
       if (btn.dataset.busy) return;
       btn.dataset.busy = '1';
-      fetch(MARK_URL).then(function(r){
+      fetch(url).then(function(r){
         if(!r.ok) throw new Error('fetch failed');
         return r.text();
       }).then(function(svg){
