@@ -180,7 +180,7 @@
     if (GD) makeGaugeDial(GD, { init: 0.72, color: CAL, onChange: function (v) {
       var rd = GD.querySelector(".rd"); rd.childNodes[0].nodeValue = Math.round(v * 100) + "%";
       rd.querySelector("small").textContent = "METABOLIC EFFICIENCY";
-      var _pm = Math.round(v * 100); GD.querySelector(".rn").textContent = _pm === 100 ? "Perfection. Unison. Brilliance." : _pm >= 90 ? "Top 1%. On Target." : "LOW. WE CAN DO BETTER!";
+      var _pm = Math.round(v * 100); GD.querySelector(".rn").textContent = _pm === 100 ? "Perfection. Unison. Brilliance." : _pm >= 90 ? "Top 1%. Metabolically Efficient" : _pm >= 70 ? "Great progress. Nearly there!" : _pm >= 40 ? "Healthier. On track." : "LOW. WE CAN DO BETTER!";
     }});
     var GG = document.querySelector('[data-gauge="goal"]');
     if (GG) makeGaugeDial(GG, { init: 0.6, color: PERI, onChange: function (v) {
