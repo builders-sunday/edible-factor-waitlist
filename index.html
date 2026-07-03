@@ -1163,7 +1163,7 @@
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/ef-mark-180.png">
 <link rel="manifest" href="manifest.webmanifest">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://challenges.cloudflare.com https://api.ediblefactor.com https://api-dev.ediblefactor.com http://localhost:9090; frame-src https://challenges.cloudflare.com; frame-ancestors 'none'; base-uri 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://challenges.cloudflare.com https://api.ediblefactor.com https://api-dev.ediblefactor.com http://localhost:9090 https://ipwho.is; frame-src https://challenges.cloudflare.com; frame-ancestors 'none'; base-uri 'self';">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <style id="efmod-styles">
 /* ============================================================================
@@ -2619,6 +2619,43 @@
   function getState(){ return lsGet(STATE_KEY) || ''; }
   function setState(s){ lsSet(STATE_KEY, s); lsSet(TS_KEY, String(Date.now())); }
 
+  // ── Client geolocation (HTTPS, keyless) ───────────────────────────────────
+  // ipwho.is resolves the visitor's coarse location over HTTPS with no API key
+  // (ip-api.com's free tier is HTTP-only and blocked as mixed content). It's a
+  // best-effort enrichment: the backend still does its own server-side IP geo
+  // and only takes these client fields when present (geo_source="client"). The
+  // result is cached in sessionStorage so a browsing session resolves once.
+  var GEO_KEY = 'eff_geo_v1';
+  var geoPromise = null;
+  function readCachedGeo(){
+    try { var raw = window.sessionStorage.getItem(GEO_KEY); if (raw) return JSON.parse(raw); } catch (e) {}
+    return null;
+  }
+  function fetchGeo(){
+    if (geoPromise) return geoPromise;
+    var cached = readCachedGeo();
+    if (cached) { geoPromise = Promise.resolve(cached); return geoPromise; }
+    geoPromise = fetch('https://ipwho.is/', { method: 'GET', mode: 'cors' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d || d.success === false) return null;
+        var g = {
+          country: d.country || '',
+          country_code: d.country_code || '',
+          region: d.region || '',
+          city: d.city || '',
+          latitude: typeof d.latitude === 'number' ? d.latitude : 0,
+          longitude: typeof d.longitude === 'number' ? d.longitude : 0
+        };
+        try { window.sessionStorage.setItem(GEO_KEY, JSON.stringify(g)); } catch (e) {}
+        return g;
+      })
+      .catch(function () { return null; });
+    return geoPromise;
+  }
+  // Warm the lookup early so it's ready by the first interaction.
+  fetchGeo();
+
   // ── Turnstile token (invisible, single-use per POST) ──────────────────────
   // Loads the API only when a site key is configured. getToken() resolves ''
   // when Turnstile is dormant or unavailable, so callers never block.
@@ -2657,9 +2694,18 @@
   }
 
   function post(payload){
-    return getToken().then(function (token) {
+    return Promise.all([getToken(), fetchGeo()]).then(function (arr) {
+      var token = arr[0], geo = arr[1];
       var body = Object.assign({ sid: SID, source: 'funnel', website: '' }, payload);
       if (token) body['cf-turnstile-response'] = token;
+      if (geo) {
+        if (geo.country) body.country = geo.country;
+        if (geo.country_code) body.country_code = geo.country_code;
+        if (geo.region) body.region = geo.region;
+        if (geo.city) body.city = geo.city;
+        if (geo.latitude) body.latitude = geo.latitude;
+        if (geo.longitude) body.longitude = geo.longitude;
+      }
       return fetch(ENDPOINT, {
         method: 'POST',
         mode: 'cors',
