@@ -1163,7 +1163,7 @@
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/ef-mark-180.png">
 <link rel="manifest" href="manifest.webmanifest">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; frame-ancestors 'none'; base-uri 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://challenges.cloudflare.com https://api.ediblefactor.com https://api-dev.ediblefactor.com http://localhost:9090; frame-src https://challenges.cloudflare.com; frame-ancestors 'none'; base-uri 'self';">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <style id="efmod-styles">
 /* ============================================================================
@@ -2584,7 +2584,21 @@
    Degrades gracefully with no localStorage and with reduced motion. */
 (function () {
   'use strict';
-  var ENDPOINT = '/api/waitlist';           // must stay relative (same-origin)
+  // Funnel events go DIRECTLY to the Go backend (durable capture -> Mongo ->
+  // Scouter). The backend sees the real client IP via CF-Connecting-IP, so geo
+  // and IP-hash stay accurate. The email form is unchanged (stays on the
+  // same-origin /api/waitlist Pages Function).
+  var ENDPOINT = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+    ? 'http://localhost:9090/v1/public/waitlist/event'
+    : 'https://api.ediblefactor.com/v1/public/waitlist/event';
+
+  // Cloudflare Turnstile for the funnel. DORMANT until a public site key is
+  // set here (and TURNSTILE_SECRET on the backend). Empty key -> no widget, no
+  // token; the backend degrades open, so the funnel works before provisioning.
+  // To activate: set EFF_TURNSTILE_SITE_KEY (and the email form's key + the
+  // backend/Pages secret). Invisible mode keeps the "cheer" tap frictionless.
+  var EFF_TURNSTILE_SITE_KEY = '';
+
   var SID_KEY = 'eff_sid_v1';
   var STATE_KEY = 'eff_state_v1';            // '' | dismissed | tapped | feedback_done | contact_done
   var TS_KEY = 'eff_ts_v1';
@@ -2605,13 +2619,54 @@
   function getState(){ return lsGet(STATE_KEY) || ''; }
   function setState(s){ lsSet(STATE_KEY, s); lsSet(TS_KEY, String(Date.now())); }
 
+  // ── Turnstile token (invisible, single-use per POST) ──────────────────────
+  // Loads the API only when a site key is configured. getToken() resolves ''
+  // when Turnstile is dormant or unavailable, so callers never block.
+  var tsWidgetId = null, tsResolve = null;
+  if (EFF_TURNSTILE_SITE_KEY && !window.turnstile) {
+    var tss = document.createElement('script');
+    tss.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+    tss.async = true; tss.defer = true;
+    document.head.appendChild(tss);
+  }
+  function ensureTurnstile(){
+    if (!EFF_TURNSTILE_SITE_KEY || !window.turnstile) return false;
+    if (tsWidgetId != null) return true;
+    var holder = document.createElement('div');
+    holder.style.display = 'none';
+    document.body.appendChild(holder);
+    tsWidgetId = window.turnstile.render(holder, {
+      sitekey: EFF_TURNSTILE_SITE_KEY,
+      size: 'invisible',
+      callback: function (token) { var r = tsResolve; tsResolve = null; if (r) r(token); },
+      'error-callback': function () { var r = tsResolve; tsResolve = null; if (r) r(''); }
+    });
+    return true;
+  }
+  function getToken(){
+    return new Promise(function (resolve) {
+      if (!ensureTurnstile()) { resolve(''); return; }
+      tsResolve = resolve;
+      try {
+        window.turnstile.reset(tsWidgetId);
+        window.turnstile.execute(tsWidgetId);
+      } catch (e) { tsResolve = null; resolve(''); return; }
+      // Safety valve: a stuck challenge must never wedge the funnel.
+      setTimeout(function () { if (tsResolve === resolve) { tsResolve = null; resolve(''); } }, 4000);
+    });
+  }
+
   function post(payload){
-    var body = Object.assign({ sid: SID, source: 'funnel', website: '' }, payload);
-    return fetch(ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-      keepalive: true
+    return getToken().then(function (token) {
+      var body = Object.assign({ sid: SID, source: 'funnel', website: '' }, payload);
+      if (token) body['cf-turnstile-response'] = token;
+      return fetch(ENDPOINT, {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+        keepalive: true
+      });
     });
   }
 
