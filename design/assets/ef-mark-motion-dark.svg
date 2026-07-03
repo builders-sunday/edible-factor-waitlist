@@ -1,0 +1,97 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    /* EF mark animation - the 4 periwinkle corner dots travel
+       clockwise into clock-hand positions (12, 3, 6, 9), pause, then
+       return to their corners. Cycle is 6s with a 0.35s stagger so
+       the dots ripple around the dial rather than landing in unison.
+       Scale + drop-shadow at the apex add a polished "press into
+       place" hit. */
+    @keyframes ef-dot-tl-to-12 {
+      0%, 8% { transform: translate(0, 0) scale(1); filter: none; }
+      35%, 55% {
+        transform: translate(26.5px, -0.5px) scale(1.35);
+        filter: drop-shadow(0 0 3px rgba(163, 162, 255, 0.65));
+      }
+      82%, 100% { transform: translate(0, 0) scale(1); filter: none; }
+    }
+    @keyframes ef-dot-tr-to-3 {
+      0%, 8% { transform: translate(0, 0) scale(1); filter: none; }
+      35%, 55% {
+        transform: translate(0.5px, 26.5px) scale(1.35);
+        filter: drop-shadow(0 0 3px rgba(163, 162, 255, 0.65));
+      }
+      82%, 100% { transform: translate(0, 0) scale(1); filter: none; }
+    }
+    @keyframes ef-dot-br-to-6 {
+      0%, 8% { transform: translate(0, 0) scale(1); filter: none; }
+      35%, 55% {
+        transform: translate(-26.5px, 0.5px) scale(1.35);
+        filter: drop-shadow(0 0 3px rgba(163, 162, 255, 0.65));
+      }
+      82%, 100% { transform: translate(0, 0) scale(1); filter: none; }
+    }
+    @keyframes ef-dot-bl-to-9 {
+      0%, 8% { transform: translate(0, 0) scale(1); filter: none; }
+      35%, 55% {
+        transform: translate(-0.5px, -26.5px) scale(1.35);
+        filter: drop-shadow(0 0 3px rgba(163, 162, 255, 0.65));
+      }
+      82%, 100% { transform: translate(0, 0) scale(1); filter: none; }
+    }
+    .ef-dot {
+      animation-duration: 6s;
+      animation-iteration-count: infinite;
+      animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    .ef-dot--tl { animation-name: ef-dot-tl-to-12; animation-delay: 0s; }
+    .ef-dot--tr { animation-name: ef-dot-tr-to-3;  animation-delay: 0.35s; }
+    .ef-dot--br { animation-name: ef-dot-br-to-6;  animation-delay: 0.70s; }
+    .ef-dot--bl { animation-name: ef-dot-bl-to-9;  animation-delay: 1.05s; }
+
+    /* Subtle pulse on the inner clock ring on each cycle so the dial
+       reads as "alive" alongside the dot ripple. */
+    @keyframes ef-ring-pulse {
+      0%, 100% { stroke-opacity: 0.35; }
+      45%      { stroke-opacity: 0.85; }
+    }
+    .ef-ring { animation: ef-ring-pulse 6s ease-in-out infinite; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ef-dot, .ef-ring { animation: none !important; }
+    }
+  </style>
+
+
+  <circle cx="32" cy="32" r="27" fill="none" stroke="#E6E6F0" stroke-width="1.2"/>
+  <circle class="ef-ring" cx="32" cy="32" r="24" fill="none" stroke="#E6E6F0" stroke-width="0.5"/>
+
+  <g fill="#A3A2FF">
+    <rect class="ef-dot ef-dot--tl" x="4"  y="4"  width="3" height="3"/>
+    <rect class="ef-dot ef-dot--tr" x="57" y="4"  width="3" height="3"/>
+    <rect class="ef-dot ef-dot--bl" x="4"  y="57" width="3" height="3"/>
+    <rect class="ef-dot ef-dot--br" x="57" y="57" width="3" height="3"/>
+  </g>
+
+  <!-- E -->
+  <g fill="#E6E6F0">
+    <rect x="17" y="20" width="5" height="24"/>
+    <rect x="17" y="20" width="14" height="5"/>
+    <rect x="17" y="29.5" width="11" height="4.5"/>
+    <rect x="17" y="39" width="14" height="5"/>
+    <rect x="15" y="20" width="9" height="2"/>
+    <rect x="15" y="42" width="9" height="2"/>
+  </g>
+
+  <!-- F -->
+  <g fill="#E6E6F0">
+    <rect x="33" y="20" width="14" height="5"/>
+    <rect x="36" y="29.5" width="11" height="4.5"/>
+    <rect x="42" y="20" width="5" height="24"/>
+    <rect x="40" y="20" width="9" height="2"/>
+    <rect x="40" y="42" width="9" height="2"/>
+  </g>
+
+  <rect x="31.85" y="20" width="0.3" height="24" fill="#FF8A46"/>
+</svg>
