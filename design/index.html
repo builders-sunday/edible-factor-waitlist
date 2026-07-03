@@ -205,6 +205,10 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
 }
 .png-rail a:hover{color:#0a0a12;background:var(--peri-bright);}
 
+/* qr badge cards */
+.stage.qr-stage{aspect-ratio:1/1;padding:clamp(20px,3vw,40px);}
+.stage .mark.qr{width:min(84%,320px);height:auto;}
+
 /* wide wordmark lockup */
 .lockup{
   grid-column:1 / -1;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--panel);
@@ -293,8 +297,9 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
     <p class="hero-sub rise">The brand kit: the Edible Factor mark in every cut and format you need. Static and motion, backgroundless or framed, plus the app glyph. Grab it as SVG when you can and PNG when you cannot. Use freely on anything you ship for or with us.</p>
     <div class="hero-meta rise">
       <span class="chip">01 / logo</span>
-      <span class="chip">02 / colours</span>
-      <span class="chip">03 / type</span>
+      <span class="chip">02 / qr</span>
+      <span class="chip">03 / colours</span>
+      <span class="chip">04 / type</span>
     </div>
   </div>
 </section>
@@ -435,11 +440,44 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
   </div>
 </section>
 
-<!-- ===================== 02 / COLOURS ===================== -->
+<!-- ===================== 02 / QR BADGE ===================== -->
 <section class="sec">
   <div class="wrap">
     <header class="sec-head rise">
-      <span class="idx">02 / colours</span>
+      <span class="idx">02 / qr badge</span>
+      <h2>The scan badge, two cuts.</h2>
+      <p>The Edible Factor scan badge: a circular tile ringed with <b>EATS, FINANCE, ONE APP</b>, the mark at its centre, ediblefactor.com below. Vectorised to true <b>SVG</b> so it stays sharp at any print size, plus <b>PNG</b> from 512 to 1600px. Violet for light surfaces, ink for dark.</p>
+    </header>
+    <div class="logo-grid">
+      <figure class="logo-card rise">
+        <div class="stage stage-check-light qr-stage"><img class="mark qr" src="assets/ediblefactor-qr-violet.svg" alt="Edible Factor QR scan badge, violet cut on light" /></div>
+        <figcaption class="card-foot">
+          <span class="card-name">Violet</span>
+          <div class="dl">
+            <a class="act" href="assets/ediblefactor-qr-violet.svg" download="ediblefactor-qr-violet.svg"><span class="dot" aria-hidden="true"></span>SVG</a>
+            <span class="png-rail"><span class="lbl">PNG</span><a href="assets/ediblefactor-qr-violet-512.png" download>512</a><a href="assets/ediblefactor-qr-violet-1024.png" download>1024</a><a href="assets/ediblefactor-qr-violet-1600.png" download>1600</a></span>
+          </div>
+        </figcaption>
+      </figure>
+      <figure class="logo-card rise">
+        <div class="stage stage-void qr-stage"><img class="mark qr" src="assets/ediblefactor-qr-ink.svg" alt="Edible Factor QR scan badge, ink cut on dark" /></div>
+        <figcaption class="card-foot">
+          <span class="card-name">Ink</span>
+          <div class="dl">
+            <a class="act" href="assets/ediblefactor-qr-ink.svg" download="ediblefactor-qr-ink.svg"><span class="dot" aria-hidden="true"></span>SVG</a>
+            <span class="png-rail"><span class="lbl">PNG</span><a href="assets/ediblefactor-qr-ink-512.png" download>512</a><a href="assets/ediblefactor-qr-ink-1024.png" download>1024</a><a href="assets/ediblefactor-qr-ink-1600.png" download>1600</a></span>
+          </div>
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 03 / COLOURS ===================== -->
+<section class="sec">
+  <div class="wrap">
+    <header class="sec-head rise">
+      <span class="idx">03 / colours</span>
       <h2>Dark by default, periwinkle on top.</h2>
       <p>Periwinkle is the brand hue and carries every accent. Calorie cyan and budget orange are the two meters, one plate read as two numbers. Nothing is pure black or pure white: every neutral is tinted toward the brand. <b>Click any swatch to copy its hex.</b></p>
     </header>
@@ -481,11 +519,11 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
   </div>
 </section>
 
-<!-- ===================== 03 / TYPE ===================== -->
+<!-- ===================== 04 / TYPE ===================== -->
 <section class="sec">
   <div class="wrap">
     <header class="sec-head rise">
-      <span class="idx">03 / type</span>
+      <span class="idx">04 / type</span>
       <h2>Three families, one job each.</h2>
       <p>Space Grotesk sets the display, Inter carries the body, JetBrains Mono stamps the labels, readouts, and eyebrows. Load them together from Google Fonts.</p>
     </header>
