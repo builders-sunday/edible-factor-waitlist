@@ -861,6 +861,201 @@
     0%, 100% { transform: translateY(0); opacity: 0.55; }
     50%      { transform: translateY(8px); opacity: 1; }
   }
+
+  /* ============================================================
+     ENGAGEMENT FUNNEL (.eff-*)  ·  additive, sits alongside the
+     email form. Stage 1 tap (inline + scroll popup) -> Stage 2
+     feedback chips -> Stage 3 email/phone. Palette-matched,
+     mobile-first, reduced-motion + no-localStorage safe.
+     ============================================================ */
+
+  /* Inline Stage 1 block inside the hero CTA card, below the email form. */
+  .eff-cheer {
+    margin-top: 16px; padding-top: 16px;
+    border-top: 1px solid rgba(168,170,255,0.10);
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+  .eff-cheer__copy {
+    font-size: 12.5px; color: var(--ink-dim); line-height: 1.4; flex: 1 1 160px;
+  }
+  .eff-heart {
+    display: inline-flex; align-items: center; gap: 8px;
+    min-height: 44px; padding: 9px 16px;
+    border-radius: 9999px;
+    background: rgba(168,170,255,0.08);
+    border: 1px solid rgba(168,170,255,0.22);
+    color: var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    cursor: pointer; white-space: nowrap;
+    transition: background .15s ease, border-color .15s ease, transform .1s ease;
+  }
+  .eff-heart:hover { background: rgba(168,170,255,0.14); border-color: rgba(168,170,255,0.4); }
+  .eff-heart:active { transform: scale(0.96); }
+  .eff-heart__glyph { font-size: 16px; line-height: 1; }
+  .eff-heart.is-popped .eff-heart__glyph { animation: eff-pop .5s ease; }
+  .eff-heart.is-done {
+    background: rgba(110,221,240,0.10);
+    border-color: rgba(110,221,240,0.35);
+    color: var(--calorie); cursor: default;
+  }
+  @keyframes eff-pop {
+    0% { transform: scale(1); } 40% { transform: scale(1.5) rotate(-8deg); }
+    70% { transform: scale(0.9); } 100% { transform: scale(1); }
+  }
+
+  /* Scroll-triggered dismissible popup, a floating Stage 1 surface. */
+  .eff-pop {
+    position: fixed; z-index: 90;
+    left: 16px; right: 16px; bottom: 16px;
+    background: rgba(12,12,18,0.94);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    border: 1px solid rgba(168,170,255,0.22);
+    border-radius: 18px;
+    box-shadow: 0 18px 60px -20px rgba(0,0,0,0.8);
+    padding: 16px 16px 16px 18px;
+    display: flex; align-items: center; gap: 14px;
+    opacity: 0; transform: translateY(14px); pointer-events: none;
+    transition: opacity .28s ease, transform .28s ease;
+  }
+  .eff-pop.is-open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .eff-pop__body { flex: 1; min-width: 0; }
+  .eff-pop__title { font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 600; font-size: 15px; color: var(--ink); letter-spacing: -0.01em; }
+  .eff-pop__sub { font-size: 12px; color: var(--ink-dim); margin-top: 2px; line-height: 1.35; }
+  .eff-pop__close {
+    position: absolute; top: 8px; right: 8px;
+    width: 30px; height: 30px; border-radius: 8px;
+    display: grid; place-items: center;
+    background: transparent; border: none; color: var(--ink-low);
+    font-size: 18px; line-height: 1; cursor: pointer;
+    transition: color .15s ease, background .15s ease;
+  }
+  .eff-pop__close:hover { color: var(--ink); background: rgba(255,255,255,0.06); }
+  @media (min-width: 1024px) {
+    .eff-pop { left: auto; right: 22px; bottom: 22px; max-width: 360px; }
+  }
+
+  /* Stage 2/3 modal overlay. */
+  .eff-modal {
+    position: fixed; inset: 0; z-index: 100;
+    display: grid; place-items: center; padding: 20px;
+    background: rgba(4,4,7,0.72);
+    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+    opacity: 0; pointer-events: none; transition: opacity .2s ease;
+  }
+  .eff-modal.is-open { opacity: 1; pointer-events: auto; }
+  .eff-modal__card {
+    width: 100%; max-width: 420px;
+    background: var(--bg-2, #0c0c12);
+    border: 1px solid rgba(168,170,255,0.18);
+    border-radius: 22px;
+    box-shadow: 0 30px 80px -24px rgba(0,0,0,0.85);
+    padding: 24px 22px;
+    transform: translateY(12px) scale(0.98);
+    transition: transform .24s cubic-bezier(.19,1,.22,1);
+    max-height: calc(100vh - 40px); overflow-y: auto;
+  }
+  .eff-modal.is-open .eff-modal__card { transform: translateY(0) scale(1); }
+  .eff-modal__close {
+    position: absolute; top: 14px; right: 14px;
+    width: 32px; height: 32px; border-radius: 9px;
+    display: grid; place-items: center;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    color: var(--ink-dim); font-size: 18px; line-height: 1; cursor: pointer;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  .eff-modal__close:hover { color: var(--ink); border-color: rgba(255,255,255,0.2); }
+
+  /* Googly eyes header, the cute anchor of the feedback modal. */
+  .eff-eyes { display: inline-flex; gap: 7px; margin-bottom: 14px; }
+  .eff-eye {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #f4f4f7; position: relative;
+    box-shadow: inset 0 -3px 6px rgba(0,0,0,0.16);
+  }
+  .eff-eye::after {
+    content: ''; position: absolute; width: 14px; height: 14px; border-radius: 50%;
+    background: #0c0c12; left: 50%; top: 50%;
+    transform: translate(-50%,-40%);
+    animation: eff-googly 3s ease-in-out infinite;
+  }
+  .eff-eye:nth-child(2)::after { animation-delay: .35s; }
+  @keyframes eff-googly {
+    0%,100% { transform: translate(-50%,-25%); }
+    25% { transform: translate(-15%,-55%); }
+    50% { transform: translate(-80%,-45%); }
+    75% { transform: translate(-55%,-72%); }
+  }
+  .eff-modal.is-open .eff-eyes { animation: eff-wiggle .6s ease; }
+  @keyframes eff-wiggle {
+    0%,100% { transform: rotate(0); } 25% { transform: rotate(-7deg); }
+    50% { transform: rotate(6deg); } 75% { transform: rotate(-4deg); }
+  }
+
+  .eff-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--periwinkle); }
+  .eff-q { font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 600; font-size: 20px; line-height: 1.2; letter-spacing: -0.01em; color: var(--ink); margin: 6px 0 4px; }
+  .eff-sub { font-size: 12.5px; color: var(--ink-dim); line-height: 1.45; margin-bottom: 16px; }
+
+  .eff-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .eff-chip {
+    padding: 9px 14px; min-height: 40px;
+    border-radius: 9999px;
+    background: rgba(168,170,255,0.06);
+    border: 1px solid rgba(168,170,255,0.18);
+    color: var(--ink); font-size: 13px; cursor: pointer;
+    transition: background .12s ease, border-color .12s ease, transform .1s ease;
+  }
+  .eff-chip:hover { border-color: rgba(168,170,255,0.4); }
+  .eff-chip:active { transform: scale(0.97); }
+  .eff-chip.is-on {
+    background: rgba(168,170,255,0.18);
+    border-color: var(--periwinkle);
+    color: var(--periwinkle-bright);
+  }
+
+  .eff-field {
+    width: 100%; box-sizing: border-box;
+    padding: 12px 14px; margin-top: 10px;
+    background: rgba(7,7,11,0.5);
+    border: 1px solid rgba(168,170,255,0.18);
+    border-radius: 12px;
+    color: var(--ink); font-size: 16px; /* 16px avoids iOS focus zoom */
+    outline: none; transition: border-color .15s ease;
+  }
+  .eff-field::placeholder { color: var(--ink-low); }
+  .eff-field:focus { border-color: rgba(168,170,255,0.45); }
+
+  .eff-actions { display: flex; gap: 10px; align-items: center; margin-top: 18px; flex-wrap: wrap; }
+  .eff-btn {
+    flex: 1 1 auto; min-height: 44px; padding: 12px 20px;
+    border-radius: 9999px; border: none; cursor: pointer;
+    background: var(--periwinkle); color: #0a0a12;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500;
+    transition: background .15s ease, opacity .15s ease;
+  }
+  .eff-btn:hover { background: var(--periwinkle-bright); }
+  .eff-btn:disabled { opacity: 0.55; cursor: default; }
+  .eff-btn--ghost {
+    flex: 0 0 auto; background: transparent; color: var(--ink-low);
+    border: 1px solid transparent;
+  }
+  .eff-btn--ghost:hover { background: transparent; color: var(--ink-dim); }
+
+  .eff-note { font-size: 12.5px; margin-top: 12px; line-height: 1.4; }
+  .eff-note.is-err { color: var(--budget); }
+  .eff-note.is-ok  { color: var(--calorie); }
+
+  /* Honeypot, visually hidden but reachable by dumb bots. */
+  .eff-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+  .eff-panel[hidden] { display: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eff-heart.is-popped .eff-heart__glyph,
+    .eff-eye::after,
+    .eff-modal.is-open .eff-eyes { animation: none !important; }
+    .eff-pop, .eff-modal, .eff-modal__card { transition: none !important; }
+  }
 </style>
 
 <!-- FE-launch · moved from body, was the cookie-banner + a11y blocks -->
@@ -1222,6 +1417,15 @@
             <span>Unsubscribe anytime</span>
             <span>·</span>
             <span>India + Global rollout</span>
+          </div>
+
+          <!-- Engagement funnel · Stage 1 inline tap (additive, below the email form) -->
+          <div class="eff-cheer">
+            <div class="eff-cheer__copy">Not ready to sign up? Your encouragement still means a lot.</div>
+            <button type="button" class="eff-heart" id="effHeartTap" data-eff-tap aria-label="Send some encouragement">
+              <span class="eff-heart__glyph" aria-hidden="true">🫶</span>
+              <span class="eff-heart__label">Cheer us on</span>
+            </button>
           </div>
 
         </div>
@@ -2306,5 +2510,271 @@
 })();
 </script>
 
+<!-- ============================================================
+     ENGAGEMENT FUNNEL  ·  scroll popup + Stage 2/3 modal
+     Additive to the email form. All copy is dash-free per repo rule.
+     ============================================================ -->
+
+<!-- Stage 1 · scroll-triggered dismissible popup (second surface of the tap) -->
+<div class="eff-pop" id="effPop" role="dialog" aria-label="A quick note" aria-hidden="true">
+  <button type="button" class="eff-pop__close" id="effPopClose" aria-label="Dismiss">&times;</button>
+  <div class="eff-pop__body">
+    <div class="eff-pop__title">Enjoying the scroll?</div>
+    <div class="eff-pop__sub">No email needed. A tap of encouragement is enough.</div>
+  </div>
+  <button type="button" class="eff-heart" data-eff-tap aria-label="Send some encouragement">
+    <span class="eff-heart__glyph" aria-hidden="true">👍</span>
+    <span class="eff-heart__label">Cheer</span>
+  </button>
+</div>
+
+<!-- Stage 2 (feedback) + Stage 3 (contact) modal -->
+<div class="eff-modal" id="effModal" role="dialog" aria-modal="true" aria-labelledby="effModalTitle" aria-hidden="true">
+  <div class="eff-modal__card">
+    <button type="button" class="eff-modal__close" id="effModalClose" aria-label="Close">&times;</button>
+
+    <!-- Stage 2: feedback chips -->
+    <div class="eff-panel" id="effPanelFeedback">
+      <div class="eff-eyes" aria-hidden="true"><span class="eff-eye"></span><span class="eff-eye"></span></div>
+      <div class="eff-eyebrow">Thanks for the love</div>
+      <h3 class="eff-q" id="effModalTitle">What would make this a yes for you?</h3>
+      <p class="eff-sub">Tap all that apply, no typing.</p>
+      <div class="eff-chips" id="effChips" role="group" aria-label="What matters to you">
+        <button type="button" class="eff-chip" data-eff-chip="affordable" aria-pressed="false">Affordable</button>
+        <button type="button" class="eff-chip" data-eff-chip="nutrition_detail" aria-pressed="false">More nutrition detail</button>
+        <button type="button" class="eff-chip" data-eff-chip="motivational" aria-pressed="false">Motivational &amp; fun</button>
+        <button type="button" class="eff-chip" data-eff-chip="fast_simple" aria-pressed="false">Fast &amp; simple</button>
+        <button type="button" class="eff-chip" data-eff-chip="personalized" aria-pressed="false">Personalized to me</button>
+      </div>
+      <div class="eff-actions">
+        <button type="button" class="eff-btn" id="effChipsSubmit">Send feedback</button>
+      </div>
+    </div>
+
+    <!-- Stage 3: contact (email or phone, both optional) -->
+    <div class="eff-panel" id="effPanelContact" hidden>
+      <div class="eff-eyebrow">One last thing</div>
+      <h3 class="eff-q">Be an early patron?</h3>
+      <p class="eff-sub">If we ever run a giveaway or ship early access, we want to thank the people who backed us first. Email or phone, whatever you prefer. Totally optional.</p>
+      <input type="text" class="eff-hp" id="effHp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <input type="email" class="eff-field" id="effEmail" placeholder="your@email.com" autocomplete="email" inputmode="email" aria-label="Email (optional)">
+      <input type="tel" class="eff-field" id="effPhone" placeholder="Phone (optional)" autocomplete="tel" inputmode="tel" aria-label="Phone (optional)">
+      <div class="eff-note" id="effContactNote" role="alert" hidden></div>
+      <div class="eff-actions">
+        <button type="button" class="eff-btn" id="effContactSubmit">Count me in</button>
+        <button type="button" class="eff-btn eff-btn--ghost" id="effContactSkip">No thanks</button>
+      </div>
+    </div>
+
+    <!-- Done -->
+    <div class="eff-panel" id="effPanelDone" hidden>
+      <div class="eff-eyes" aria-hidden="true"><span class="eff-eye"></span><span class="eff-eye"></span></div>
+      <div class="eff-eyebrow">You are a gem</div>
+      <h3 class="eff-q">Thank you 🎉</h3>
+      <p class="eff-sub">That genuinely helps us build the right thing. See you soon.</p>
+      <div class="eff-actions"><button type="button" class="eff-btn" id="effDoneClose">Close</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Engagement funnel controller. Self-contained, no dependencies.
+   Stage 1 tap (inline + popup) -> Stage 2 chips -> Stage 3 contact.
+   State cached in localStorage so a returning browser is never re-asked.
+   Degrades gracefully with no localStorage and with reduced motion. */
+(function () {
+  'use strict';
+  var ENDPOINT = '/api/waitlist';           // must stay relative (same-origin)
+  var SID_KEY = 'eff_sid_v1';
+  var STATE_KEY = 'eff_state_v1';            // '' | dismissed | tapped | feedback_done | contact_done
+  var TS_KEY = 'eff_ts_v1';
+  var POPUP_SCROLL_PCT = 0.45;              // reveal popup once past 45% scroll
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var mem = {};
+  function lsGet(k){ try { return window.localStorage.getItem(k); } catch (e) { return mem[k] || null; } }
+  function lsSet(k, v){ try { window.localStorage.setItem(k, v); } catch (e) { mem[k] = v; } }
+
+  function uuid(){
+    try { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch (e) {}
+    return 'sid-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+  }
+  var SID = lsGet(SID_KEY);
+  if (!SID) { SID = uuid(); lsSet(SID_KEY, SID); }
+
+  function getState(){ return lsGet(STATE_KEY) || ''; }
+  function setState(s){ lsSet(STATE_KEY, s); lsSet(TS_KEY, String(Date.now())); }
+
+  function post(payload){
+    var body = Object.assign({ sid: SID, source: 'funnel', website: '' }, payload);
+    return fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      keepalive: true
+    });
+  }
+
+  var pop = document.getElementById('effPop');
+  var modal = document.getElementById('effModal');
+  var panelFeedback = document.getElementById('effPanelFeedback');
+  var panelContact = document.getElementById('effPanelContact');
+  var panelDone = document.getElementById('effPanelDone');
+  var lastFocus = null;
+
+  function showPanel(el){
+    [panelFeedback, panelContact, panelDone].forEach(function (p){ if (p) p.hidden = (p !== el); });
+  }
+
+  function openModal(panel){
+    if (!modal) return;
+    showPanel(panel || panelFeedback);
+    lastFocus = document.activeElement;
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.documentElement.style.overflow = 'hidden';
+    var focusable = modal.querySelector('.eff-panel:not([hidden]) .eff-chip, .eff-panel:not([hidden]) .eff-field, .eff-panel:not([hidden]) .eff-btn');
+    if (focusable && !reduce) { try { focusable.focus(); } catch (e) {} }
+  }
+  function closeModal(){
+    if (!modal) return;
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.documentElement.style.overflow = '';
+    if (lastFocus && lastFocus.focus) { try { lastFocus.focus(); } catch (e) {} }
+  }
+
+  function hidePopup(){ if (pop) { pop.classList.remove('is-open'); pop.setAttribute('aria-hidden', 'true'); } }
+  function showPopup(){
+    if (!pop || getState()) return;          // never if any prior choice cached
+    pop.classList.add('is-open');
+    pop.setAttribute('aria-hidden', 'false');
+  }
+  function dismissPopup(){
+    hidePopup();
+    if (!getState()) setState('dismissed');  // remember: do not re-ask this browser
+  }
+
+  function markContactDone(){
+    setState('contact_done');
+    var inline = document.getElementById('effHeartTap');
+    if (inline) {
+      inline.classList.add('is-done');
+      var lbl = inline.querySelector('.eff-heart__label'); if (lbl) lbl.textContent = 'Thank you';
+      var gly = inline.querySelector('.eff-heart__glyph'); if (gly) gly.textContent = '💛';
+    }
+  }
+
+  // Stage 1 tap, shared by the inline button and the popup button.
+  function doTap(e){
+    var btn = e && e.currentTarget;
+    if (btn) { btn.classList.add('is-popped'); setTimeout(function (){ btn.classList.remove('is-popped'); }, 500); }
+    hidePopup();
+    var st = getState();
+    if (st === '' || st === 'dismissed') { setState('tapped'); post({ stage: 'tap' }).catch(function (){}); }
+    openModal(getState() === 'feedback_done' ? panelContact : panelFeedback);
+  }
+
+  function collectChips(){
+    var out = [];
+    if (modal) modal.querySelectorAll('.eff-chip.is-on').forEach(function (c){ out.push(c.getAttribute('data-eff-chip')); });
+    return out;
+  }
+
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  var PHONE_RE = /^[+]?[\d\s()-]{7,20}$/;
+
+  function ready(){
+    // Stage 1 tap buttons (inline + popup).
+    document.querySelectorAll('[data-eff-tap]').forEach(function (b){ b.addEventListener('click', doTap); });
+
+    // Reflect a completed contact from a past visit; then the funnel rests.
+    if (getState() === 'contact_done') {
+      var inlineDone = document.getElementById('effHeartTap');
+      if (inlineDone) {
+        inlineDone.classList.add('is-done');
+        var l = inlineDone.querySelector('.eff-heart__label'); if (l) l.textContent = 'Thank you';
+        var g = inlineDone.querySelector('.eff-heart__glyph'); if (g) g.textContent = '💛';
+      }
+    }
+
+    // Stage 2 chips: multi-select toggle.
+    document.querySelectorAll('.eff-chip').forEach(function (c){
+      c.addEventListener('click', function (){
+        var on = c.classList.toggle('is-on');
+        c.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+    });
+
+    var chipsSubmit = document.getElementById('effChipsSubmit');
+    if (chipsSubmit) chipsSubmit.addEventListener('click', function (){
+      setState('feedback_done');
+      post({ stage: 'chips', answers: collectChips() }).catch(function (){});
+      showPanel(panelContact);
+      var f = document.getElementById('effEmail'); if (f && !reduce) { try { f.focus(); } catch (e) {} }
+    });
+
+    var contactSubmit = document.getElementById('effContactSubmit');
+    var note = document.getElementById('effContactNote');
+    if (contactSubmit) contactSubmit.addEventListener('click', function (){
+      var email = (document.getElementById('effEmail').value || '').trim();
+      var phone = (document.getElementById('effPhone').value || '').trim();
+      var hp = (document.getElementById('effHp').value || '');
+      var okEmail = email && EMAIL_RE.test(email);
+      var okPhone = phone && PHONE_RE.test(phone);
+      if (!okEmail && !okPhone) {
+        if (note) { note.hidden = false; note.className = 'eff-note is-err'; note.textContent = 'Enter a valid email or phone, or tap No thanks.'; }
+        return;
+      }
+      contactSubmit.disabled = true;
+      post({ stage: 'contact', email: okEmail ? email : '', phone: okPhone ? phone : '', website: hp })
+        .then(function (r){ return r.json().catch(function (){ return {}; }); })
+        .then(function (d){
+          if (d && d.error) {
+            if (note) { note.hidden = false; note.className = 'eff-note is-err'; note.textContent = d.error; }
+            contactSubmit.disabled = false;
+            return;
+          }
+          markContactDone();
+          showPanel(panelDone);
+        })
+        .catch(function (){ markContactDone(); showPanel(panelDone); });
+    });
+
+    var skip = document.getElementById('effContactSkip');
+    if (skip) skip.addEventListener('click', function (){
+      if (getState() !== 'contact_done') setState('feedback_done'); // completed feedback, declined contact
+      closeModal();
+    });
+
+    var doneClose = document.getElementById('effDoneClose');
+    if (doneClose) doneClose.addEventListener('click', closeModal);
+
+    var mClose = document.getElementById('effModalClose');
+    if (mClose) mClose.addEventListener('click', closeModal);
+    if (modal) modal.addEventListener('click', function (e){ if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', function (e){ if (e.key === 'Escape' && modal && modal.classList.contains('is-open')) closeModal(); });
+
+    var pClose = document.getElementById('effPopClose');
+    if (pClose) pClose.addEventListener('click', dismissPopup);
+
+    // Scroll trigger for the popup: once, only when no prior choice is cached.
+    if (!getState()) {
+      var shown = false;
+      var onScroll = function (){
+        if (shown || getState()) { window.removeEventListener('scroll', onScroll); return; }
+        var h = document.documentElement;
+        var scrolled = (h.scrollTop || document.body.scrollTop || 0);
+        var max = (h.scrollHeight - h.clientHeight) || 1;
+        if (scrolled / max >= POPUP_SCROLL_PCT) { shown = true; window.removeEventListener('scroll', onScroll); showPopup(); }
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready);
+  else ready();
+})();
+</script>
 </body>
 </html>
