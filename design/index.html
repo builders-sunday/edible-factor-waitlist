@@ -182,6 +182,17 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
 .act .dot{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.55;}
 .act.is-copied .dot{opacity:1;}
 
+/* JS-enhanced brand kit: inline live mark + static/background toggles.
+   Falls back to the plain <img> + download links when JS is off. */
+.stage .ef-live{width:clamp(78px,12vw,104px);height:auto;border-radius:20px;position:relative;z-index:1;display:block;}
+.stage-paper .ef-live{box-shadow:0 20px 40px -18px rgba(10,11,16,.55);}
+.stage-peri .ef-live{box-shadow:0 20px 42px -16px rgba(10,11,16,.5);}
+.stage-light .ef-live{box-shadow:0 20px 40px -18px rgba(10,11,16,.35);}
+.lockup-stage .ef-live{width:clamp(52px,8vw,72px);height:auto;border-radius:15px;display:block;}
+.act.is-on{color:#0a0a12;background:var(--peri);border-color:var(--peri);}
+.act.is-on:hover{color:#0a0a12;background:var(--peri-bright);border-color:var(--peri-bright);}
+.act.is-on .dot{opacity:1;}
+
 /* wide wordmark lockup */
 .lockup{
   grid-column:1 / -1;
@@ -627,6 +638,180 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
     rises.forEach(function(el){ io.observe(el); });
   }
+})();
+</script>
+
+<script>
+/* Brand-kit mark controls. Inlines each emblem SVG so every variant gets a
+   Static toggle (freeze the animation), a Background toggle (show/hide the
+   canvas fill), and Download as SVG or PNG that reflect both toggles. No-JS
+   users keep the plain <img> + the download links already in the markup. */
+(function () {
+  'use strict';
+  var SOURCES = { dark: 'assets/ef-mark.svg', light: 'assets/ef-mark-light.svg' };
+  var parsed = {}; // 'dark' | 'light' -> original parsed <svg>
+
+  function findBg(svg) {
+    var rects = svg.querySelectorAll('rect');
+    for (var i = 0; i < rects.length; i++) {
+      var r = rects[i];
+      var x = r.getAttribute('x'), y = r.getAttribute('y');
+      if (r.getAttribute('width') === '64' && r.getAttribute('height') === '64'
+          && (x === null || x === '0') && (y === null || y === '0')) {
+        return r;
+      }
+    }
+    return null;
+  }
+
+  // Live preview: mutate the inlined svg in place to reflect the toggles.
+  function applyState(svg, st) {
+    var anim = svg.querySelectorAll('.ef-dot, .ef-ring');
+    for (var i = 0; i < anim.length; i++) anim[i].style.animation = st.stat ? 'none' : '';
+    var ring = svg.querySelector('.ef-ring');
+    if (ring) ring.style.strokeOpacity = st.stat ? '0.35' : '';
+    var bg = findBg(svg);
+    if (bg) bg.style.display = st.bg ? '' : 'none';
+  }
+
+  // Build a clean, standalone SVG string from the ORIGINAL (not the live node)
+  // with the chosen options baked in.
+  function buildSvg(variant, st, sizePx) {
+    var c = parsed[variant].cloneNode(true);
+    c.removeAttribute('class');
+    var bg = findBg(c);
+    if (bg && !st.bg) bg.parentNode.removeChild(bg);
+    if (st.stat) {
+      var style = c.querySelector('style');
+      if (style) style.parentNode.removeChild(style);
+      var dots = c.querySelectorAll('.ef-dot');
+      for (var i = 0; i < dots.length; i++) dots[i].removeAttribute('class');
+      var ring = c.querySelector('.ef-ring');
+      if (ring) { ring.setAttribute('stroke-opacity', '0.35'); ring.removeAttribute('class'); }
+    }
+    c.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    // Scalable for the .svg download (viewBox only); explicit pixels for the
+    // PNG raster so the intermediate Image has real intrinsic dimensions.
+    if (sizePx) { c.setAttribute('width', String(sizePx)); c.setAttribute('height', String(sizePx)); }
+    return '<?xml version="1.0" encoding="UTF-8"?>\n' + new XMLSerializer().serializeToString(c);
+  }
+
+  function fileBase(variant, st) {
+    return 'ef-mark' + (variant === 'light' ? '-light' : '') + (st.stat ? '-static' : '-animated') + (st.bg ? '' : '-nobg');
+  }
+
+  function saveBlob(blob, name) {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+  }
+
+  function downloadSvg(variant, st) {
+    saveBlob(new Blob([buildSvg(variant, st)], { type: 'image/svg+xml' }), fileBase(variant, st) + '.svg');
+  }
+
+  function downloadPng(variant, st, onDone) {
+    var svgStr = buildSvg(variant, st);
+    var img = new Image();
+    img.onload = function () {
+      var size = 1024;
+      var canvas = document.createElement('canvas');
+      canvas.width = size; canvas.height = size;
+      var ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, size, size); // transparent when background is off
+      ctx.drawImage(img, 0, 0, size, size);
+      canvas.toBlob(function (blob) {
+        if (blob) saveBlob(blob, fileBase(variant, st) + '.png');
+        if (onDone) onDone(!!blob);
+      }, 'image/png');
+    };
+    img.onerror = function () { if (onDone) onDone(false); };
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr);
+  }
+
+  function actBtn(label, pressed) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'act';
+    if (pressed) b.setAttribute('aria-pressed', 'true');
+    b.innerHTML = '<span class="dot" aria-hidden="true"></span><span class="t"></span>';
+    b.querySelector('.t').textContent = label;
+    return b;
+  }
+
+  function flash(btn, msg) {
+    var t = btn.querySelector('.t');
+    var prev = t.textContent;
+    t.textContent = msg;
+    btn.classList.add('is-copied');
+    setTimeout(function () { t.textContent = prev; btn.classList.remove('is-copied'); }, 1100);
+  }
+
+  function enhanceCard(fig) {
+    var img = fig.querySelector('img');
+    if (!img) return;
+    var variant = /light/.test(img.getAttribute('src') || '') ? 'light' : 'dark';
+    if (!parsed[variant]) return;
+
+    var svg = parsed[variant].cloneNode(true);
+    svg.setAttribute('class', 'ef-live');
+    svg.removeAttribute('width');
+    svg.removeAttribute('height');
+    var alt = img.getAttribute('alt');
+    if (alt) { svg.setAttribute('role', 'img'); svg.setAttribute('aria-label', alt); }
+    img.parentNode.replaceChild(svg, img);
+
+    var st = { stat: false, bg: true };
+    applyState(svg, st);
+
+    var acts = fig.querySelector('.acts');
+    if (!acts) return;
+    acts.innerHTML = '';
+
+    var bStatic = actBtn('Static', false);
+    var bBg = actBtn('Background', true);
+    bBg.classList.add('is-on'); // background on by default
+    var bSvg = actBtn('SVG', false);
+    var bPng = actBtn('PNG', false);
+
+    bStatic.addEventListener('click', function () {
+      st.stat = !st.stat;
+      bStatic.classList.toggle('is-on', st.stat);
+      bStatic.setAttribute('aria-pressed', st.stat ? 'true' : 'false');
+      applyState(svg, st);
+    });
+    bBg.addEventListener('click', function () {
+      st.bg = !st.bg;
+      bBg.classList.toggle('is-on', st.bg);
+      bBg.setAttribute('aria-pressed', st.bg ? 'true' : 'false');
+      applyState(svg, st);
+    });
+    bSvg.addEventListener('click', function () { downloadSvg(variant, st); flash(bSvg, 'Saved'); });
+    bPng.addEventListener('click', function () {
+      if (bPng.dataset.busy) return;
+      bPng.dataset.busy = '1';
+      flash(bPng, 'Rendering');
+      downloadPng(variant, st, function (ok) { delete bPng.dataset.busy; if (!ok) flash(bPng, 'Failed'); });
+    });
+
+    acts.appendChild(bStatic);
+    acts.appendChild(bBg);
+    acts.appendChild(bSvg);
+    acts.appendChild(bPng);
+  }
+
+  Promise.all([
+    fetch(SOURCES.dark).then(function (r) { return r.text(); }),
+    fetch(SOURCES.light).then(function (r) { return r.text(); })
+  ]).then(function (res) {
+    var p = new DOMParser();
+    parsed.dark = p.parseFromString(res[0], 'image/svg+xml').documentElement;
+    parsed.light = p.parseFromString(res[1], 'image/svg+xml').documentElement;
+    var cards = document.querySelectorAll('figure.logo-card, figure.lockup');
+    for (var i = 0; i < cards.length; i++) enhanceCard(cards[i]);
+  }).catch(function () { /* keep the no-JS <img> + download-link fallback */ });
 })();
 </script>
 </body>
