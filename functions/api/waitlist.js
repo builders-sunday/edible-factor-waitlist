@@ -99,6 +99,55 @@ function postSlack(env, waitUntil, text, context) {
   if (typeof waitUntil === 'function') waitUntil(p);
 }
 
+// Assign an idempotent queue position per email using KV (reuses the already
+// bound RATE_LIMIT namespace). Returns { position, isNew }. FAILS OPEN: with no
+// KV bound, or on any KV error, returns { position: null, isNew: true } so the
+// signup still succeeds - the position is a nice-to-have, not a gate. Keys are
+// prefixed wlq: so they never collide with the wl:/wlf: rate-limit keys, and
+// carry no TTL (a position is permanent). Note: KV has no atomic increment, so
+// a rare concurrent race can reuse a number - acceptable for a waitlist.
+async function assignPosition(env, email) {
+  const kv = env.WAITLIST_KV || env.RATE_LIMIT;
+  if (!kv || !email) return { position: null, isNew: true };
+  try {
+    const existing = await kv.get(`wlq:pos:${email}`);
+    if (existing) return { position: parseInt(existing, 10) || null, isNew: false };
+    const current = parseInt((await kv.get('wlq:count')) || '0', 10);
+    const position = current + 1;
+    await kv.put('wlq:count', String(position));
+    await kv.put(`wlq:pos:${email}`, String(position));
+    return { position, isNew: true };
+  } catch (e) {
+    console.error('[waitlist] position error:', e);
+    return { position: null, isNew: true };
+  }
+}
+
+// Fire-and-forget Loops transactional confirmation email ("you're #N on the
+// list"). FAILS OPEN: skipped unless BOTH LOOPS_API_KEY and LOOPS_CONFIRMATION_ID
+// are set (the latter is the transactional template id created in the Loops
+// dashboard, whose body references {position}). Never blocks the user response.
+function sendLoopsConfirmation(env, waitUntil, email, position) {
+  if (!env.LOOPS_API_KEY || !env.LOOPS_CONFIRMATION_ID) return;
+  const p = fetch('https://app.loops.so/api/v1/transactional', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${env.LOOPS_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      transactionalId: env.LOOPS_CONFIRMATION_ID,
+      email,
+      dataVariables: { position: position != null ? position : '' },
+    }),
+  })
+    .then(async (r) => {
+      if (!r.ok) console.error('[waitlist] Loops confirmation failed:', r.status, await r.text().catch(() => ''));
+    })
+    .catch((e) => console.error('[waitlist] Loops confirmation error:', e));
+  if (typeof waitUntil === 'function') waitUntil(p);
+}
+
 export async function onRequestOptions({ request }) {
   return new Response(null, { status: 204, headers: corsHeaders(request.headers.get('origin')) });
 }
@@ -189,9 +238,21 @@ export async function onRequestPost({ request, env, waitUntil }) {
       console.log('[waitlist]', JSON.stringify(signup));
     }
 
+    // Assign a queue position (idempotent per email) and, for a NEW signup,
+    // fire the confirmation email with it. Both degrade gracefully - a returning
+    // subscriber gets their original position back and no duplicate email.
+    let position = null;
+    let alreadySubscribed = false;
+    if (hasEmail) {
+      const assigned = await assignPosition(env, email);
+      position = assigned.position;
+      alreadySubscribed = !assigned.isNew;
+      if (assigned.isNew) sendLoopsConfirmation(env, waitUntil, email, position);
+    }
+
     postSlack(
       env, waitUntil,
-      `:incoming_envelope: *Waitlist signup*\n\`${email || phone}\``,
+      `:incoming_envelope: *Waitlist signup*${position != null ? ' #' + position : ''}\n\`${email || phone}\``,
       `${sid ? 'sid `' + sid + '` · ' : ''}source \`${signup.source}\` · ip \`${signup.ip}\` · ${signup.ts}`,
     );
 
@@ -203,7 +264,7 @@ export async function onRequestPost({ request, env, waitUntil }) {
     // await fetch(env.SHEETS_WEBHOOK_URL, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(signup) });
     */
 
-    return json({ ok: true }, 200, cors);
+    return json({ ok: true, ...(position != null ? { position } : {}), ...(alreadySubscribed ? { alreadySubscribed: true } : {}) }, 200, cors);
   } catch (err) {
     console.error('[waitlist] error:', err);
     return json({ error: 'Could not save right now. Please try again shortly.' }, 500, cors);
