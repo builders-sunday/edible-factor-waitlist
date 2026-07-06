@@ -2466,7 +2466,12 @@ html.theme-light .theme-toggle .ic-moon { display: block; }
         if (err) { err.textContent = msg; err.classList.remove('hidden'); }
         suc && suc.classList.add('hidden');
       };
-      const showSuccess = () => {
+      const showSuccess = (position) => {
+        if (suc) {
+          suc.textContent = position
+            ? `You're #${Number(position).toLocaleString()} on the list. Watch your inbox.`
+            : "You're on the list. Watch your inbox.";
+        }
         err && err.classList.add('hidden');
         suc && suc.classList.remove('hidden');
       };
@@ -2486,7 +2491,7 @@ html.theme-light .theme-toggle .ic-moon { display: block; }
         });
         const data = await res.json().catch(() => ({}));
         if (res.ok && data?.ok) {
-          showSuccess();
+          showSuccess(data.position);
           form.reset();
         } else if (res.status === 429) {
           showErr('Too many signups from here. Please try again in a bit.');
