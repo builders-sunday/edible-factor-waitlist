@@ -1369,6 +1369,67 @@ html.theme-light .bg-grid {
   background-size: 72px 72px, 160px 160px;
 }
 
+/* ── Grand finale: ANIMATED origami. A fixed field of paper squares that fold
+   open and closed in a diagonal wave. Light + motion only; a script fills
+   #origami-layer and sets html.origami-live. Reduced-motion / no-JS fall back
+   to the static faceted texture above. ── */
+#origami-layer { display: none; }
+html.origami-live.theme-light #origami-layer {
+  display: grid;
+  position: fixed;
+  inset: -14px;                  /* bleed so edge tiles are never clipped */
+  z-index: -1;                   /* behind all content; it IS the page backdrop */
+  pointer-events: none;
+  overflow: hidden;
+  background: var(--bg);         /* eggshell base under the tiles */
+  grid-auto-rows: var(--ori-size, 134px);
+}
+/* Make the page base transparent so the fixed folding field (z-index -1) shows
+   through everything except opaque cards. Content stays above it naturally. */
+html.origami-live.theme-light,
+html.origami-live.theme-light body.bg-bg { background-color: transparent; }
+/* The waitlist card stays a clean, near-opaque panel over the folding backdrop
+   (only a whisper of paper shows through its frosted glass), so the form + CTA
+   never fight the texture. */
+html.origami-live.theme-light .wl-card { background-color: color-mix(in srgb, var(--bg-2) 96%, transparent); }
+/* When the animation is live, sections drop the STATIC facet SVG (the folding
+   tiles replace it) and keep only the faint paper grain, so the fixed field
+   shows through. */
+html.origami-live.theme-light .bg-grid {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='pp'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23pp)' opacity='0.028'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+.ori-tile { position: relative; perspective: 680px; }
+/* static lower-left paper half (the sheet under the fold) */
+.ori-tile::before {
+  content: ''; position: absolute; inset: 0;
+  clip-path: polygon(0 0, 0 100%, 100% 100%);
+  background: linear-gradient(135deg,
+    color-mix(in srgb, #ffffff 12%, transparent),
+    color-mix(in srgb, #60100b 8%, transparent));
+}
+/* folding upper-right paper half - rotates around the tile diagonal (1,1,0) */
+.ori-tile > i {
+  position: absolute; inset: 0;
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+  background: linear-gradient(315deg,
+    color-mix(in srgb, #ffffff 66%, transparent),
+    color-mix(in srgb, #60100b 3%, transparent));
+  transform-origin: center;
+  backface-visibility: visible;
+  animation: ori-fold var(--ori-dur, 7s) cubic-bezier(.5, 0, .15, 1) infinite;
+}
+@keyframes ori-fold {
+  0%, 10%   { transform: rotate3d(1, 1, 0, 0deg);   filter: brightness(1); }
+  50%       { transform: rotate3d(1, 1, 0, 176deg); filter: brightness(0.6); }
+  90%, 100% { transform: rotate3d(1, 1, 0, 0deg);   filter: brightness(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html.origami-live.theme-light #origami-layer { display: none; }
+  .ori-tile > i { animation: none; transform: rotate3d(1, 1, 0, 0deg); }
+}
+
 /* ── Theme toggle (nav) ── */
 .theme-toggle {
   width: 36px; height: 36px; flex-shrink: 0;
@@ -1388,6 +1449,11 @@ html.theme-light .theme-toggle .ic-moon { display: block; }
 </head>
 
 <body class="bg-bg text-ink font-body">
+
+<!-- Animated origami: a fixed field of paper squares that fold + open. Light
+     mode + motion only; JS fills it (see the origami-fold script). The static
+     faceted .bg-grid texture is the no-JS / reduced-motion fallback. -->
+<div id="origami-layer" aria-hidden="true"></div>
 
 <noscript>
 <div style="background:#07070b;color:#eceaf3;padding:18px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#9693ac;border-bottom:1px solid rgba(217,95,82,0.20);">
@@ -2533,6 +2599,50 @@ html.theme-light .theme-toggle .ic-moon { display: block; }
         imgs[idx].classList.add('is-active');
       }, 2800);
     });
+  })();
+
+  /* Grand finale: build the animated origami field. A grid of paper tiles sized
+     to the viewport; each folds along its diagonal, staggered by (row + col) so
+     the folds ripple across the screen as a diagonal wave. Motion + light only;
+     reduced-motion or no-JS keep the static faceted texture. */
+  (function () {
+    var layer = document.getElementById('origami-layer');
+    if (!layer) return;
+    var root = document.documentElement;
+    var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function build() {
+      if (mq.matches) { root.classList.remove('origami-live'); layer.textContent = ''; return; }
+      // Scale tile size with the viewport so the element count stays bounded
+      // (~100 tiles) even on ultrawide/4K screens - keeps the animation light.
+      var size = window.innerWidth < 640 ? 92 : Math.max(118, Math.round(window.innerWidth / 13));
+      var cols = Math.ceil(window.innerWidth / size) + 1;
+      var rows = Math.ceil(window.innerHeight / size) + 1;
+      layer.style.setProperty('--ori-size', size + 'px');
+      layer.style.gridTemplateColumns = 'repeat(' + cols + ', ' + size + 'px)';
+      var frag = document.createDocumentFragment();
+      for (var r = 0; r < rows; r++) {
+        for (var c = 0; c < cols; c++) {
+          var tile = document.createElement('div');
+          tile.className = 'ori-tile';
+          var flap = document.createElement('i');
+          // Diagonal wave (wrapped every 9 diagonals) + a touch of duration
+          // variety so the field breathes organically rather than in lockstep.
+          flap.style.animationDelay = (((r + c) % 9) * 0.5).toFixed(2) + 's';
+          flap.style.setProperty('--ori-dur', (6.4 + ((r * 5 + c * 3) % 5) * 0.5).toFixed(2) + 's');
+          tile.appendChild(flap);
+          frag.appendChild(tile);
+        }
+      }
+      layer.textContent = '';
+      layer.appendChild(frag);
+      root.classList.add('origami-live');
+    }
+
+    build();
+    var t;
+    window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(build, 250); });
+    if (mq.addEventListener) mq.addEventListener('change', build);
   })();
 </script>
 
