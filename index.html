@@ -346,11 +346,21 @@
     font-family: 'JetBrains Mono', ui-monospace, monospace;
     font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
     padding: 12px 22px; border-radius: 9999px;
-    text-decoration: none;
+    text-decoration: none; white-space: nowrap;
     transition: transform .15s ease, background .15s ease;
     display: inline-flex; align-items: center; gap: 10px;
   }
   .pill-cta:hover { background: var(--periwinkle-bright); transform: translateY(-1px); }
+
+  /* Mobile nav: compact the pills + switch so all three fit on one row with
+     clear breathing room between the logo and the Careers bubble. */
+  @media (max-width: 560px) {
+    .pill-cta { padding: 9px 14px; font-size: 11px; letter-spacing: 0.1em; }
+    .pill-glass { padding: 7px 12px; font-size: 10px; letter-spacing: 0.1em; }
+    .bp-switch { width: 52px; height: 27px; }
+    .bp-knob { width: 23px; height: 23px; left: calc(100% - 23px - 3px); }
+    html.theme-light .bp-knob { left: 3px; }
+  }
 
   /* Glass bubble button (nav Careers): a frosted liquid-glass pill matching the
      email input + theme toggle. Theme-aware; never underlined. */
@@ -438,24 +448,23 @@
   /* Trim the hero's top dead space (was 96px) while preserving notch safe-area. */
   .hero-section.bg-grid { padding-top: calc(74px + env(safe-area-inset-top)); }
 
-  /* Hand-drawn pencil marks: a wavy underline beneath the rotor word
-     (calories/budget) and a rough hand-drawn circle around "HOW". Theme-aware
-     warm-graphite fill via an SVG alpha-mask + color-mix, so they read like a
-     real pencil annotation in both themes. */
-  .rotor::after {
-    content: ''; position: absolute; left: -4%; right: -4%; bottom: -0.30em;
-    height: 0.40em; pointer-events: none;
-    background: color-mix(in srgb, var(--periwinkle) 80%, var(--ink));
-    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 14' preserveAspectRatio='none'%3E%3Cpath d='M4 9 C40 4 70 11 104 7 C140 3 168 10 196 5' fill='none' stroke='%23000' stroke-width='3.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 14' preserveAspectRatio='none'%3E%3Cpath d='M4 9 C40 4 70 11 104 7 C140 3 168 10 196 5' fill='none' stroke='%23000' stroke-width='3.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
+  /* Lede marks: a smooth BLACK pencil underline under "any menu" / "any meal"
+     (theme-aware ink so it stays visible in dark), and "both" as a calorie-blue
+     <-> budget-orange colour rotator (no underline). */
+  .pencil-ul { position: relative; white-space: nowrap; }
+  .pencil-ul::after {
+    content: ''; position: absolute; left: -3%; right: -3%; bottom: -0.22em;
+    height: 0.34em; pointer-events: none;
+    background: var(--ink);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M3 7 C60 3 140 3 197 6' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M3 7 C60 3 140 3 197 6' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
   }
-  .hero__title .accent { position: relative; }
-  .hero__title .accent::after {
-    content: ''; position: absolute; inset: -0.14em -0.22em -0.08em; pointer-events: none;
-    background: color-mix(in srgb, var(--periwinkle) 62%, var(--ink));
-    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 110' preserveAspectRatio='none'%3E%3Cpath d='M108 7 C166 4 214 27 210 58 C206 89 150 105 99 103 C46 101 9 80 12 49 C15 22 60 11 124 9' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 110' preserveAspectRatio='none'%3E%3Cpath d='M108 7 C166 4 214 27 210 58 C206 89 150 105 99 103 C46 101 9 80 12 49 C15 22 60 11 124 9' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
+  .both-rotor { font-weight: 600; animation: both-color 3.4s ease-in-out infinite; }
+  @keyframes both-color {
+    0%, 42%   { color: var(--calorie); }
+    58%, 100% { color: var(--budget); }
   }
+  @media (prefers-reduced-motion: reduce) { .both-rotor { animation: none; color: var(--calorie); } }
   /* Mobile only: reserve right-side space for the absolutely-positioned
      glimpse rotator so the H1 does not slide under it. At >=768px the
      glimpse is a flex sibling of the H1, so no padding is needed
@@ -1477,21 +1486,50 @@ html.origami-live.theme-light .bg-grid {
   .ori-tile > i { animation: none; transform: rotate3d(1, 1, 0, 0deg); }
 }
 
-/* ── Theme toggle (nav) ── */
-.theme-toggle {
-  width: 36px; height: 36px; flex-shrink: 0;
-  display: inline-flex; align-items: center; justify-content: center;
-  border-radius: 9999px; border: 1px solid rgba(255,255,255,0.12);
-  color: var(--ink-dim); background: transparent; cursor: pointer;
-  transition: color 0.2s, border-color 0.2s, background 0.2s;
+/* ── Theme toggle: a Buster & Punch style knurled-brass metal switch ── */
+.bp-switch {
+  position: relative; flex-shrink: 0;
+  width: 62px; height: 30px; padding: 0; border: 1px solid rgba(0,0,0,0.6);
+  border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center;
+  /* recessed gunmetal slot (dark theme default) */
+  background: linear-gradient(180deg, #080706, #201c17 62%, #2a251d);
+  box-shadow:
+    inset 0 2px 5px rgba(0,0,0,0.75),
+    inset 0 -1px 0 rgba(255,255,255,0.07),
+    0 1px 0 rgba(255,255,255,0.13);
+  transition: background .3s ease, box-shadow .3s ease, border-color .3s ease;
 }
-.theme-toggle:hover { color: var(--periwinkle); border-color: var(--periwinkle); }
-html.theme-light .theme-toggle { border-color: rgba(35,32,29,0.16); }
-.theme-toggle svg { width: 17px; height: 17px; }
-.theme-toggle .ic-moon { display: none; }
-.theme-toggle .ic-sun { display: block; }
-html.theme-light .theme-toggle .ic-sun { display: none; }
-html.theme-light .theme-toggle .ic-moon { display: block; }
+html.theme-light .bp-switch {
+  /* warm brushed-nickel slot on light */
+  background: linear-gradient(180deg, #c8bfae, #ded5c4 60%, #eae2d2);
+  border-color: rgba(120,98,64,0.4);
+  box-shadow:
+    inset 0 2px 5px rgba(96,74,40,0.30),
+    inset 0 -1px 0 rgba(255,255,255,0.75),
+    0 1px 0 rgba(255,255,255,0.55);
+}
+.bp-switch .bp-ic { position: absolute; top: 50%; transform: translateY(-50%); width: 13px; height: 13px; pointer-events: none; transition: opacity .25s ease; }
+.bp-switch .bp-ic-sun  { left: 8px;  color: #eaa53a; opacity: .38; }
+.bp-switch .bp-ic-moon { right: 8px; color: #aab4cf; opacity: 1; }
+html.theme-light .bp-switch .bp-ic-sun  { opacity: 1; }
+html.theme-light .bp-switch .bp-ic-moon { opacity: .38; }
+/* knurled brass toggle knob - diamond crosshatch over a brass radial */
+.bp-knob {
+  position: absolute; top: 50%; left: calc(100% - 26px - 3px);
+  width: 26px; height: 26px; border-radius: 50%; transform: translateY(-50%);
+  background:
+    repeating-linear-gradient(46deg, rgba(48,28,0,0.26) 0 1.3px, transparent 1.3px 2.7px),
+    repeating-linear-gradient(-46deg, rgba(48,28,0,0.20) 0 1.3px, transparent 1.3px 2.7px),
+    radial-gradient(125% 125% at 32% 26%, #f8d98d, #d6a24a 44%, #a26f28 76%, #7f5518);
+  box-shadow:
+    0 2px 5px rgba(0,0,0,0.5), 0 1px 1px rgba(0,0,0,0.35),
+    inset 0 1.5px 1px rgba(255,255,255,0.55),
+    inset 0 -2.5px 3px rgba(64,38,0,0.5);
+  transition: left .32s cubic-bezier(.5,.05,.15,1), box-shadow .2s ease, filter .2s ease;
+}
+html.theme-light .bp-knob { left: 3px; }
+.bp-switch:hover .bp-knob { filter: brightness(1.06); box-shadow: 0 3px 8px rgba(0,0,0,0.55), inset 0 1.5px 1px rgba(255,255,255,0.6), inset 0 -2.5px 3px rgba(64,38,0,0.5); }
+@media (prefers-reduced-motion: reduce) { .bp-knob { transition: none; } }
 </style>
 </head>
 
@@ -1529,9 +1567,10 @@ html.theme-light .theme-toggle .ic-moon { display: block; }
         Private Beta · Bengaluru → Global
       </span>
       <a href="/careers" class="pill-glass">Careers</a>
-      <button id="themeToggle" type="button" class="theme-toggle" aria-label="Switch between light and dark theme">
-        <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
-        <svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      <button id="themeToggle" type="button" class="bp-switch" role="switch" aria-label="Switch between light and dark theme">
+        <svg class="bp-ic bp-ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+        <svg class="bp-ic bp-ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        <span class="bp-knob" aria-hidden="true"></span>
       </button>
       <a href="#waitlist-hero" id="navJoinWaitlist" class="pill-cta">Join Waitlist</a>
     </div>
@@ -1606,7 +1645,7 @@ html.theme-light .theme-toggle .ic-moon { display: block; }
             </span> at the same time.
           </p>
           <p class="mt-2 text-inkdim text-sm leading-relaxed">
-            Scan any menu, log any meal, stay inside both budgets. EdibleFactor solves the equation every other app leaves half-done.
+            Scan <span class="pencil-ul">any menu</span>, log <span class="pencil-ul">any meal</span>, stay inside <span class="both-rotor">both</span> budgets. EdibleFactor solves the equation every other app leaves half-done.
           </p>
         </div>
       </div>
