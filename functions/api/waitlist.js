@@ -104,8 +104,11 @@ function postSlack(env, waitUntil, text, context) {
 // KV bound, or on any KV error, returns { position: null, isNew: true } so the
 // signup still succeeds - the position is a nice-to-have, not a gate. Keys are
 // prefixed wlq: so they never collide with the wl:/wlf: rate-limit keys, and
-// carry no TTL (a position is permanent). Note: KV has no atomic increment, so
-// a rare concurrent race can reuse a number - acceptable for a waitlist.
+// carry no TTL (a position is permanent). Note: idempotency holds per SEQUENTIAL
+// request only - KV has no atomic increment, so a concurrent race (two different
+// emails, or a double-submit of the same email) can reuse/duplicate a number
+// and, for a same-email double-submit, send two confirmations. Acceptable for a
+// waitlist; the rate limit narrows the window.
 async function assignPosition(env, email) {
   const kv = env.WAITLIST_KV || env.RATE_LIMIT;
   if (!kv || !email) return { position: null, isNew: true };
@@ -247,7 +250,10 @@ export async function onRequestPost({ request, env, waitUntil }) {
       const assigned = await assignPosition(env, email);
       position = assigned.position;
       alreadySubscribed = !assigned.isNew;
-      if (assigned.isNew) sendLoopsConfirmation(env, waitUntil, email, position);
+      // Gate on a REAL position (KV bound): in the no-KV degraded mode isNew is
+      // always true, so gating on isNew alone would fire a position-less "#"
+      // confirmation on every resubmit.
+      if (assigned.isNew && position != null) sendLoopsConfirmation(env, waitUntil, email, position);
     }
 
     postSlack(
