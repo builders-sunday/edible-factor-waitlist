@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Edible Factor — You are HOW you eat · redesign preview</title>
+<meta name="description" content="Edible Factor tracks your calories and your budget at the same time. Two budgets, one plate. A redesign preview." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/svg+xml" href="assets/ef-mark.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/styles.css?v=6" />
+<noscript><style>.rise{opacity:1!important;transform:none!important}</style></noscript>
+</head>
+<body>
+
+<div class="ribbon">Redesign preview · v2 · not the live homepage</div>
+
+<header class="head">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="assets/ef-mark.svg" alt="Edible Factor" /><b>Edible Factor</b></a>
+    <nav class="nav" aria-label="Primary">
+      <a href="#problem">The problem</a>
+      <a href="#plate">One plate</a>
+      <a href="#numbers">Numbers</a>
+      <a class="btn btn-primary" href="#waitlist">Join waitlist</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ===================== HERO ===================== -->
+<section class="hero spot">
+  <span class="beam" aria-hidden="true"></span>
+  <div class="wrap">
+    <div class="hero-copy">
+      <div class="kick rise"><span class="beta">Private beta · Bengaluru → Global</span></div>
+      <h1 class="rise d1">You are <em>HOW</em> you eat.</h1>
+      <p class="hero-sub rise d2">The only app that tracks your <b class="cal">calories</b> and your <b class="bud">budget</b> at the same time. Two meters, one plate, every meal out.</p>
+      <div class="hero-cta rise d2">
+        <a class="btn btn-primary" href="#waitlist">Reserve my seat</a>
+        <a class="btn btn-ghost" href="#plate">See how it works</a>
+      </div>
+      <div class="hero-meta rise d3">
+        <div class="c1"><b>Calories</b>tracked live</div>
+        <div class="c2"><b>Rupees</b>tracked live</div>
+        <div><b>Dine-in</b>built for eating out</div>
+      </div>
+    </div>
+    <div class="hero-art rise d2" aria-hidden="true"><canvas id="heroGauge"></canvas></div>
+  </div>
+</section>
+
+<!-- ===================== THE SIGNATURE: two budgets, one plate ===================== -->
+<section class="plate" id="plate" aria-label="Two budgets, one plate">
+  <div class="pin spot">
+    <canvas class="plate-canvas" id="plateGauge" aria-hidden="true"></canvas>
+    <div class="frame">
+      <div class="wrap" style="position:relative;height:100svh;">
+        <div class="heading">
+          <div class="eyebrow">The core · one dinner, watched two ways</div>
+          <h2>Two budgets,<br>one <span class="cal">plate</span><span class="bud">.</span></h2>
+        </div>
+
+        <div class="courses" aria-hidden="true">
+          <div class="c on"><span class="n">01</span><span class="t">Amuse<b>Sparkling kombucha</b></span></div>
+          <div class="c"><span class="n">02</span><span class="t">Starter<b>Burrata, tomato</b></span></div>
+          <div class="c"><span class="n">03</span><span class="t">Main<b>Grilled seabass</b></span></div>
+          <div class="c"><span class="n">04</span><span class="t">Dessert<b>Chocolate tart</b></span></div>
+          <div class="c"><span class="n">05</span><span class="t">The bill<b>Both budgets</b></span></div>
+        </div>
+
+        <div class="budgets">
+          <div class="b calv"><div class="lbl">Calories left</div><div class="v" data-cal>2,000</div><div class="of">of 2,000 kcal today</div></div>
+          <div class="b budv"><div class="lbl">Budget left</div><div class="v" data-bud>₹1,800</div><div class="of">of ₹1,800 tonight</div></div>
+          <div class="b"><div class="lbl">Now serving</div><div class="of" data-dish style="font-size:13px;color:var(--ink);">Sparkling kombucha</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="scrub" aria-hidden="true"><i></i></div>
+  </div>
+</section>
+
+<!-- ===================== THE PROBLEM ===================== -->
+<section class="sec sec-coal spot" id="problem">
+  <div class="wrap">
+    <div class="prob-grid">
+      <div class="prob">
+        <div class="eyebrow rise">The real problem</div>
+        <h2 class="rise d1">You've always had to <span class="peri">choose.</span></h2>
+        <p class="rise d2">Every app tracks one number. Calories, or spend, never both. So eating out becomes a guess: stay in shape, or stay in budget. Edible Factor refuses the trade.</p>
+      </div>
+      <div class="prob-list">
+        <div class="p rise"><span class="ic">01</span><div><div class="t">Calorie apps ignore the bill</div><div class="d">They log the seabass, not the ₹620 it cost. Your wallet is invisible to them.</div></div></div>
+        <div class="p rise d1"><span class="ic">02</span><div><div class="t">Budget apps ignore the body</div><div class="d">They see a ₹1,410 dinner, not the 1,310 calories in it. Your body is invisible to them.</div></div></div>
+        <div class="p rise d2"><span class="ic">03</span><div><div class="t">Neither knows the menu</div><div class="d">Generic databases don't know what this restaurant actually plates. Edible Factor does, dish by dish.</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== INSTRUMENTS ===================== -->
+<section class="sec spot" id="numbers">
+  <div class="wrap">
+    <div class="inst-head">
+      <div class="inst">
+        <div class="eyebrow rise">Instruments</div>
+        <h2 class="rise d1">Numbers that <span class="peri">mean</span> something.</h2>
+      </div>
+      <p class="lede rise d2">Not another calorie counter. Three readings that actually change how you order. Drag them.</p>
+    </div>
+    <div class="gauges rise d2">
+      <div class="gauge" data-gauge="metabolic">
+        <span class="cap">Reading 01</span><span class="idx">%</span>
+        <div class="gwrap"><canvas></canvas><div class="gknob"><span class="gp"></span></div></div>
+        <div class="rd">72%<small>METABOLIC EFFICIENCY</small></div>
+        <div class="rn">Great progress. Nearly there!</div>
+      </div>
+      <div class="gauge" data-gauge="goal">
+        <span class="cap">Reading 02</span><span class="idx">%</span>
+        <div class="gwrap"><canvas></canvas><div class="gknob"><span class="gp"></span></div></div>
+        <div class="rd">91%<small>GOAL ALIGNMENT</small></div>
+        <div class="rn">Top 1%. Goals Achieved.</div>
+      </div>
+      <div class="gauge" data-gauge="precision">
+        <span class="cap">Reading 03</span><span class="idx">%</span>
+        <div class="gwrap"><canvas></canvas><div class="gknob"><span class="gp"></span></div></div>
+        <div class="rd">100%<small>BUDGET PRECISION</small></div>
+        <div class="rn">Perfect. To the paisa.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== WAITLIST ===================== -->
+<section class="wl spot" id="waitlist">
+  <div class="wrap">
+    <div class="eyebrow rise">Private beta</div>
+    <h2 class="rise d1">Reserve<br>your seat.</h2>
+    <p class="rise d2">Bengaluru first, then everywhere people eat out and still care about both numbers.</p>
+    <form class="wl-form rise d2" novalidate>
+      <input type="email" placeholder="you@email.com" aria-label="Email" />
+      <button class="btn btn-primary" type="submit">Reserve</button>
+    </form>
+    <div class="wl-note rise d3">No spam. No analytics. Just a seat.</div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div>
+      <div class="col"><a href="#problem">Problem</a> · <a href="#plate">One plate</a> · <a href="#numbers">Numbers</a> · <a href="#waitlist">Waitlist</a></div>
+      <div class="col by" style="margin-top:12px;">ediblefactor · © 2026 · Made in Bengaluru</div>
+      <div class="col by">v2 redesign concept · built by GattyWorks</div>
+    </div>
+    <div class="disp" style="font-size:clamp(40px,9vw,120px);color:var(--panel2);letter-spacing:-.04em;line-height:.8;">HOW</div>
+  </div>
+</footer>
+
+<script src="assets/lenis.min.js"></script>
+<script src="assets/app.js?v=6"></script>
+</body>
+</html>

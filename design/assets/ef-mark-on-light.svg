@@ -1,0 +1,32 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="32" cy="32" r="27" fill="none" stroke="#1A1A1A" stroke-width="1.2"/>
+  <circle cx="32" cy="32" r="24" fill="none" stroke="#1A1A1A" stroke-width="0.5"/>
+  <g fill="#1A1A1A">
+    <rect x="4" y="4" width="3" height="3"/>
+    <rect x="57" y="4" width="3" height="3"/>
+    <rect x="4" y="57" width="3" height="3"/>
+    <rect x="57" y="57" width="3" height="3"/>
+  </g>
+
+  <!-- E (left letter) -->
+  <g fill="#1A1A1A">
+    <rect x="17" y="20" width="5" height="24"/>
+    <rect x="17" y="20" width="14" height="5"/>          <!-- TOP BAR extended (was 11) -->
+    <rect x="17" y="29.5" width="11" height="4.5"/>      <!-- middle stays shorter -->
+    <rect x="17" y="39" width="14" height="5"/>          <!-- BOTTOM BAR extended (was 11) -->
+    <rect x="15" y="20" width="9" height="2"/>
+    <rect x="15" y="42" width="9" height="2"/>
+  </g>
+
+  <!-- F (right letter) -->
+  <g fill="#1A1A1A">
+    <rect x="33" y="20" width="14" height="5"/>          <!-- TOP BAR extended + pulled left start (was x=36 w=11) -->
+    <rect x="36" y="29.5" width="11" height="4.5"/>      <!-- middle stays shorter -->
+    <rect x="42" y="20" width="5" height="24"/>
+    <rect x="40" y="20" width="9" height="2"/>
+    <rect x="40" y="42" width="9" height="2"/>
+  </g>
+
+  <!-- Orange hairline centered in the gap -->
+  <rect x="31.85" y="20" width="0.3" height="24" fill="#FF8A46"/>
+</svg>

@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Design language - Edible Factor brand kit</title>
+<meta name="description" content="The Edible Factor brand kit: the mark in every cut and format you need. Static and motion, backgroundless or framed, SVG and PNG. Use freely on anything you ship for or with us." />
+<link rel="canonical" href="https://ediblefactor.com/design" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self';" />
+<link rel="icon" type="image/svg+xml" href="assets/ef-glyph.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<meta property="og:title" content="Design language - Edible Factor brand kit" />
+<meta property="og:description" content="The Edible Factor mark in every cut and format. Static and motion, backgroundless or framed, SVG and PNG. Use freely." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://ediblefactor.com/design" />
+
+<style>
+:root{
+  --void:#07070b;
+  --coal:#0b0b11;
+  --panel:#101018;
+  --panel2:#15151f;
+  --ink:#eceaf3;
+  --ink-72:rgba(236,234,243,.72);
+  --ink-dim:#9693ac;
+  --ink-low:#6b6885;
+  --ink-28:rgba(236,234,243,.28);
+  --line:rgba(236,234,243,.09);
+  --line-2:rgba(236,234,243,.16);
+  --peri:#a8aaff;
+  --peri-bright:#c0c2ff;
+  --calorie:#6eddf0;
+  --budget:#ff8a4a;
+  --paper:#edecf5;
+  --ease:cubic-bezier(.19,1,.22,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--void);
+  color:var(--ink);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.04;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+img{max-width:100%;display:block;}
+a{color:inherit;text-decoration:none;}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
+:focus-visible{outline:2px solid var(--peri);outline-offset:3px;border-radius:4px;}
+
+.wrap{width:min(100% - 44px,1120px);margin-inline:auto;}
+.disp{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;letter-spacing:-.03em;line-height:.98;}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace;}
+
+/* ---------------- header ---------------- */
+.head{
+  position:sticky;top:0;z-index:60;
+  background:linear-gradient(180deg,rgba(7,7,11,.92),rgba(7,7,11,.55));
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.head .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;}
+.brand{display:flex;align-items:center;gap:11px;}
+.brand img{width:28px;height:28px;}
+.brand b{font-family:'Space Grotesk';font-weight:700;font-size:16px;letter-spacing:-.01em;}
+.back{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-dim);
+  display:inline-flex;align-items:center;gap:8px;transition:color .3s var(--ease);
+}
+.back::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--peri);opacity:.8;}
+.back:hover{color:var(--ink);}
+
+/* ---------------- hero ---------------- */
+.hero{position:relative;padding:clamp(96px,17vw,190px) 0 clamp(56px,8vw,96px);overflow:hidden;}
+.hero::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(48% 62% at 78% 8%,rgba(168,170,255,.15),transparent 60%);
+}
+.hero .wrap{position:relative;z-index:1;}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--peri-bright);
+}
+.hero h1{
+  font-family:'Space Grotesk';font-weight:700;
+  font-size:clamp(46px,8.6vw,108px);line-height:.92;letter-spacing:-.045em;
+  margin-top:22px;max-width:14ch;
+}
+.hero h1 span{color:var(--peri-bright);}
+.hero-sub{
+  color:var(--ink-72);font-size:clamp(16px,1.55vw,19px);
+  max-width:62ch;margin-top:26px;
+}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px 14px;margin-top:34px;}
+.chip{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-dim);
+  border:1px solid var(--line-2);border-radius:999px;padding:7px 13px;
+}
+
+/* ---------------- section scaffold ---------------- */
+.sec{padding:clamp(64px,10vw,120px) 0;position:relative;z-index:1;border-top:1px solid var(--line);}
+.sec-head{max-width:64ch;margin-bottom:clamp(34px,5vw,56px);}
+.idx{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--peri);
+}
+.sec-head h2{
+  font-family:'Space Grotesk';font-weight:700;
+  font-size:clamp(30px,4.6vw,54px);line-height:1.02;letter-spacing:-.03em;
+  margin-top:16px;
+}
+.sec-head p{color:var(--ink-dim);font-size:16px;max-width:60ch;margin-top:18px;}
+.sec-head p b{color:var(--ink);font-weight:500;}
+
+/* ---------------- logo cards ---------------- */
+.mode-label{
+  display:flex;align-items:center;gap:12px;
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--ink-dim);
+  margin:clamp(30px,4vw,48px) 0 18px;
+}
+.mode-label:first-of-type{margin-top:0;}
+.mode-label .pip{width:6px;height:6px;border-radius:50%;background:var(--peri);flex:none;}
+.mode-label--light .pip{background:var(--paper);}
+.mode-label--motion .pip{background:var(--calorie);}
+.mode-label--glyph .pip{background:var(--budget);}
+.mode-label::after{content:"";flex:1;height:1px;background:var(--line);}
+.logo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+.logo-grid + .mode-label{margin-top:clamp(30px,4vw,48px);}
+.logo-grid.g3{grid-template-columns:repeat(3,1fr);}
+.logo-card{
+  border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--panel);
+  transition:transform .5s var(--ease),border-color .5s var(--ease),box-shadow .5s var(--ease);
+}
+.logo-card:hover{transform:translateY(-4px);border-color:var(--line-2);box-shadow:0 26px 50px -30px #000;}
+.stage{
+  position:relative;aspect-ratio:5/4;display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.stage .mark{width:clamp(78px,12vw,104px);height:auto;position:relative;z-index:1;}
+/* checkerboard = transparent background made visible */
+.stage-check{
+  background-color:#0d0e14;
+  background-image:
+    linear-gradient(45deg,rgba(236,234,243,.045) 25%,transparent 25%,transparent 75%,rgba(236,234,243,.045) 75%),
+    linear-gradient(45deg,rgba(236,234,243,.045) 25%,transparent 25%,transparent 75%,rgba(236,234,243,.045) 75%);
+  background-size:22px 22px;background-position:0 0,11px 11px;
+}
+.stage-check-light{
+  background-color:#e9e8f2;
+  background-image:
+    linear-gradient(45deg,rgba(16,16,24,.06) 25%,transparent 25%,transparent 75%,rgba(16,16,24,.06) 75%),
+    linear-gradient(45deg,rgba(16,16,24,.06) 25%,transparent 25%,transparent 75%,rgba(16,16,24,.06) 75%);
+  background-size:22px 22px;background-position:0 0,11px 11px;
+}
+.stage-void{background:#0a0b10;}
+.stage-void::before{content:"";position:absolute;inset:0;background:radial-gradient(45% 55% at 50% 45%,rgba(168,170,255,.16),transparent 62%);}
+.stage-paper{background:var(--paper);}
+.stage-paper .mark,.stage-check-light .mark{filter:drop-shadow(0 18px 34px rgba(10,11,16,.4));}
+.stage-peri{background:var(--peri);}
+.stage-peri .mark{filter:drop-shadow(0 18px 36px rgba(10,11,16,.4));}
+.card-foot{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  padding:15px 18px 16px;border-top:1px solid var(--line);
+}
+.card-name{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-dim);display:flex;align-items:center;gap:9px;padding-top:6px;
+}
+.badge{
+  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--peri-bright);border:1px solid rgba(168,170,255,.4);border-radius:999px;padding:2px 7px;
+}
+.badge--motion{color:var(--calorie);border-color:rgba(110,221,240,.42);}
+/* download rail */
+.dl{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end;}
+.act{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-dim);border:1px solid var(--line-2);border-radius:999px;padding:8px 12px;
+  display:inline-flex;align-items:center;gap:7px;white-space:nowrap;
+  transition:color .3s var(--ease),border-color .3s var(--ease),background .3s var(--ease);
+}
+.act:hover{color:var(--ink);border-color:var(--peri);}
+.act.is-copied{color:#0a0a12;background:var(--peri-bright);border-color:var(--peri-bright);}
+.act .dot{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.55;}
+.act.is-copied .dot{opacity:1;}
+.png-rail{
+  display:inline-flex;align-items:center;gap:2px;
+  border:1px solid var(--line-2);border-radius:999px;padding:3px 4px 3px 11px;
+}
+.png-rail .lbl{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-low);margin-right:4px;}
+.png-rail a{
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.04em;color:var(--ink-dim);
+  padding:5px 8px;border-radius:999px;transition:color .25s var(--ease),background .25s var(--ease);
+}
+.png-rail a:hover{color:#0a0a12;background:var(--peri-bright);}
+
+/* qr badge cards */
+.stage.qr-stage{aspect-ratio:1/1;padding:clamp(20px,3vw,40px);}
+.stage .mark.qr{width:min(84%,320px);height:auto;}
+
+/* JS-enhanced brand kit: inline live mark + static/background toggles.
+   Falls back to the plain <img> + download links when JS is off. */
+.stage .ef-live{width:clamp(78px,12vw,104px);height:auto;border-radius:20px;position:relative;z-index:1;display:block;}
+.stage-paper .ef-live{box-shadow:0 20px 40px -18px rgba(10,11,16,.55);}
+.stage-peri .ef-live{box-shadow:0 20px 42px -16px rgba(10,11,16,.5);}
+.stage-light .ef-live{box-shadow:0 20px 40px -18px rgba(10,11,16,.35);}
+.lockup-stage .ef-live{width:clamp(52px,8vw,72px);height:auto;border-radius:15px;display:block;}
+.act.is-on{color:#0a0a12;background:var(--peri);border-color:var(--peri);}
+.act.is-on:hover{color:#0a0a12;background:var(--peri-bright);border-color:var(--peri-bright);}
+.act.is-on .dot{opacity:1;}
+
+/* wide wordmark lockup */
+.lockup{
+  grid-column:1 / -1;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--panel);
+  transition:border-color .5s var(--ease),box-shadow .5s var(--ease);
+}
+.lockup:hover{border-color:var(--line-2);box-shadow:0 26px 50px -30px #000;}
+.lockup-stage{
+  position:relative;display:flex;align-items:center;gap:clamp(18px,3vw,34px);
+  padding:clamp(38px,7vw,72px) clamp(24px,5vw,56px);
+  background:radial-gradient(60% 120% at 12% 30%,rgba(168,170,255,.1),transparent 60%),var(--coal);
+}
+.lockup-stage img{width:clamp(52px,8vw,72px);height:auto;}
+.lockup-stage b{font-family:'Space Grotesk';font-weight:700;font-size:clamp(28px,5.4vw,56px);letter-spacing:-.035em;line-height:1;}
+.lockup--light .lockup-stage{background:radial-gradient(60% 120% at 12% 30%,rgba(168,170,255,.2),transparent 60%),var(--paper);}
+.lockup--light .lockup-stage b{color:#101018;}
+
+/* ---------------- colours ---------------- */
+.sw-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.swatch{display:block;width:100%;text-align:left;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--panel);transition:transform .45s var(--ease),border-color .45s var(--ease),box-shadow .45s var(--ease);}
+.swatch:hover{transform:translateY(-4px);border-color:var(--line-2);box-shadow:0 24px 46px -30px #000;}
+.sw-block{position:relative;height:118px;display:flex;align-items:flex-start;justify-content:flex-end;padding:12px;}
+.sw-block::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px var(--line);pointer-events:none;}
+.sw-copy{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;opacity:0;transition:opacity .3s var(--ease);}
+.swatch:hover .sw-copy,.swatch:focus-visible .sw-copy{opacity:.7;}
+.sw-foot{padding:14px 16px 16px;border-top:1px solid var(--line);}
+.sw-name{font-family:'Space Grotesk';font-weight:700;font-size:15px;letter-spacing:-.01em;color:var(--ink);}
+.sw-hex{display:block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:var(--ink-low);margin-top:6px;text-transform:uppercase;transition:color .3s var(--ease);}
+.swatch.is-copied .sw-hex{color:var(--peri-bright);}
+
+/* ---------------- type specimens ---------------- */
+.specs{display:flex;flex-direction:column;gap:16px;}
+.spec{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:clamp(26px,4vw,40px);}
+.spec-top{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.spec-role{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--peri);}
+.spec-w{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-low);}
+.sample{margin-top:22px;color:var(--ink);}
+.spec.is-grotesk .sample{font-family:'Space Grotesk';font-weight:700;font-size:clamp(28px,5vw,54px);letter-spacing:-.03em;line-height:1.0;}
+.spec.is-inter .sample{font-family:'Inter';font-weight:400;font-size:clamp(22px,3.6vw,38px);letter-spacing:-.012em;line-height:1.18;color:var(--ink-72);max-width:24ch;}
+.spec.is-mono .sample{font-family:'JetBrains Mono';font-weight:500;font-size:clamp(19px,3.1vw,32px);letter-spacing:.02em;line-height:1.1;}
+.spec-name{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--ink-dim);margin-top:26px;text-transform:uppercase;}
+.weights{display:flex;gap:clamp(20px,4vw,44px);flex-wrap:wrap;margin-top:22px;border-top:1px solid var(--line);padding-top:22px;}
+.weights .w{display:flex;flex-direction:column;gap:8px;}
+.weights .aa{font-size:34px;line-height:1;color:var(--ink);}
+.spec.is-grotesk .aa{font-family:'Space Grotesk';}
+.spec.is-inter .aa{font-family:'Inter';}
+.spec.is-mono .aa{font-family:'JetBrains Mono';}
+.weights .wn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-low);}
+
+/* ---------------- footer ---------------- */
+.foot{position:relative;z-index:1;border-top:1px solid var(--line);background:var(--void);padding:clamp(48px,7vw,72px) 0 clamp(40px,6vw,60px);overflow:hidden;}
+.foot .wrap{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;position:relative;z-index:1;}
+.foot .fbrand{display:flex;align-items:center;gap:11px;}
+.foot .fbrand img{width:26px;height:26px;}
+.foot .fbrand b{font-family:'Space Grotesk';font-weight:700;font-size:15px;letter-spacing:-.01em;}
+.foot .fnote{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-low);text-align:right;line-height:1.9;}
+.foot .fnote a{color:var(--ink-dim);}
+.foot .fnote a:hover{color:var(--peri-bright);}
+.watermark{position:absolute;right:-2vw;bottom:-3.2vw;z-index:0;pointer-events:none;font-family:'Space Grotesk';font-weight:700;font-size:clamp(120px,26vw,340px);line-height:.7;letter-spacing:-.05em;color:var(--panel2);opacity:.7;user-select:none;}
+
+/* ---------------- reveal ---------------- */
+.rise{opacity:0;transform:translateY(26px);}
+.rise.in{opacity:1;transform:none;transition:opacity .9s var(--ease),transform 1s var(--ease);}
+
+/* ---------------- responsive ---------------- */
+@media (max-width:900px){.logo-grid,.logo-grid.g3{grid-template-columns:1fr 1fr;}.sw-grid{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:560px){.logo-grid,.logo-grid.g3{grid-template-columns:1fr;}.sw-grid{grid-template-columns:1fr 1fr;}.card-foot{gap:12px;}.dl{justify-content:flex-start;}.lockup-stage{flex-direction:column;align-items:flex-start;}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}*{animation:none!important;transition:none!important;}.rise{opacity:1!important;transform:none!important;}}
+</style>
+</head>
+<body>
+
+<header class="head">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Edible Factor home"><img src="assets/ef-mark-on-dark.svg" alt="Edible Factor mark" /><b>Edible Factor</b></a>
+    <a class="back" href="https://ediblefactor.com">ediblefactor.com</a>
+  </div>
+</header>
+
+<main>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow rise">/design</div>
+    <h1 class="rise">Design <span>language.</span></h1>
+    <p class="hero-sub rise">The brand kit: the Edible Factor mark in every cut and format you need. Static and motion, backgroundless or framed, plus the app glyph. Grab it as SVG when you can and PNG when you cannot. Use freely on anything you ship for or with us.</p>
+    <div class="hero-meta rise">
+      <span class="chip">01 / logo</span>
+      <span class="chip">02 / qr</span>
+      <span class="chip">03 / colours</span>
+      <span class="chip">04 / type</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 01 / LOGO ===================== -->
+<section class="sec">
+  <div class="wrap">
+    <header class="sec-head rise">
+      <span class="idx">01 / logo</span>
+      <h2>The mark, every cut and format.</h2>
+      <p>One tile: the <b>E</b> and <b>F</b> set in Space Grotesk, a twin registration ring, four periwinkle dots, and a single budget orange hairline splitting the letters. Every card below downloads as vector <b>SVG</b> or raster <b>PNG</b> at 256 to 2048px. The backgroundless cuts are fully transparent, shown here on a checker so you can see it. Reach for the ink that holds contrast on your surface.</p>
+    </header>
+
+    <!-- Backgroundless / clear -->
+    <div class="mode-label mode-label--dark rise"><span class="pip" aria-hidden="true"></span>Backgroundless, clear</div>
+    <div class="logo-grid">
+      <figure class="logo-card rise">
+        <div class="stage stage-check"><img class="mark" src="assets/ef-mark-on-dark.svg" alt="Edible Factor bone-ink mark on transparency" /></div>
+        <figcaption class="card-foot">
+          <span class="card-name">Bone ink <span class="badge">clear</span></span>
+          <div class="dl">
+            <button class="act" type="button" data-copy-svg data-svg="assets/ef-mark-on-dark.svg" aria-label="Copy the bone-ink mark as SVG"><span class="dot" aria-hidden="true"></span><span class="t">Copy SVG</span></button>
+            <a class="act" href="assets/ef-mark-on-dark.svg" download="ef-mark-on-dark.svg">SVG</a>
+            <span class="png-rail"><span class="lbl">PNG</span><a href="assets/ef-mark-on-dark-512.png" download>512</a><a href="assets/ef-mark-on-dark-1024.png" download>1024</a><a href="assets/ef-mark-on-dark-2048.png" download>2048</a></span>
+          </div>
+        </figcaption>
+      </figure>
+      <figure class="logo-card rise">
+        <div class="stage stage-check-light"><img class="mark" src="assets/ef-mark-on-light.svg" alt="Edible Factor dark-ink mark on transparency" /></div>
+        <figcaption class="card-foot">
+          <span class="card-name">Dark ink <span class="badge">clear</span></span>
+          <div class="dl">
+            <button class="act" type="button" data-copy-svg data-svg="assets/ef-mark-on-light.svg" aria-label="Copy the dark-ink mark as SVG"><span class="dot" aria-hidden="true"></span><span class="t">Copy SVG</span></button>
+            <a class="act" href="assets/ef-mark-on-light.svg" download="ef-mark-on-light.svg">SVG</a>
+            <span class="png-rail"><span class="lbl">PNG</span><a href="assets/ef-mark-on-light-512.png" download>512</a><a href="assets/ef-mark-on-light-1024.png" download>1024</a><a href="assets/ef-mark-on-light-2048.png" download>2048</a></span>
+          </div>
+        </figcaption>
+      </figure>
+    </div>
+
+    <!-- Framed -->
+    <div class="mode-label mode-label--light rise"><span class="pip" aria-hidden="true"></span>Framed tile</div>
+    <div class="logo-grid">
+      <figure class="logo-card rise">
+        <div class="stage stage-void"><img class="mark" src="assets/ef-mark-framed-dark.svg" alt="Edible Factor mark framed on dark" /></div>
+        <figcaption class="card-foot">
+          <span class="card-name">Dark frame</span>
+          <div class="dl">
+            <button class="act" type="button" data-copy-svg data-svg="assets/ef-mark-framed-dark.svg" aria-label="Copy the dark framed mark as SVG"><span class="dot" aria-hidden="true"></span><span class="t">Copy SVG</span></button>
+            <a class="act" href="assets/ef-mark-framed-dark.svg" download="ef-mark-framed-dark.svg">SVG</a>
+            <span class="png-rail"><span class="lbl">PNG</span><a href="assets/ef-mark-framed-dark-512.png" download>512</a><a href="assets/ef-mark-framed-dark-1024.png" download>1024</a><a href="assets/ef-mark-framed-dark-2048.png" download>2048</a></span>
+          </div>
+        </figcaption>
+      </figure>
+      <figure class="logo-card rise">
+        <div class="stage stage-paper"><img class="mark" src="assets/ef-mark-framed-light.svg" alt="Edible Factor mark framed on light" /></div>
+        <figcaption class="card-foot">
+          <span class="card-name">Light frame</span>
+          <div class="dl">
+            <button class="act" type="button" data-copy-svg data-svg="assets/ef-mark-framed-light.svg" aria-label="Copy the light framed mark as SVG"><span class="dot" aria-hidden="true"></span><span class="t">Copy SVG</span></button>
+            <a class="act" href="assets/ef-mark-framed-light.svg" download="ef-mark-framed-light.svg">SVG</a>
+            <span class="png-rail"><span class="lbl">PNG</span><a href="assets/ef-mark-framed-light-512.png" download>512</a><a href="assets/ef-mark-framed-light-1024.png" download>1024</a><a href="assets/ef-mark-framed-light-2048.png" download>2048</a></span>
+          </div>
+        </figcaption>
+      </figure>
+    </div>
+
+    <!-- Motion -->
+    <div class="mode-label mode-label--motion rise"><span class="pip" aria-hidden="true"></span>Motion</div>
+    <div class="logo-grid">
+      <figure class="logo-card rise">
+        <div class="stage stage-check"><img class="mark" src="assets/ef-mark-motion-dark.svg" alt="Edible Factor animated mark, bone ink" /></div>
+        <figcaption class="card-foot">
+          <span class="card-name">Animated, bone <span class="badge badge--motion">motion</span></span>
+          <div class="dl">
+            <button class="act" type="button" data-copy-svg data-svg="assets/ef-mark-motion-dark.svg" aria-label="Copy the animated bone-ink mark as SVG"><span class="dot" aria-hidden="true"></span><span class="t">Copy SVG</span></button>
+            <a class="act" href="assets/ef-mark-motion-dark.svg" download="ef-mark-motion-dark.svg">SVG</a>
+            <span class="png-rail"><span class="lbl">Still</span><a href="assets/ef-mark-motion-dark-512.png" download>512</a><a href="assets/ef-mark-motion-dark-1024.png" download>1024</a></span>
+          </div>
+        </figcaption>
+      </figure>
+      <figure class="logo-card rise">
+        <div class="stage stage-check-light"><img class="mark" src="assets/ef-mark-motion-light.svg" alt="Edible Factor animated mark, dark ink" /></div>
+        <figcaption class="card-foot">
+          <span class="card-name">Animated, dark <span class="badge badge--motion">motion</span></span>
+          <div class="dl">
+            <button class="act" type="button" data-copy-svg data-svg="assets/ef-mark-motion-light.svg" aria-label="Copy the animated dark-ink mark as SVG"><span class="dot" aria-hidden="true"></span><span class="t">Copy SVG</span></button>
+            <a class="act" href="assets/ef-mark-motion-light.svg" download="ef-mark-motion-light.svg">SVG</a>
+            <span class="png-rail"><span class="lbl">Still</span><a href="assets/ef-mark-motion-light-512.png" download>512</a><a href="assets/ef-mark-motion-light-1024.png" download>1024</a></span>
+          </div>
+        </figcaption>
+      </figure>
+    </div>
+
+    <!-- Glyph + lockups -->
+    <div class="mode-label mode-label--glyph rise"><span class="pip" aria-hidden="true"></span>App glyph and lockups</div>
+    <div class="logo-grid g3">
+      <figure class="logo-card rise">
+        <div class="stage stage-void"><img class="mark" src="assets/ef-glyph.svg" alt="Edible Factor dial glyph" style="width:clamp(56px,8vw,76px)" /></div>
+        <figcaption class="card-foot">
+          <span class="card-name">Dial glyph</span>
+          <div class="dl">
+            <button class="act" type="button" data-copy-svg data-svg="assets/ef-glyph.svg" aria-label="Copy the dial glyph as SVG"><span class="dot" aria-hidden="true"></span><span class="t">Copy SVG</span></button>
+            <a class="act" href="assets/ef-glyph.svg" download="ef-glyph.svg">SVG</a>
+            <span class="png-rail"><span class="lbl">PNG</span><a href="assets/ef-glyph-128.png" download>128</a><a href="assets/ef-glyph-256.png" download>256</a><a href="assets/ef-glyph-512.png" download>512</a></span>
+          </div>
+        </figcaption>
+      </figure>
+
+      <figure class="lockup rise" style="grid-column:span 2">
+        <div class="lockup-stage">
+          <img src="assets/ef-mark-on-dark.svg" alt="Edible Factor mark" />
+          <b>Edible Factor</b>
+        </div>
+        <figcaption class="card-foot">
+          <span class="card-name">Wordmark lockup, dark</span>
+          <div class="dl">
+            <button class="act" type="button" data-copy-svg data-svg="assets/ef-mark-on-dark.svg" aria-label="Copy the mark as SVG"><span class="dot" aria-hidden="true"></span><span class="t">Copy mark SVG</span></button>
+            <a class="act" href="assets/ef-mark-on-dark.svg" download="ef-mark-on-dark.svg">Mark SVG</a>
+          </div>
+        </figcaption>
+      </figure>
+
+      <figure class="lockup lockup--light rise" style="grid-column:1 / -1">
+        <div class="lockup-stage">
+          <img src="assets/ef-mark-on-light.svg" alt="Edible Factor mark" />
+          <b>Edible Factor</b>
+        </div>
+        <figcaption class="card-foot">
+          <span class="card-name">Wordmark lockup, light</span>
+          <div class="dl">
+            <button class="act" type="button" data-copy-svg data-svg="assets/ef-mark-on-light.svg" aria-label="Copy the mark as SVG"><span class="dot" aria-hidden="true"></span><span class="t">Copy mark SVG</span></button>
+            <a class="act" href="assets/ef-mark-on-light.svg" download="ef-mark-on-light.svg">Mark SVG</a>
+          </div>
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 02 / QR BADGE ===================== -->
+<section class="sec">
+  <div class="wrap">
+    <header class="sec-head rise">
+      <span class="idx">02 / qr badge</span>
+      <h2>The scan badge, two cuts.</h2>
+      <p>The Edible Factor scan badge: a circular tile ringed with <b>EATS, FINANCE, ONE APP</b>, the mark at its centre, ediblefactor.com below. Vectorised to true <b>SVG</b> so it stays sharp at any print size, plus <b>PNG</b> from 512 to 1600px. Violet for light surfaces, ink for dark.</p>
+    </header>
+    <div class="logo-grid">
+      <figure class="logo-card rise">
+        <div class="stage stage-check-light qr-stage"><img class="mark qr" src="assets/ediblefactor-qr-violet.svg" alt="Edible Factor QR scan badge, violet cut on light" /></div>
+        <figcaption class="card-foot">
+          <span class="card-name">Violet</span>
+          <div class="dl">
+            <a class="act" href="assets/ediblefactor-qr-violet.svg" download="ediblefactor-qr-violet.svg"><span class="dot" aria-hidden="true"></span>SVG</a>
+            <span class="png-rail"><span class="lbl">PNG</span><a href="assets/ediblefactor-qr-violet-512.png" download>512</a><a href="assets/ediblefactor-qr-violet-1024.png" download>1024</a><a href="assets/ediblefactor-qr-violet-1600.png" download>1600</a></span>
+          </div>
+        </figcaption>
+      </figure>
+      <figure class="logo-card rise">
+        <div class="stage stage-void qr-stage"><img class="mark qr" src="assets/ediblefactor-qr-ink.svg" alt="Edible Factor QR scan badge, ink cut on dark" /></div>
+        <figcaption class="card-foot">
+          <span class="card-name">Ink</span>
+          <div class="dl">
+            <a class="act" href="assets/ediblefactor-qr-ink.svg" download="ediblefactor-qr-ink.svg"><span class="dot" aria-hidden="true"></span>SVG</a>
+            <span class="png-rail"><span class="lbl">PNG</span><a href="assets/ediblefactor-qr-ink-512.png" download>512</a><a href="assets/ediblefactor-qr-ink-1024.png" download>1024</a><a href="assets/ediblefactor-qr-ink-1600.png" download>1600</a></span>
+          </div>
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 03 / COLOURS ===================== -->
+<section class="sec">
+  <div class="wrap">
+    <header class="sec-head rise">
+      <span class="idx">03 / colours</span>
+      <h2>Dark by default, periwinkle on top.</h2>
+      <p>Periwinkle is the brand hue and carries every accent. Calorie cyan and budget orange are the two meters, one plate read as two numbers. Nothing is pure black or pure white: every neutral is tinted toward the brand. <b>Click any swatch to copy its hex.</b></p>
+    </header>
+
+    <div class="sw-grid">
+      <button class="swatch" type="button" data-hex="#07070b" aria-label="Copy Void hex, hash 07070b">
+        <span class="sw-block" style="background:#07070b;color:var(--ink)"><span class="sw-copy">copy</span></span>
+        <span class="sw-foot"><span class="sw-name">Void</span><span class="sw-hex">#07070b</span></span>
+      </button>
+      <button class="swatch" type="button" data-hex="#101018" aria-label="Copy Panel hex, hash 101018">
+        <span class="sw-block" style="background:#101018;color:var(--ink)"><span class="sw-copy">copy</span></span>
+        <span class="sw-foot"><span class="sw-name">Panel</span><span class="sw-hex">#101018</span></span>
+      </button>
+      <button class="swatch" type="button" data-hex="#eceaf3" aria-label="Copy Ink hex, hash eceaf3">
+        <span class="sw-block" style="background:#eceaf3;color:#101018"><span class="sw-copy">copy</span></span>
+        <span class="sw-foot"><span class="sw-name">Ink</span><span class="sw-hex">#eceaf3</span></span>
+      </button>
+      <button class="swatch" type="button" data-hex="#9693ac" aria-label="Copy Ink dim hex, hash 9693ac">
+        <span class="sw-block" style="background:#9693ac;color:#101018"><span class="sw-copy">copy</span></span>
+        <span class="sw-foot"><span class="sw-name">Ink dim</span><span class="sw-hex">#9693ac</span></span>
+      </button>
+      <button class="swatch" type="button" data-hex="#a8aaff" aria-label="Copy Periwinkle hex, hash a8aaff">
+        <span class="sw-block" style="background:#a8aaff;color:#101018"><span class="sw-copy">copy</span></span>
+        <span class="sw-foot"><span class="sw-name">Periwinkle</span><span class="sw-hex">#a8aaff</span></span>
+      </button>
+      <button class="swatch" type="button" data-hex="#c0c2ff" aria-label="Copy Periwinkle bright hex, hash c0c2ff">
+        <span class="sw-block" style="background:#c0c2ff;color:#101018"><span class="sw-copy">copy</span></span>
+        <span class="sw-foot"><span class="sw-name">Periwinkle bright</span><span class="sw-hex">#c0c2ff</span></span>
+      </button>
+      <button class="swatch" type="button" data-hex="#6eddf0" aria-label="Copy Calorie cyan hex, hash 6eddf0">
+        <span class="sw-block" style="background:#6eddf0;color:#101018"><span class="sw-copy">copy</span></span>
+        <span class="sw-foot"><span class="sw-name">Calorie cyan</span><span class="sw-hex">#6eddf0</span></span>
+      </button>
+      <button class="swatch" type="button" data-hex="#ff8a4a" aria-label="Copy Budget orange hex, hash ff8a4a">
+        <span class="sw-block" style="background:#ff8a4a;color:#101018"><span class="sw-copy">copy</span></span>
+        <span class="sw-foot"><span class="sw-name">Budget orange</span><span class="sw-hex">#ff8a4a</span></span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 04 / TYPE ===================== -->
+<section class="sec">
+  <div class="wrap">
+    <header class="sec-head rise">
+      <span class="idx">04 / type</span>
+      <h2>Three families, one job each.</h2>
+      <p>Space Grotesk sets the display, Inter carries the body, JetBrains Mono stamps the labels, readouts, and eyebrows. Load them together from Google Fonts.</p>
+    </header>
+
+    <div class="specs">
+      <div class="spec is-grotesk rise">
+        <div class="spec-top"><span class="spec-role">display</span><span class="spec-w">500 / 700</span></div>
+        <div class="sample">You are HOW you eat.</div>
+        <div class="spec-name">Space Grotesk</div>
+        <div class="weights">
+          <div class="w"><span class="aa" style="font-weight:500">Aa</span><span class="wn">Medium 500</span></div>
+          <div class="w"><span class="aa" style="font-weight:700">Aa</span><span class="wn">Bold 700</span></div>
+        </div>
+      </div>
+
+      <div class="spec is-inter rise">
+        <div class="spec-top"><span class="spec-role">body</span><span class="spec-w">300 / 400 / 500 / 600</span></div>
+        <div class="sample">Two budgets, tracked on one plate, every meal you eat out.</div>
+        <div class="spec-name">Inter</div>
+        <div class="weights">
+          <div class="w"><span class="aa" style="font-weight:300">Aa</span><span class="wn">Light 300</span></div>
+          <div class="w"><span class="aa" style="font-weight:400">Aa</span><span class="wn">Regular 400</span></div>
+          <div class="w"><span class="aa" style="font-weight:500">Aa</span><span class="wn">Medium 500</span></div>
+          <div class="w"><span class="aa" style="font-weight:600">Aa</span><span class="wn">Semibold 600</span></div>
+        </div>
+      </div>
+
+      <div class="spec is-mono rise">
+        <div class="spec-top"><span class="spec-role">mono</span><span class="spec-w">400 / 500</span></div>
+        <div class="sample">/ CALORIES · ₹ BUDGET · ONE PLATE</div>
+        <div class="spec-name">JetBrains Mono</div>
+        <div class="weights">
+          <div class="w"><span class="aa" style="font-weight:400">Aa</span><span class="wn">Regular 400</span></div>
+          <div class="w"><span class="aa" style="font-weight:500">Aa</span><span class="wn">Medium 500</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="watermark" aria-hidden="true">EF</div>
+  <div class="wrap">
+    <div class="fbrand"><img src="assets/ef-mark-on-dark.svg" alt="Edible Factor mark" /><b>Edible Factor</b></div>
+    <div class="fnote">
+      Brand kit. Use freely.<br>
+      <a href="https://ediblefactor.com">ediblefactor.com</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  function legacyCopy(text){
+    try{
+      var ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');
+      ta.style.position='absolute';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();
+      var ok=document.execCommand('copy');document.body.removeChild(ta);return ok;
+    }catch(e){return false;}
+  }
+  function copyText(text){
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      return navigator.clipboard.writeText(text).then(function(){return true;}).catch(function(){return legacyCopy(text);});
+    }
+    return Promise.resolve(legacyCopy(text));
+  }
+  function flip(btn,t,msg){
+    var prev=t.getAttribute('data-label')||t.textContent;t.setAttribute('data-label',prev);
+    t.textContent=msg;btn.classList.add('is-copied');
+    setTimeout(function(){t.textContent=prev;btn.classList.remove('is-copied');delete btn.dataset.busy;},1200);
+  }
+  document.querySelectorAll('[data-copy-svg]').forEach(function(btn){
+    var t=btn.querySelector('.t');var url=btn.getAttribute('data-svg');
+    btn.addEventListener('click',function(){
+      if(btn.dataset.busy)return;btn.dataset.busy='1';
+      fetch(url).then(function(r){if(!r.ok)throw new Error('x');return r.text();})
+        .then(function(svg){return copyText(svg);})
+        .then(function(ok){flip(btn,t,ok?'Copied':'Copy failed');})
+        .catch(function(){flip(btn,t,'Copy failed');});
+    });
+  });
+  document.querySelectorAll('[data-hex]').forEach(function(sw){
+    var out=sw.querySelector('.sw-hex');
+    sw.addEventListener('click',function(){
+      if(sw.dataset.busy)return;sw.dataset.busy='1';var hex=sw.getAttribute('data-hex');var prev=out.textContent;
+      copyText(hex).then(function(ok){
+        out.textContent=ok?'Copied':'Copy failed';sw.classList.add('is-copied');
+        setTimeout(function(){out.textContent=prev;sw.classList.remove('is-copied');delete sw.dataset.busy;},1200);
+      });
+    });
+  });
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var rises=document.querySelectorAll('.rise');
+  if(reduce||!('IntersectionObserver' in window)){rises.forEach(function(el){el.classList.add('in');});}
+  else{
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});
+    },{rootMargin:'0px 0px -8% 0px',threshold:0.06});
+    rises.forEach(function(el){io.observe(el);});
+  }
+})();
+</script>
+
+<script>
+/* Brand-kit mark controls. Inlines each emblem SVG so every variant gets a
+   Static toggle (freeze the animation), a Background toggle (show/hide the
+   canvas fill), and Download as SVG or PNG that reflect both toggles. No-JS
+   users keep the plain <img> + the download links already in the markup. */
+(function () {
+  'use strict';
+  var SOURCES = { dark: 'assets/ef-mark.svg', light: 'assets/ef-mark-light.svg' };
+  var parsed = {}; // 'dark' | 'light' -> original parsed <svg>
+
+  function findBg(svg) {
+    var rects = svg.querySelectorAll('rect');
+    for (var i = 0; i < rects.length; i++) {
+      var r = rects[i];
+      var x = r.getAttribute('x'), y = r.getAttribute('y');
+      if (r.getAttribute('width') === '64' && r.getAttribute('height') === '64'
+          && (x === null || x === '0') && (y === null || y === '0')) {
+        return r;
+      }
+    }
+    return null;
+  }
+
+  // Live preview: mutate the inlined svg in place to reflect the toggles.
+  function applyState(svg, st) {
+    var anim = svg.querySelectorAll('.ef-dot, .ef-ring');
+    for (var i = 0; i < anim.length; i++) anim[i].style.animation = st.stat ? 'none' : '';
+    var ring = svg.querySelector('.ef-ring');
+    if (ring) ring.style.strokeOpacity = st.stat ? '0.35' : '';
+    var bg = findBg(svg);
+    if (bg) bg.style.display = st.bg ? '' : 'none';
+  }
+
+  // Build a clean, standalone SVG string from the ORIGINAL (not the live node)
+  // with the chosen options baked in.
+  function buildSvg(variant, st, sizePx) {
+    var c = parsed[variant].cloneNode(true);
+    c.removeAttribute('class');
+    var bg = findBg(c);
+    if (bg && !st.bg) bg.parentNode.removeChild(bg);
+    if (st.stat) {
+      var style = c.querySelector('style');
+      if (style) style.parentNode.removeChild(style);
+      var dots = c.querySelectorAll('.ef-dot');
+      for (var i = 0; i < dots.length; i++) dots[i].removeAttribute('class');
+      var ring = c.querySelector('.ef-ring');
+      if (ring) { ring.setAttribute('stroke-opacity', '0.35'); ring.removeAttribute('class'); }
+    }
+    c.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    // Scalable for the .svg download (viewBox only); explicit pixels for the
+    // PNG raster so the intermediate Image has real intrinsic dimensions.
+    if (sizePx) { c.setAttribute('width', String(sizePx)); c.setAttribute('height', String(sizePx)); }
+    return '<?xml version="1.0" encoding="UTF-8"?>\n' + new XMLSerializer().serializeToString(c);
+  }
+
+  function fileBase(variant, st) {
+    return 'ef-mark' + (variant === 'light' ? '-light' : '') + (st.stat ? '-static' : '-animated') + (st.bg ? '' : '-nobg');
+  }
+
+  function saveBlob(blob, name) {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+  }
+
+  function downloadSvg(variant, st) {
+    saveBlob(new Blob([buildSvg(variant, st)], { type: 'image/svg+xml' }), fileBase(variant, st) + '.svg');
+  }
+
+  function downloadPng(variant, st, onDone) {
+    var svgStr = buildSvg(variant, st);
+    var img = new Image();
+    img.onload = function () {
+      var size = 1024;
+      var canvas = document.createElement('canvas');
+      canvas.width = size; canvas.height = size;
+      var ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, size, size); // transparent when background is off
+      ctx.drawImage(img, 0, 0, size, size);
+      canvas.toBlob(function (blob) {
+        if (blob) saveBlob(blob, fileBase(variant, st) + '.png');
+        if (onDone) onDone(!!blob);
+      }, 'image/png');
+    };
+    img.onerror = function () { if (onDone) onDone(false); };
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr);
+  }
+
+  function actBtn(label, pressed) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'act';
+    if (pressed) b.setAttribute('aria-pressed', 'true');
+    b.innerHTML = '<span class="dot" aria-hidden="true"></span><span class="t"></span>';
+    b.querySelector('.t').textContent = label;
+    return b;
+  }
+
+  function flash(btn, msg) {
+    var t = btn.querySelector('.t');
+    var prev = t.textContent;
+    t.textContent = msg;
+    btn.classList.add('is-copied');
+    setTimeout(function () { t.textContent = prev; btn.classList.remove('is-copied'); }, 1100);
+  }
+
+  function enhanceCard(fig) {
+    var img = fig.querySelector('img');
+    if (!img) return;
+    var variant = /light/.test(img.getAttribute('src') || '') ? 'light' : 'dark';
+    if (!parsed[variant]) return;
+
+    var svg = parsed[variant].cloneNode(true);
+    svg.setAttribute('class', 'ef-live');
+    svg.removeAttribute('width');
+    svg.removeAttribute('height');
+    var alt = img.getAttribute('alt');
+    if (alt) { svg.setAttribute('role', 'img'); svg.setAttribute('aria-label', alt); }
+    img.parentNode.replaceChild(svg, img);
+
+    var st = { stat: false, bg: true };
+    applyState(svg, st);
+
+    var acts = fig.querySelector('.acts');
+    if (!acts) return;
+    acts.innerHTML = '';
+
+    var bStatic = actBtn('Static', false);
+    var bBg = actBtn('Background', true);
+    bBg.classList.add('is-on'); // background on by default
+    var bSvg = actBtn('SVG', false);
+    var bPng = actBtn('PNG', false);
+
+    bStatic.addEventListener('click', function () {
+      st.stat = !st.stat;
+      bStatic.classList.toggle('is-on', st.stat);
+      bStatic.setAttribute('aria-pressed', st.stat ? 'true' : 'false');
+      applyState(svg, st);
+    });
+    bBg.addEventListener('click', function () {
+      st.bg = !st.bg;
+      bBg.classList.toggle('is-on', st.bg);
+      bBg.setAttribute('aria-pressed', st.bg ? 'true' : 'false');
+      applyState(svg, st);
+    });
+    bSvg.addEventListener('click', function () { downloadSvg(variant, st); flash(bSvg, 'Saved'); });
+    bPng.addEventListener('click', function () {
+      if (bPng.dataset.busy) return;
+      bPng.dataset.busy = '1';
+      flash(bPng, 'Rendering');
+      downloadPng(variant, st, function (ok) { delete bPng.dataset.busy; if (!ok) flash(bPng, 'Failed'); });
+    });
+
+    acts.appendChild(bStatic);
+    acts.appendChild(bBg);
+    acts.appendChild(bSvg);
+    acts.appendChild(bPng);
+  }
+
+  Promise.all([
+    fetch(SOURCES.dark).then(function (r) { return r.text(); }),
+    fetch(SOURCES.light).then(function (r) { return r.text(); })
+  ]).then(function (res) {
+    var p = new DOMParser();
+    parsed.dark = p.parseFromString(res[0], 'image/svg+xml').documentElement;
+    parsed.light = p.parseFromString(res[1], 'image/svg+xml').documentElement;
+    var cards = document.querySelectorAll('figure.logo-card, figure.lockup');
+    for (var i = 0; i < cards.length; i++) enhanceCard(cards[i]);
+  }).catch(function () { /* keep the no-JS <img> + download-link fallback */ });
+})();
+</script>
+</body>
+</html>
