@@ -135,7 +135,7 @@
     /* Cap the H1 so the LEFT column does not need 800+px to fit
        "You are HOW" on one line. This keeps the headline at a
        tablet-comparable size on desktop. */
-    .hero-grid-lg .hero__title { font-size: clamp(72px, 7vw, 100px); }
+    .hero-grid-lg .hero__title { font-size: clamp(60px, 5.8vw, 84px); }
     /* Desktop drops the glimpse rotator entirely - the dial behind the
        CTA card carries the visual motion on this breakpoint. */
     .hero-grid-lg .glimpse { display: none; }
@@ -346,10 +346,32 @@
     font-family: 'JetBrains Mono', ui-monospace, monospace;
     font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
     padding: 12px 22px; border-radius: 9999px;
+    text-decoration: none;
     transition: transform .15s ease, background .15s ease;
     display: inline-flex; align-items: center; gap: 10px;
   }
   .pill-cta:hover { background: var(--periwinkle-bright); transform: translateY(-1px); }
+
+  /* Glass bubble button (nav Careers): a frosted liquid-glass pill matching the
+     email input + theme toggle. Theme-aware; never underlined. */
+  .pill-glass {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink-dim); text-decoration: none;
+    padding: 9px 16px; border-radius: 9999px;
+    display: inline-flex; align-items: center; gap: 6px;
+    background: color-mix(in srgb, var(--bg) 42%, transparent);
+    -webkit-backdrop-filter: blur(14px) saturate(1.5);
+    backdrop-filter: blur(14px) saturate(1.5);
+    border: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.24), 0 4px 14px -9px rgba(0,0,0,0.32);
+    transition: color .2s ease, border-color .2s ease, background .2s ease, transform .15s ease;
+  }
+  .pill-glass:hover {
+    color: var(--periwinkle);
+    border-color: color-mix(in srgb, var(--periwinkle) 48%, transparent);
+    transform: translateY(-1px);
+  }
 
   .pill-ghost {
     border: 1px solid rgba(217,95,82,0.35);
@@ -411,7 +433,29 @@
      leaves room for the lede + glimpse rotator above the fold on 375px
      viewports. Slope bumped to 12vw so the H1 still grows aggressively
      on tablet/desktop. */
-  .hero__title { font-size: clamp(44px, 12vw, 160px); }
+  .hero__title { font-size: clamp(40px, 11vw, 132px); }
+
+  /* Trim the hero's top dead space (was 96px) while preserving notch safe-area. */
+  .hero-section.bg-grid { padding-top: calc(74px + env(safe-area-inset-top)); }
+
+  /* Hand-drawn pencil marks: a wavy underline beneath the rotor word
+     (calories/budget) and a rough hand-drawn circle around "HOW". Theme-aware
+     warm-graphite fill via an SVG alpha-mask + color-mix, so they read like a
+     real pencil annotation in both themes. */
+  .rotor::after {
+    content: ''; position: absolute; left: -4%; right: -4%; bottom: -0.30em;
+    height: 0.40em; pointer-events: none;
+    background: color-mix(in srgb, var(--periwinkle) 80%, var(--ink));
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 14' preserveAspectRatio='none'%3E%3Cpath d='M4 9 C40 4 70 11 104 7 C140 3 168 10 196 5' fill='none' stroke='%23000' stroke-width='3.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 14' preserveAspectRatio='none'%3E%3Cpath d='M4 9 C40 4 70 11 104 7 C140 3 168 10 196 5' fill='none' stroke='%23000' stroke-width='3.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
+  }
+  .hero__title .accent { position: relative; }
+  .hero__title .accent::after {
+    content: ''; position: absolute; inset: -0.14em -0.22em -0.08em; pointer-events: none;
+    background: color-mix(in srgb, var(--periwinkle) 62%, var(--ink));
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 110' preserveAspectRatio='none'%3E%3Cpath d='M108 7 C166 4 214 27 210 58 C206 89 150 105 99 103 C46 101 9 80 12 49 C15 22 60 11 124 9' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 110' preserveAspectRatio='none'%3E%3Cpath d='M108 7 C166 4 214 27 210 58 C206 89 150 105 99 103 C46 101 9 80 12 49 C15 22 60 11 124 9' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
+  }
   /* Mobile only: reserve right-side space for the absolutely-positioned
      glimpse rotator so the H1 does not slide under it. At >=768px the
      glimpse is a flex sibling of the H1, so no padding is needed
@@ -422,7 +466,7 @@
        headline, and reduced gaps pull the card up above the fold. */
     .hero-section { padding-top: 52px; }
     .hero-section .hero-grid { gap: 10px; }
-    .hero__title { padding-right: 84px; font-size: clamp(34px, 9.4vw, 150px); line-height: 0.95; }
+    .hero__title { padding-right: 84px; font-size: clamp(31px, 8.6vw, 120px); line-height: 0.95; }
     /* The (now smaller) glimpse phone still overhangs the short 2-line H1 a
        little, so the lede keeps a clearance gap that fully clears it - this
        is the fix for the phone landing on the calorie/budget rotator.
@@ -957,15 +1001,18 @@
      "Cheer us on" funnel gets noticed. Pauses while the user is hovering,
      focusing, or pressing it, and once it has been tapped (is-done). */
   @keyframes ef-shake {
-    0%, 80%, 100% { transform: translateX(0) rotate(0); }
-    82% { transform: translateX(-2px) rotate(-4deg); }
-    85% { transform: translateX(2px) rotate(4deg); }
-    88% { transform: translateX(-2px) rotate(-3deg); }
-    91% { transform: translateX(2px) rotate(2deg); }
-    94% { transform: translateX(-1px) rotate(-1deg); }
+    0%, 70%, 100% { transform: translateX(0) rotate(0); }
+    73% { transform: translateX(-5px) rotate(-8deg); }
+    76% { transform: translateX(5px) rotate(7deg); }
+    79% { transform: translateX(-5px) rotate(-7deg); }
+    82% { transform: translateX(4px) rotate(6deg); }
+    85% { transform: translateX(-3px) rotate(-4deg); }
+    88% { transform: translateX(3px) rotate(3deg); }
+    91% { transform: translateX(-2px) rotate(-2deg); }
+    94% { transform: translateX(1px) rotate(1deg); }
     97% { transform: translateX(0) rotate(0); }
   }
-  .eff-heart:not(.is-done) { animation: ef-shake 3.6s ease-in-out 1.6s infinite; }
+  .eff-heart:not(.is-done) { animation: ef-shake 2.6s ease-in-out 1s infinite; }
   .eff-heart:hover, .eff-heart:focus-visible, .eff-heart:active, .eff-heart.is-done { animation: none; }
   /* Confetti burst on cheer tap. Pieces are created in JS with per-piece
      --dx/--dy/--rot/--dur set inline; they fly out from the button and fall. */
@@ -1369,6 +1416,67 @@ html.theme-light .bg-grid {
   background-size: 72px 72px, 160px 160px;
 }
 
+/* ── Grand finale: ANIMATED origami. A fixed field of paper squares that fold
+   open and closed in a diagonal wave. Light + motion only; a script fills
+   #origami-layer and sets html.origami-live. Reduced-motion / no-JS fall back
+   to the static faceted texture above. ── */
+#origami-layer { display: none; }
+html.origami-live.theme-light #origami-layer {
+  display: grid;
+  position: fixed;
+  inset: -14px;                  /* bleed so edge tiles are never clipped */
+  z-index: -1;                   /* behind all content; it IS the page backdrop */
+  pointer-events: none;
+  overflow: hidden;
+  background: var(--bg);         /* eggshell base under the tiles */
+  grid-auto-rows: var(--ori-size, 134px);
+}
+/* Make the page base transparent so the fixed folding field (z-index -1) shows
+   through everything except opaque cards. Content stays above it naturally. */
+html.origami-live.theme-light,
+html.origami-live.theme-light body.bg-bg { background-color: transparent; }
+/* The waitlist card stays a clean, near-opaque panel over the folding backdrop
+   (only a whisper of paper shows through its frosted glass), so the form + CTA
+   never fight the texture. */
+html.origami-live.theme-light .wl-card { background-color: color-mix(in srgb, var(--bg-2) 96%, transparent); }
+/* When the animation is live, sections drop the STATIC facet SVG (the folding
+   tiles replace it) and keep only the faint paper grain, so the fixed field
+   shows through. */
+html.origami-live.theme-light .bg-grid {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='pp'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23pp)' opacity='0.028'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+.ori-tile { position: relative; perspective: 680px; }
+/* static lower-left paper half (the sheet under the fold) */
+.ori-tile::before {
+  content: ''; position: absolute; inset: 0;
+  clip-path: polygon(0 0, 0 100%, 100% 100%);
+  background: linear-gradient(135deg,
+    color-mix(in srgb, #ffffff 12%, transparent),
+    color-mix(in srgb, #60100b 8%, transparent));
+}
+/* folding upper-right paper half - rotates around the tile diagonal (1,1,0) */
+.ori-tile > i {
+  position: absolute; inset: 0;
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+  background: linear-gradient(315deg,
+    color-mix(in srgb, #ffffff 66%, transparent),
+    color-mix(in srgb, #60100b 3%, transparent));
+  transform-origin: center;
+  backface-visibility: visible;
+  animation: ori-fold var(--ori-dur, 7s) cubic-bezier(.5, 0, .15, 1) infinite;
+}
+@keyframes ori-fold {
+  0%, 10%   { transform: rotate3d(1, 1, 0, 0deg);   filter: brightness(1); }
+  50%       { transform: rotate3d(1, 1, 0, 176deg); filter: brightness(0.6); }
+  90%, 100% { transform: rotate3d(1, 1, 0, 0deg);   filter: brightness(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html.origami-live.theme-light #origami-layer { display: none; }
+  .ori-tile > i { animation: none; transform: rotate3d(1, 1, 0, 0deg); }
+}
+
 /* ── Theme toggle (nav) ── */
 .theme-toggle {
   width: 36px; height: 36px; flex-shrink: 0;
@@ -1388,6 +1496,11 @@ html.theme-light .theme-toggle .ic-moon { display: block; }
 </head>
 
 <body class="bg-bg text-ink font-body">
+
+<!-- Animated origami: a fixed field of paper squares that fold + open. Light
+     mode + motion only; JS fills it (see the origami-fold script). The static
+     faceted .bg-grid texture is the no-JS / reduced-motion fallback. -->
+<div id="origami-layer" aria-hidden="true"></div>
 
 <noscript>
 <div style="background:#07070b;color:#eceaf3;padding:18px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#9693ac;border-bottom:1px solid rgba(217,95,82,0.20);">
@@ -1415,7 +1528,7 @@ html.theme-light .theme-toggle .ic-moon { display: block; }
         <span class="w-1.5 h-1.5 rounded-full bg-periwinkle"></span>
         Private Beta · Bengaluru → Global
       </span>
-      <a href="/careers" class="mono text-[11px] tracking-[0.16em] uppercase text-inkdim hover:text-periwinkle transition-colors">Careers</a>
+      <a href="/careers" class="pill-glass">Careers</a>
       <button id="themeToggle" type="button" class="theme-toggle" aria-label="Switch between light and dark theme">
         <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
         <svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
@@ -2534,6 +2647,50 @@ html.theme-light .theme-toggle .ic-moon { display: block; }
       }, 2800);
     });
   })();
+
+  /* Grand finale: build the animated origami field. A grid of paper tiles sized
+     to the viewport; each folds along its diagonal, staggered by (row + col) so
+     the folds ripple across the screen as a diagonal wave. Motion + light only;
+     reduced-motion or no-JS keep the static faceted texture. */
+  (function () {
+    var layer = document.getElementById('origami-layer');
+    if (!layer) return;
+    var root = document.documentElement;
+    var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function build() {
+      if (mq.matches) { root.classList.remove('origami-live'); layer.textContent = ''; return; }
+      // Scale tile size with the viewport so the element count stays bounded
+      // (~100 tiles) even on ultrawide/4K screens - keeps the animation light.
+      var size = window.innerWidth < 640 ? 92 : Math.max(118, Math.round(window.innerWidth / 13));
+      var cols = Math.ceil(window.innerWidth / size) + 1;
+      var rows = Math.ceil(window.innerHeight / size) + 1;
+      layer.style.setProperty('--ori-size', size + 'px');
+      layer.style.gridTemplateColumns = 'repeat(' + cols + ', ' + size + 'px)';
+      var frag = document.createDocumentFragment();
+      for (var r = 0; r < rows; r++) {
+        for (var c = 0; c < cols; c++) {
+          var tile = document.createElement('div');
+          tile.className = 'ori-tile';
+          var flap = document.createElement('i');
+          // Diagonal wave (wrapped every 9 diagonals) + a touch of duration
+          // variety so the field breathes organically rather than in lockstep.
+          flap.style.animationDelay = (((r + c) % 9) * 0.5).toFixed(2) + 's';
+          flap.style.setProperty('--ori-dur', (6.4 + ((r * 5 + c * 3) % 5) * 0.5).toFixed(2) + 's');
+          tile.appendChild(flap);
+          frag.appendChild(tile);
+        }
+      }
+      layer.textContent = '';
+      layer.appendChild(frag);
+      root.classList.add('origami-live');
+    }
+
+    build();
+    var t;
+    window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(build, 250); });
+    if (mq.addEventListener) mq.addEventListener('change', build);
+  })();
 </script>
 
 <script id="efmod-js">
@@ -2922,21 +3079,25 @@ html.theme-light .theme-toggle .ic-moon { display: block; }
     try {
       if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     } catch (e) {}
-    var colors = ['#d95f52', '#6eddf0', '#ff8a4a', '#e8796b', '#ffffff'];
-    for (var i = 0; i < 22; i++) {
+    var colors = ['#d95f52', '#6eddf0', '#ff8a4a', '#e8796b', '#ffd36b', '#ffffff'];
+    var count = 48;
+    for (var i = 0; i < count; i++) {
       var p = document.createElement('span');
       p.className = 'confetti-piece';
-      var ang = (Math.PI * 2) * (i / 22) + Math.random() * 0.5;
-      var dist = 55 + Math.random() * 95;
+      var ang = (Math.PI * 2) * (i / count) + Math.random() * 0.6;
+      var dist = 60 + Math.random() * 150;
+      var sz = 6 + Math.random() * 7;
       p.style.left = x + 'px';
       p.style.top = y + 'px';
+      p.style.width = sz.toFixed(1) + 'px';
+      p.style.height = (sz * 1.35).toFixed(1) + 'px';
       p.style.background = colors[i % colors.length];
       p.style.setProperty('--dx', (Math.cos(ang) * dist).toFixed(1) + 'px');
-      p.style.setProperty('--dy', (Math.sin(ang) * dist + 90).toFixed(1) + 'px');
-      p.style.setProperty('--rot', (Math.random() * 720 - 360).toFixed(0) + 'deg');
-      p.style.setProperty('--dur', (0.8 + Math.random() * 0.5).toFixed(2) + 's');
+      p.style.setProperty('--dy', (Math.sin(ang) * dist + 110).toFixed(1) + 'px');
+      p.style.setProperty('--rot', (Math.random() * 900 - 450).toFixed(0) + 'deg');
+      p.style.setProperty('--dur', (0.9 + Math.random() * 0.7).toFixed(2) + 's');
       document.body.appendChild(p);
-      (function (el){ setTimeout(function (){ el.remove(); }, 1500); })(p);
+      (function (el){ setTimeout(function (){ el.remove(); }, 1800); })(p);
     }
   }
 
