@@ -998,6 +998,14 @@
   @media (min-width: 1024px) {
     .eff-pop { left: auto; right: 22px; bottom: 22px; max-width: 360px; }
   }
+  /* Light theme: the cheer popup hardcodes a dark surface, which reads as a
+     black card on the eggshell page. Repaint it to the paper surface with a
+     soft shadow; its title/sub already use theme ink vars so text flips too. */
+  html.theme-light .eff-pop {
+    background: rgba(252, 249, 242, 0.97);
+    box-shadow: 0 18px 50px -20px rgba(35, 27, 23, 0.28);
+  }
+  html.theme-light .eff-pop__close:hover { background: rgba(35, 27, 23, 0.06); }
 
   /* Stage 2/3 modal overlay. */
   .eff-modal {
