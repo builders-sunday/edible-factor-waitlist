@@ -1140,6 +1140,11 @@
     border-radius: 14px;
   }
   .ef-logo-link:active { opacity: 0.7; }
+  /* Theme-swapped mark: dark cut on the dark theme, the animated on-light
+     (motion) cut on the eggshell theme. */
+  .ef-logo--light { display: none; }
+  html.theme-light .ef-logo--dark { display: none; }
+  html.theme-light .ef-logo--light { display: block; }
 
   /* === Safe-area handling for iPhone notch / dynamic island ===
      Requires `viewport-fit=cover` in the viewport meta (added in head).
@@ -1321,8 +1326,8 @@ html.theme-light {
   --ink:     #23201d;
   --ink-dim: #5b564f;
   --ink-low: #857f74;              /* >= 4.5:1 on eggshell */
-  --periwinkle: #60100b;           /* deep wine - the brand accent on paper */
-  --periwinkle-bright: #7e1a12;
+  --periwinkle: #d95f52;           /* wine-red brand accent - same in both themes */
+  --periwinkle-bright: #e8796b;
   --calorie: #1697ab;              /* deepened cyan */
   --budget:  #d2691e;              /* deepened peach */
 }
@@ -1342,6 +1347,12 @@ html.theme-light .text-calorie { color: var(--calorie); }
 html.theme-light .text-budget { color: var(--budget); }
 html.theme-light .text-white\/\[0\.025\] { color: rgba(0,0,0,0.045); }
 html.theme-light .bg-periwinkle { background-color: var(--periwinkle); }
+/* The accent (#d95f52) is a mid-light red, so accent-filled buttons need dark
+   labels on paper - same as they get on the dark theme (var(--bg) is dark
+   there). Keeps "Join Waitlist" / "Reserve My Seat" / "Got it" readable. */
+html.theme-light .pill-cta,
+html.theme-light .wl-form button[type=submit],
+html.theme-light .cookie-banner__btn--accept { color: #16130f; }
 html.theme-light .bg-periwinkle\/10 { background-color: color-mix(in srgb, var(--periwinkle) 12%, transparent); }
 html.theme-light .border-white\/10 { border-color: rgba(35,32,29,0.12); }
 html.theme-light .border-white\/5 { border-color: rgba(35,32,29,0.07); }
@@ -1391,7 +1402,8 @@ html.theme-light .theme-toggle .ic-moon { display: block; }
 <nav class="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-bg/70 border-b border-white/5">
   <div class="max-w-[1400px] mx-auto px-6 md:px-10 h-[68px] flex items-center justify-between">
     <a href="#problem" class="ef-logo-link inline-flex items-center justify-center" aria-label="Jump to the problem" data-smooth-scroll="problem">
-      <img src="/ef-mark.svg" alt="ediblefactor" width="44" height="44" class="block rounded-xl" loading="eager">
+      <img src="/ef-mark.svg" alt="ediblefactor" width="44" height="44" class="ef-logo ef-logo--dark block rounded-xl" loading="eager">
+      <img src="/ef-mark-animated-on-light.svg" alt="ediblefactor" width="44" height="44" class="ef-logo ef-logo--light block rounded-xl" loading="eager" aria-hidden="true">
     </a>
     <div class="flex items-center gap-3">
       <span class="hidden lg:inline-flex items-center gap-2 mono text-[11px] tracking-[0.16em] uppercase text-inkdim">
