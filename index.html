@@ -226,7 +226,10 @@
     position: absolute;
     top: 0;
     right: 0;
-    width: 96px;
+    /* Shrunk on mobile so the phone stays within the 2-line headline height
+       and never overhangs onto the calorie/budget rotator in the lede below.
+       Desktop (>=768px) overrides this with the large flex-sibling size. */
+    width: clamp(56px, 15vw, 78px);
     aspect-ratio: 88 / 128;
     height: auto;
     z-index: 5;
@@ -417,12 +420,14 @@
     /* Tighten the mobile hero so the whole waitlist card - the primary hook -
        lands inside the first viewport on load. Smaller top padding, a shorter
        headline, and reduced gaps pull the card up above the fold. */
-    .hero-section { padding-top: 62px; }
+    .hero-section { padding-top: 58px; }
     .hero-section .hero-grid { gap: 16px; }
-    .hero__title { padding-right: 100px; font-size: clamp(36px, 10vw, 150px); line-height: 0.96; }
-    /* The absolutely-positioned glimpse phone still overhangs the H1 row, so
-       the lede keeps a small clearance gap. */
-    .hero__lede-block { margin-top: 20px; }
+    .hero__title { padding-right: 88px; font-size: clamp(36px, 10vw, 150px); line-height: 0.96; }
+    /* The (now smaller) glimpse phone still overhangs the short 2-line H1 a
+       little, so the lede keeps a clearance gap that fully clears it - this
+       is the fix for the phone landing on the calorie/budget rotator.
+       Verified no overlap from 360px up. */
+    .hero__lede-block { margin-top: 30px; }
     .hero__lede-block p:first-child { font-size: 15px; }
     .hero__lede-block p:last-child { margin-top: 6px; font-size: 13px; line-height: 1.5; }
     /* Compress the card itself a touch so the full CTA (through "Cheer us on")
