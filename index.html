@@ -420,21 +420,21 @@
     /* Tighten the mobile hero so the whole waitlist card - the primary hook -
        lands inside the first viewport on load. Smaller top padding, a shorter
        headline, and reduced gaps pull the card up above the fold. */
-    .hero-section { padding-top: 58px; }
-    .hero-section .hero-grid { gap: 16px; }
-    .hero__title { padding-right: 88px; font-size: clamp(36px, 10vw, 150px); line-height: 0.96; }
+    .hero-section { padding-top: 52px; }
+    .hero-section .hero-grid { gap: 10px; }
+    .hero__title { padding-right: 84px; font-size: clamp(34px, 9.4vw, 150px); line-height: 0.95; }
     /* The (now smaller) glimpse phone still overhangs the short 2-line H1 a
        little, so the lede keeps a clearance gap that fully clears it - this
        is the fix for the phone landing on the calorie/budget rotator.
        Verified no overlap from 360px up. */
-    .hero__lede-block { margin-top: 30px; }
-    .hero__lede-block p:first-child { font-size: 15px; }
-    .hero__lede-block p:last-child { margin-top: 6px; font-size: 13px; line-height: 1.5; }
-    /* Compress the card itself a touch so the full CTA (through "Cheer us on")
-       clears the fold. */
-    .wl-card { padding: 20px; }
-    .wl-card h2 { margin-bottom: 12px; }
-    .wl-card .eff-cheer { margin-top: 12px; padding-top: 12px; }
+    .hero__lede-block { margin-top: 24px; }
+    .hero__lede-block p:first-child { font-size: 14.5px; }
+    .hero__lede-block p:last-child { margin-top: 4px; font-size: 12.5px; line-height: 1.45; }
+    /* Compress the card so the full CTA (through "Cheer us on") lands inside
+       the first viewport on load, not the next scroll section. */
+    .wl-card { padding: 18px 18px 16px; }
+    .wl-card h2 { margin-bottom: 10px; }
+    .wl-card .eff-cheer { margin-top: 10px; padding-top: 10px; }
   }
   .hero__title .word {
     display: inline-block;
@@ -794,14 +794,33 @@
     .wl-form input[type=email] {
       box-sizing: border-box;
       width: 100%;
-      padding: 12px 14px;
-      background: rgba(7, 7, 11, 0.35);
-      border: 1px solid rgba(217, 95, 82, 0.18);
-      border-radius: 12px;
-      min-height: 44px;
+      padding: 14px 16px;
+      /* Liquid glass: a theme-aware frosted fill. The old hardcoded dark rgba
+         rendered dark-on-dark (illegible) in light mode; color-mix on var(--bg)
+         frosts eggshell in light + ink in dark, so var(--ink) text stays crisp
+         on both. Heavy blur + a bright top edge + a wine underglow = premium
+         glass that catches the light. */
+      background:
+        linear-gradient(158deg,
+          color-mix(in srgb, var(--bg) 66%, transparent),
+          color-mix(in srgb, var(--bg) 38%, transparent));
+      -webkit-backdrop-filter: blur(22px) saturate(1.9);
+      backdrop-filter: blur(22px) saturate(1.9);
+      border: 1px solid color-mix(in srgb, var(--periwinkle) 30%, transparent);
+      border-radius: 15px;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.45),
+        inset 0 10px 20px -16px rgba(255, 255, 255, 0.7),
+        inset 0 -12px 26px -18px color-mix(in srgb, var(--periwinkle) 55%, transparent),
+        0 12px 30px -16px rgba(0, 0, 0, 0.4);
+      min-height: 50px;
     }
     .wl-form:focus-within input[type=email] {
-      border-color: rgba(217, 95, 82, 0.45);
+      border-color: color-mix(in srgb, var(--periwinkle) 60%, transparent);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        0 0 0 3px color-mix(in srgb, var(--periwinkle) 18%, transparent),
+        0 10px 28px -16px rgba(0, 0, 0, 0.42);
     }
     .wl-form button[type=submit] {
       width: 100%;
@@ -1340,11 +1359,14 @@ html.theme-light .bg-periwinkle\/10 { background-color: color-mix(in srgb, var(-
 html.theme-light .border-white\/10 { border-color: rgba(35,32,29,0.12); }
 html.theme-light .border-white\/5 { border-color: rgba(35,32,29,0.07); }
 
-/* Faint grid overlay: warm ink hairlines instead of periwinkle-on-black */
+/* Light mode drops the hairline grid for a folded-paper / origami texture:
+   subtle faceted diamonds (lit tops + wine-shadowed bottoms) read as folded
+   planes, over a faint paper grain. Dark mode keeps its grid (base .bg-grid). */
 html.theme-light .bg-grid {
   background-image:
-    linear-gradient(rgba(96,16,11,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(96,16,11,0.05) 1px, transparent 1px);
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72'%3E%3Cpolygon points='0,0 72,0 36,36' fill='%23ffffff' fill-opacity='0.55'/%3E%3Cpolygon points='0,72 72,72 36,36' fill='%2360100b' fill-opacity='0.05'/%3E%3Cpolygon points='0,0 0,72 36,36' fill='%23ffffff' fill-opacity='0.14'/%3E%3Cpolygon points='72,0 72,72 36,36' fill='%2360100b' fill-opacity='0.02'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23p)' opacity='0.03'/%3E%3C/svg%3E");
+  background-size: 72px 72px, 160px 160px;
 }
 
 /* ── Theme toggle (nav) ── */
