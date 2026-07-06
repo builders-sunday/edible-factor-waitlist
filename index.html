@@ -954,6 +954,18 @@
   }
   .eff-heart:not(.is-done) { animation: ef-shake 3.6s ease-in-out 1.6s infinite; }
   .eff-heart:hover, .eff-heart:focus-visible, .eff-heart:active, .eff-heart.is-done { animation: none; }
+  /* Confetti burst on cheer tap. Pieces are created in JS with per-piece
+     --dx/--dy/--rot/--dur set inline; they fly out from the button and fall. */
+  .confetti-piece {
+    position: fixed; z-index: 200; width: 8px; height: 11px; border-radius: 1px;
+    pointer-events: none; will-change: transform, opacity;
+    animation: confetti-fall var(--dur, 1s) cubic-bezier(.15,.6,.4,1) forwards;
+  }
+  @keyframes confetti-fall {
+    0%   { transform: translate(0,0) rotate(0deg); opacity: 1; }
+    100% { transform: translate(var(--dx,0px), var(--dy,140px)) rotate(var(--rot,540deg)); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { .confetti-piece { display: none; } }
   @media (prefers-reduced-motion: reduce) { .eff-heart { animation: none !important; } }
 
   /* Scroll-triggered dismissible popup, a floating Stage 1 surface. */
@@ -1573,7 +1585,7 @@ html.theme-light .theme-toggle .ic-moon { display: block; }
           <div class="eff-cheer">
             <div class="eff-cheer__copy">Not ready to sign up? Your encouragement still means a lot.</div>
             <button type="button" class="eff-heart" id="effHeartTap" data-eff-tap aria-label="Send some encouragement">
-              <span class="eff-heart__glyph" aria-hidden="true">🫶</span>
+              <span class="eff-heart__glyph" aria-hidden="true">🫶🏻</span>
               <span class="eff-heart__label">Cheer us on</span>
             </button>
           </div>
@@ -2916,10 +2928,36 @@ html.theme-light .theme-toggle .ic-moon { display: block; }
     }
   }
 
+  // Confetti burst from a screen point (used on the cheer tap).
+  function spawnConfetti(x, y){
+    try {
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    } catch (e) {}
+    var colors = ['#d95f52', '#6eddf0', '#ff8a4a', '#e8796b', '#ffffff'];
+    for (var i = 0; i < 22; i++) {
+      var p = document.createElement('span');
+      p.className = 'confetti-piece';
+      var ang = (Math.PI * 2) * (i / 22) + Math.random() * 0.5;
+      var dist = 55 + Math.random() * 95;
+      p.style.left = x + 'px';
+      p.style.top = y + 'px';
+      p.style.background = colors[i % colors.length];
+      p.style.setProperty('--dx', (Math.cos(ang) * dist).toFixed(1) + 'px');
+      p.style.setProperty('--dy', (Math.sin(ang) * dist + 90).toFixed(1) + 'px');
+      p.style.setProperty('--rot', (Math.random() * 720 - 360).toFixed(0) + 'deg');
+      p.style.setProperty('--dur', (0.8 + Math.random() * 0.5).toFixed(2) + 's');
+      document.body.appendChild(p);
+      (function (el){ setTimeout(function (){ el.remove(); }, 1500); })(p);
+    }
+  }
+
   // Stage 1 tap, shared by the inline button and the popup button.
   function doTap(e){
     var btn = e && e.currentTarget;
-    if (btn) { btn.classList.add('is-popped'); setTimeout(function (){ btn.classList.remove('is-popped'); }, 500); }
+    if (btn) {
+      btn.classList.add('is-popped'); setTimeout(function (){ btn.classList.remove('is-popped'); }, 500);
+      try { var r = btn.getBoundingClientRect(); spawnConfetti(r.left + r.width / 2, r.top + r.height / 2); } catch (e2) {}
+    }
     hidePopup();
     var st = getState();
     if (st === '' || st === 'dismissed') { setState('tapped'); post({ stage: 'tap' }).catch(function (){}); }
