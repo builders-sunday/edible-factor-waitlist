@@ -4,6 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#07070b">
+<script>
+  /* Pre-paint theme init: honour a saved choice, else the OS preference.
+     Runs before body paints so there is no dark-to-light flash. */
+  (function () {
+    try {
+      var q = new URLSearchParams(location.search).get('theme');
+      var t = (q === 'light' || q === 'dark') ? q : localStorage.getItem('ef-theme');
+      if (t !== 'light' && t !== 'dark') {
+        t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      if (t === 'light') document.documentElement.classList.add('theme-light');
+      var m = document.querySelector('meta[name="theme-color"]');
+      if (m) m.setAttribute('content', t === 'light' ? '#f5f2ed' : '#07070b');
+    } catch (e) {}
+  })();
+</script>
 <title>edible·factor · You are HOW you eat</title>
 <meta name="description" content="The only app that tracks your calories and your budget at the same time. Private beta · Bengaluru → Global.">
 
@@ -1255,6 +1271,72 @@
   .efmod .gauge .rd small{margin-top:5px;font-size:10px;}
   .efmod .gauge .rn{margin-top:7px;min-height:0;font-size:10px;line-height:1.5;}
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   LIGHT THEME  ·  adaptive off-white / eggshell mode
+   The site is dark by default (:root). `html.theme-light` (set by the
+   pre-paint init script from localStorage or the OS preference, and by the
+   nav toggle) flips the page to the shared eggshell paper palette. Most
+   colours cascade from the CSS vars; the precompiled Tailwind utilities
+   hardcode dark rgb() values, so the ones actually used are re-pointed to
+   the vars here (higher specificity, no !important). Device-frame mockups
+   deliberately stay dark - a dark phone reads correctly on paper.
+   ═══════════════════════════════════════════════════════════════════════ */
+html.theme-light {
+  color-scheme: light;
+  --bg:   #f5f2ed;   /* eggshell paper (shared with the menu system) */
+  --bg-2: #fcf9f2;   /* raised surface / cards */
+  --bg-3: #efeae1;   /* wells */
+  --ink:     #23201d;
+  --ink-dim: #5b564f;
+  --ink-low: #857f74;              /* >= 4.5:1 on eggshell */
+  --periwinkle: #5a5cf0;           /* deepened for text/accent contrast on paper */
+  --periwinkle-bright: #6e70e8;
+  --calorie: #1697ab;              /* deepened cyan */
+  --budget:  #d2691e;              /* deepened peach */
+}
+
+/* Base surfaces + the hardcoded utility colours actually used in markup */
+html.theme-light body,
+html.theme-light .bg-bg { background-color: var(--bg); }
+html.theme-light .bg-bg\/70 { background-color: color-mix(in srgb, var(--bg) 78%, transparent); }
+html.theme-light .bg-bg2\/80 { background-color: color-mix(in srgb, var(--bg-2) 86%, transparent); }
+html.theme-light .text-ink { color: var(--ink); }
+html.theme-light .text-ink\/90 { color: color-mix(in srgb, var(--ink) 90%, transparent); }
+html.theme-light .text-inkdim { color: var(--ink-dim); }
+html.theme-light .text-inklow { color: var(--ink-low); }
+html.theme-light .text-periwinkle,
+html.theme-light .hover\:text-periwinkle:hover { color: var(--periwinkle); }
+html.theme-light .text-calorie { color: var(--calorie); }
+html.theme-light .text-budget { color: var(--budget); }
+html.theme-light .text-white\/\[0\.025\] { color: rgba(0,0,0,0.045); }
+html.theme-light .bg-periwinkle { background-color: var(--periwinkle); }
+html.theme-light .bg-periwinkle\/10 { background-color: color-mix(in srgb, var(--periwinkle) 12%, transparent); }
+html.theme-light .border-white\/10 { border-color: rgba(35,32,29,0.12); }
+html.theme-light .border-white\/5 { border-color: rgba(35,32,29,0.07); }
+
+/* Faint grid overlay: warm ink hairlines instead of periwinkle-on-black */
+html.theme-light .bg-grid {
+  background-image:
+    linear-gradient(rgba(90,92,240,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(90,92,240,0.05) 1px, transparent 1px);
+}
+
+/* ── Theme toggle (nav) ── */
+.theme-toggle {
+  width: 36px; height: 36px; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 9999px; border: 1px solid rgba(255,255,255,0.12);
+  color: var(--ink-dim); background: transparent; cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.theme-toggle:hover { color: var(--periwinkle); border-color: var(--periwinkle); }
+html.theme-light .theme-toggle { border-color: rgba(35,32,29,0.16); }
+.theme-toggle svg { width: 17px; height: 17px; }
+.theme-toggle .ic-moon { display: none; }
+.theme-toggle .ic-sun { display: block; }
+html.theme-light .theme-toggle .ic-sun { display: none; }
+html.theme-light .theme-toggle .ic-moon { display: block; }
 </style>
 </head>
 
@@ -1286,10 +1368,30 @@
         Private Beta · Bengaluru → Global
       </span>
       <a href="/careers" class="mono text-[11px] tracking-[0.16em] uppercase text-inkdim hover:text-periwinkle transition-colors">Careers</a>
+      <button id="themeToggle" type="button" class="theme-toggle" aria-label="Switch between light and dark theme">
+        <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+        <svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </button>
       <a href="#waitlist-hero" id="navJoinWaitlist" class="pill-cta">Join Waitlist</a>
     </div>
   </div>
 </nav>
+
+<script>
+  /* Theme toggle: flip .theme-light, persist the explicit choice, and keep
+     the address-bar theme-color in sync. Pre-paint init (in <head>) already
+     set the initial state from storage / OS preference. */
+  (function () {
+    var btn = document.getElementById('themeToggle');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var isLight = document.documentElement.classList.toggle('theme-light');
+      try { localStorage.setItem('ef-theme', isLight ? 'light' : 'dark'); } catch (e) {}
+      var m = document.querySelector('meta[name="theme-color"]');
+      if (m) m.setAttribute('content', isLight ? '#f5f2ed' : '#07070b');
+    });
+  })();
+</script>
 
 <!-- ============================================================
      HERO  ·  split layout: title left, CTA right (with rotating dial)
