@@ -88,6 +88,34 @@ To add or change a mockup, edit the `TARGETS` array in `capture.mjs`, run `npm r
 - **Form endpoint stays relative** (`/api/waitlist`). The CF Function lives at the same origin; do not reintroduce absolute URLs.
 - **Mockups are immutable per filename.** `_headers` sets `Cache-Control: immutable` on them. To replace a screenshot, use a new filename and update the `<img src>` reference, or the old one will stay cached on visitors' browsers for a year.
 
+## Publishing / going live - the deploy workflow
+
+**Trigger phrases:** "deploy it", "publish the changes", "make it live", "push it live", "ship it", "go live", or any equivalent. Merging a PR into `main` **is** the deploy - Pages' Git integration builds and serves whatever is on `main` within about a minute, no separate deploy command required (see the TL;DR at the top of this file and `docs/ARCHITECTURE.md`).
+
+1. Branch off `main`, make the change, open a PR (this repo's normal flow - see recent history for the pattern).
+2. **Before the final commit on the branch**, run `node write-version.mjs` and commit the resulting `version.json` alongside the change. Because there's no build step here (Pages just serves the checked-out root as-is), `version.json` is a committed file, not a generated build artifact - see the note in `write-version.mjs` and the caveat below.
+3. Merge the PR into `main` (`gh pr merge --squash`). That merge is what goes live.
+4. Confirm the merge commit is actually live - see "Confirming a deploy landed" below.
+
+**Known one-commit lag:** `write-version.mjs` reads `git rev-parse HEAD` *before* `version.json` is committed, so the sha it records is the parent of the commit that actually ships it (the commit adding `version.json` can't know its own future hash). In practice this means `version.json`'s commit will match the merge commit if you squash-merge the PR (GitHub creates one new commit on `main`, and `version.json`'s recorded parent sha becomes irrelevant - what matters is that the squash commit lands and `version.json`'s *content* is on `main`). If you ever commit `version.json` directly to `main` outside a PR, expect the recorded commit to be one behind true HEAD by exactly that commit - don't chase perfect precision here, just don't be surprised by it.
+
+## Confirming a deploy landed
+
+**Use this for every deploy, not just when something seems off.** `https://ediblefactor.com/version.json` reports the commit that was live in the build that shipped it:
+
+```json
+{ "commit": "<full sha>", "shortCommit": "<7 chars>", "branch": "main", "builtAt": "<ISO timestamp>" }
+```
+
+It's a plain static file at the repo root, written by `write-version.mjs` and committed like any other file (no build step exists to generate it fresh per deploy - see the workflow above). `_headers` sets `Cache-Control: no-store` on `/version.json` so every read hits the origin.
+
+**The check:**
+```bash
+git log -1 --format=%H -- version.json   # commit that last touched version.json on main
+curl -s https://ediblefactor.com/version.json | jq -r .commit
+```
+Because of the one-commit lag described above, treat a match on `shortCommit`/timestamp recency as confirmation the right deploy shipped, not a byte-for-byte sha match against `git rev-parse HEAD` on `main`. If `version.json` hasn't changed in a while relative to your latest merge, the deploy may still be in flight - poll again rather than trusting a plain `curl -o /dev/null -w "%{http_code}"` 200, which only proves *some* build is live.
+
 ## Clarifying questions
 
 When a request is ambiguous or underspecified, don't guess — ask a clarifying question, and with it propose 2–4 concrete candidate answers you generate yourself (distinct options covering the likely intent) so I can pick or redirect. Before asking, double-check the question and its options **twice**: confirm the question is the real blocker and that each option is accurate, distinct, and plausible. If a sensible default clearly exists, state your assumption and proceed instead of asking.
