@@ -29,3 +29,8 @@
 
 /why-not-petpooja.html
   X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+
+# Deploy-verification file. Never cache — every check must read the commit
+# that's actually live, not a stale edge copy.
+/version.json
+  Cache-Control: no-store
