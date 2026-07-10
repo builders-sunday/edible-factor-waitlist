@@ -128,3 +128,24 @@ Before writing any code in this repo, create a ticket on the Edible Factor proje
 - Flow: create the item first, set its fields, write the plan on the item, THEN branch and build. Process before code: no code before a ticket exists.
 - Required fields on every ticket, leave nothing blank: Category (Bug / Feature / Enhancement / Concern), Priority (P0 to P3), Area, Assignee, Start date, and Expected close date. Start date and Expected close date are mandatory going forward: the requester answers them when filing the ticket, or the AI fills them in when it creates the ticket.
 - Name the repos involved on the ticket itself. Most changes span more than one repo (backend, web, plate, scouter, waitlist, human, ios), so list every repo the change touches in the "Repos to change" field, so cross-repo work stays visible from the board.
+
+## Experiences (decision log)
+
+`.claude/experiences/` is this repo's durable record of significant
+decisions and experiments: what we tried, what we decided, and why.
+Format and index are in `.claude/experiences/README.md`.
+
+Three standing rules:
+
+1. **Consult before big decisions.** Before an architecture change, a
+   dependency add or removal, a feature removal, a big refactor, or
+   re-running a previously rejected experiment, read the experiences
+   index and weigh any relevant entry before relitigating it.
+2. **Ask why, then record it.** When asked to do or undo something
+   significant and the reason is not stated, ask (what triggered this,
+   what did it cost, what were the pain points) and capture the answer
+   in the entry. The why is the point; git history already has the what.
+3. **Append after the fact.** After any non-trivial decision, tradeoff,
+   rejection, or significant experiment/analysis (including agent-run
+   ones like an SEO pass or a perf audit), add a dated entry and index
+   it, in the same PR as the change where possible.
