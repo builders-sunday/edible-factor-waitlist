@@ -81,7 +81,7 @@ Static assets at the root: `ef-mark.svg`, `ef-mark-180.png`, `favicon.ico`, `og-
 | Endpoint | Method(s) | File | What it does |
 |---|---|---|---|
 | `/api/waitlist` | `POST`, `OPTIONS` | `functions/api/waitlist.js` | Site's own signup + engagement sink. Handles the classic email form and the funnel `stage` shapes (`tap` / `chips` / `contact`; missing stage defaults to `contact`). Honeypot short-circuit, KV rate limit, optional Turnstile siteverify, then writes email signups to Loops and mirrors to Slack. Does NOT proxy the Go backend. |
-| `/api/jobs` | `GET` | `functions/api/jobs.js` | Same-origin proxy to `GET {BACKEND}/v1/public/jobs`. Normalizes `role` / `scouter_restaurant_id` / `outlet_id`, forces `page=1&per_page=100`, edge-caches OK responses in `caches.default` for 5 min to shield the laptop backend. |
+| `/api/jobs` | `GET` | `functions/api/jobs.js` | Same-origin proxy to `GET {BACKEND}/v1/public/jobs`. Normalizes `role` / `scouter_restaurant_id` / `outlet_id`, forces `page=1&per_page=100`, edge-caches OK responses in `caches.default` for 5 min to shield the backend. |
 | `/api/apply` | `POST`, `OPTIONS` | `functions/api/apply.js` | Same-origin proxy to `POST {BACKEND}/v1/public/jobs/{id}/applications`. Honeypot, validates `job_id` (24-hex ObjectID), name/email/phone; whitelists forwarded fields; SSRF-hygienes `resume_url` (rejects IP literals, `localhost`, `*.internal`, `169.254.169.254`). |
 | `/api/notify` | `POST`, `OPTIONS` | `functions/api/notify.js` | Same-origin proxy to `POST {BACKEND}/v1/public/notify-signups`. Honeypot, requires valid email; forwards `email` + optional `phone`/`source`/`url`. Backend dedupes then batches Discord + Loops off the request path. |
 
@@ -296,7 +296,7 @@ flowchart LR
   BUILD --> DETECT["functions/ auto-routed<br/>-> /api/*"]
   DETECT --> LIVE["ediblefactor.com<br/>+ edible-factor-waitlist.pages.dev"]
 
-  LIVE -. proxies .-> BE["Go backend<br/>api.ediblefactor.com<br/>(laptop + cloudflared tunnel)"]
+  LIVE -. proxies .-> BE["Go backend<br/>api.ediblefactor.com<br/>(Docker on a self-managed VPS + cloudflared tunnel)"]
   LIVE -. writes .-> LOOPS["Loops.so"]
   LIVE -. mirrors .-> SLACK["Slack"]
 ```
@@ -311,7 +311,7 @@ flowchart LR
 | Manual deploy | `npx wrangler pages deploy . --project-name ediblefactor-waitlist` |
 | Local dev | `npx wrangler pages dev .` (-> `:8788`, includes Functions) or `python3 -m http.server` (static only) |
 
-Do NOT add a GitHub Actions deploy workflow - it would race the dashboard Git integration (a prior attempt was reverted fleet-wide). Backend availability depends on Abhi's laptop + the `cloudflared` tunnel being up; a 502/521 from `api.ediblefactor.com` usually means the laptop is asleep, and it will surface as a 502 from `/api/jobs`/`/api/apply`/`/api/notify`.
+Do NOT add a GitHub Actions deploy workflow - it would race the dashboard Git integration (a prior attempt was reverted fleet-wide). The backend runs in Docker on a self-managed VPS behind a `cloudflared` tunnel (not a laptop - see `edible-factor-backend`'s `docs/DEPLOYMENT.md`); a 502/521 from `api.ediblefactor.com` means the VPS, container, or tunnel is down, and it will surface as a 502 from `/api/jobs`/`/api/apply`/`/api/notify`.
 
 ## How to review a change
 
