@@ -1,7 +1,7 @@
 /**
  * EdibleFactor - Public job listings proxy (Cloudflare Pages Function)
  * -----------------------------------------------------------------------------
- * GET /api/jobs?role=chef|bartender|server|manager
+ * GET /api/jobs?role=<role slug>&category=<category slug>
  *               &scouter_restaurant_id=<id>&outlet_id=<id>   (all optional)
  *
  * Same-origin proxy in front of the backend's public careers API. The careers
@@ -9,6 +9,11 @@
  * `connect-src 'self'`, and a same-origin Function also sidesteps CORS. This
  * runs on the Cloudflare Workers runtime (Web standard Request/Response, no
  * Node APIs).
+ *
+ * role/category are free-form slugs from the ~80-role, 10-category taxonomy
+ * (see GET /api/jobs-taxonomy) - the backend is the single source of truth
+ * and validates + rejects unknown values itself, so this proxy just
+ * normalizes and forwards them rather than maintaining its own allowlist.
  *
  * Backend base URL: env.BACKEND_API_URL (set in the Pages project), default
  * https://api.ediblefactor.com. The backend runs on Abhi's laptop via the
@@ -20,7 +25,6 @@
  */
 
 const DEFAULT_BACKEND = 'https://api.ediblefactor.com';
-const ROLES = new Set(['chef', 'bartender', 'server', 'manager']);
 const CACHE_CONTROL = 'public, max-age=300';
 
 function json(body, status) {
@@ -36,10 +40,14 @@ export async function onRequestGet(context) {
   const base = (env.BACKEND_API_URL || DEFAULT_BACKEND).replace(/\/+$/, '');
   const url = new URL(request.url);
 
-  // Forward only the params the backend understands, normalized.
+  // Forward only the params the backend understands, normalized. No local
+  // role/category allowlist here - the backend validates against the full
+  // taxonomy and rejects unknown slugs itself.
   const qs = new URLSearchParams({ page: '1', per_page: '100' });
-  const role = (url.searchParams.get('role') || '').toLowerCase();
-  if (ROLES.has(role)) qs.set('role', role);
+  const role = (url.searchParams.get('role') || '').trim().toLowerCase().slice(0, 64);
+  if (role) qs.set('role', role);
+  const category = (url.searchParams.get('category') || '').trim().toLowerCase().slice(0, 64);
+  if (category) qs.set('category', category);
   const scouterRestaurantId = (url.searchParams.get('scouter_restaurant_id') || '').trim().slice(0, 64);
   if (scouterRestaurantId) qs.set('scouter_restaurant_id', scouterRestaurantId);
   const outletId = (url.searchParams.get('outlet_id') || '').trim().slice(0, 64);

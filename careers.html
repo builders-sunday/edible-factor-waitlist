@@ -200,6 +200,11 @@
     display: flex; flex-wrap: wrap; gap: 8px;
     align-items: center;
   }
+  /* .controls sets its own `display`, which otherwise beats the UA
+     stylesheet's [hidden]{display:none} at equal specificity (author rules
+     always win over UA rules). Needed for #roleControls, toggled via the
+     `hidden` property/attribute as the second filter tier shows/hides. */
+  .controls[hidden] { display: none; }
   .filter-label {
     font-family: 'JetBrains Mono', ui-monospace, monospace;
     font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
@@ -866,15 +871,16 @@
 </section>
 
 <!-- ============================================================
-     FILTER ROW
+     FILTER ROWS (category chips populated from GET /api/jobs-taxonomy;
+     role chips populated per-category once one is selected - see the
+     renderCategoryChips/renderRoleChips JS below. Never hardcode the list
+     here, the backend taxonomy is the single source of truth.)
      ============================================================ -->
-<div class="controls reveal" role="group" aria-label="Filter roles by type">
+<div class="controls reveal" role="group" aria-label="Filter jobs by category" id="categoryControls">
   <span class="filter-label">Filter</span>
-  <button type="button" class="chip-toggle" data-role="all" aria-pressed="true">All</button>
-  <button type="button" class="chip-toggle" data-role="chef" aria-pressed="false">Chef</button>
-  <button type="button" class="chip-toggle" data-role="bartender" aria-pressed="false">Bartender</button>
-  <button type="button" class="chip-toggle" data-role="server" aria-pressed="false">Server</button>
-  <button type="button" class="chip-toggle" data-role="manager" aria-pressed="false">Manager</button>
+</div>
+<div class="controls reveal" role="group" aria-label="Filter jobs by role" id="roleControls" hidden>
+  <span class="filter-label">Role</span>
 </div>
 
 <!-- ============================================================
@@ -1039,12 +1045,13 @@
   "use strict";
 
   // ---- Constants ------------------------------------------------------
-  var ROLE_LABELS = {
-    chef: "Chef / Cook",
-    bartender: "Bartender",
-    server: "Server / Waitstaff",
-    manager: "Manager"
-  };
+  // Category/role labels are NOT hardcoded - they are populated from
+  // GET /api/jobs-taxonomy once it resolves (see loadTaxonomy below). Until
+  // then (or if the fetch fails) these stay empty and roleLabel()/
+  // categoryLabel() fall back to a humanized slug so jobs still render.
+  var CATEGORIES = [];        // taxonomy.categories, in API order: [{slug,label,roles:[{slug,label}]}]
+  var ROLE_LABELS = {};       // flattened slug -> label, across all categories
+  var ROLE_CATEGORY = {};     // flattened slug -> owning category slug
   var EMPLOYMENT_LABELS = {
     full_time: "Full-time",
     part_time: "Part-time"
@@ -1055,8 +1062,10 @@
   // ---- State ----------------------------------------------------------
   var allJobs = [];
   var jobById = {};
-  var activeRole = "all";
+  var activeCategory = "all";
+  var activeRole = "all";        // scoped within activeCategory once one is picked
   var activeOutlet = "all";      // outlet_id of the selected outlet, or "all"
+  var jobsLoaded = false;        // guards loadTaxonomy() from rendering "empty" before loadJobs() resolves
   var currentJob = null;
   var lastTrigger = null;
 
@@ -1094,6 +1103,8 @@
   var contextBanner = $("contextBanner");
   var contextName = $("contextName");
   var outletSwitch = $("outletSwitch");
+  var categoryControls = $("categoryControls");
+  var roleControls = $("roleControls");
 
   // ---- Helpers --------------------------------------------------------
   function esc(s) {
@@ -1110,7 +1121,20 @@
     if (text != null) e.textContent = text;
     return e;
   }
-  function roleLabel(r) { return ROLE_LABELS[r] || (r ? r : "Role"); }
+  // Fallback label for a slug when the taxonomy hasn't loaded yet (or a slug
+  // isn't in it): "kitchen_helper" -> "Kitchen Helper". Jobs must still
+  // render readably even if the /api/jobs-taxonomy fetch is slow or fails.
+  function humanizeSlug(s) {
+    if (!s) return "Role";
+    return String(s).replace(/_/g, " ").replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+  }
+  function roleLabel(r) { return ROLE_LABELS[r] || humanizeSlug(r); }
+  function categoryLabel(c) {
+    for (var i = 0; i < CATEGORIES.length; i++) {
+      if (CATEGORIES[i] && CATEGORIES[i].slug === c) return CATEGORIES[i].label || humanizeSlug(c);
+    }
+    return humanizeSlug(c);
+  }
   function employmentLabel(t) { return EMPLOYMENT_LABELS[t] || (t ? t.replace(/_/g, " ") : ""); }
   function importanceBadge(imp) {
     // imp === "required" -> Required; anything else -> Preferred
@@ -1161,6 +1185,127 @@
     }
   }
 
+  // ---- Taxonomy (categories + roles) + chip filter UI -----------------
+  // Fetched once on boot, in parallel with loadJobs(). The chip UI and
+  // roleLabel()/categoryLabel() work fine before this resolves (or if it
+  // never does) - they just show humanized slugs until real labels land.
+  function loadTaxonomy() {
+    fetch("/api/jobs-taxonomy", { headers: { "Accept": "application/json" } })
+      .then(function (res) {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return res.json();
+      })
+      .then(function (json) {
+        var data = (json && json.data) || {};
+        var categories = Array.isArray(data.categories) ? data.categories : [];
+        CATEGORIES = categories;
+        ROLE_LABELS = {};
+        ROLE_CATEGORY = {};
+        categories.forEach(function (c) {
+          if (!c || !c.slug) return;
+          var roles = Array.isArray(c.roles) ? c.roles : [];
+          roles.forEach(function (r) {
+            if (!r || !r.slug) return;
+            ROLE_LABELS[r.slug] = r.label || humanizeSlug(r.slug);
+            ROLE_CATEGORY[r.slug] = c.slug;
+          });
+        });
+        renderCategoryChips();
+        renderRoleChips();
+        // Job cards/empty-state copy read roleLabel()/categoryLabel() too -
+        // re-render to pick up real labels, but only once loadJobs() has
+        // actually populated allJobs (otherwise this would flash the
+        // "empty" state while the jobs fetch is still in flight).
+        if (jobsLoaded) render();
+      })
+      .catch(function (err) {
+        console.error("[careers] taxonomy fetch failed:", err);
+      });
+  }
+
+  function categoryPill(value, label) {
+    var b = el("button", "chip-toggle", label);
+    b.type = "button";
+    b.dataset.category = value;
+    b.setAttribute("aria-pressed", activeCategory === value ? "true" : "false");
+    b.addEventListener("click", function () {
+      if (activeCategory === value) return;
+      activeCategory = value;
+      activeRole = "all";
+      // The category set itself doesn't change on click, only which pill is
+      // pressed - update in place (no rebuild) so keyboard focus stays on
+      // the clicked pill, matching how the plain toggle row behaved before.
+      var pills = categoryControls.querySelectorAll(".chip-toggle");
+      Array.prototype.forEach.call(pills, function (p) {
+        p.setAttribute("aria-pressed", p.dataset.category === value ? "true" : "false");
+      });
+      renderRoleChips();
+      render();
+    });
+    return b;
+  }
+
+  function renderCategoryChips() {
+    var pills = categoryControls.querySelectorAll(".chip-toggle");
+    Array.prototype.forEach.call(pills, function (p) { p.remove(); });
+    categoryControls.appendChild(categoryPill("all", "All"));
+    CATEGORIES.forEach(function (c) {
+      if (!c || !c.slug) return;
+      categoryControls.appendChild(categoryPill(c.slug, c.label || humanizeSlug(c.slug)));
+    });
+  }
+
+  function rolePill(value, label) {
+    var b = el("button", "chip-toggle", label);
+    b.type = "button";
+    b.dataset.role = value;
+    b.setAttribute("aria-pressed", activeRole === value ? "true" : "false");
+    b.addEventListener("click", function () {
+      if (activeRole === value) return;
+      activeRole = value;
+      var pills = roleControls.querySelectorAll(".chip-toggle");
+      Array.prototype.forEach.call(pills, function (p) {
+        p.setAttribute("aria-pressed", p.dataset.role === value ? "true" : "false");
+      });
+      render();
+    });
+    return b;
+  }
+
+  // Second-tier row: hidden while activeCategory is "all"; otherwise an
+  // implicit "All <category>" pill (activeRole stays "all") plus one pill
+  // per role in that category, in taxonomy order.
+  function renderRoleChips() {
+    var pills = roleControls.querySelectorAll(".chip-toggle");
+    Array.prototype.forEach.call(pills, function (p) { p.remove(); });
+
+    if (activeCategory === "all") {
+      roleControls.hidden = true;
+      return;
+    }
+    var cat = null;
+    for (var i = 0; i < CATEGORIES.length; i++) {
+      if (CATEGORIES[i] && CATEGORIES[i].slug === activeCategory) { cat = CATEGORIES[i]; break; }
+    }
+    var roles = (cat && Array.isArray(cat.roles)) ? cat.roles : [];
+    if (roles.length === 0) {
+      roleControls.hidden = true;
+      return;
+    }
+    roleControls.appendChild(rolePill("all", "All " + (cat.label || humanizeSlug(activeCategory))));
+    roles.forEach(function (r) {
+      if (!r || !r.slug) return;
+      roleControls.appendChild(rolePill(r.slug, r.label || humanizeSlug(r.slug)));
+    });
+    roleControls.hidden = false;
+    // roleControls carries the `reveal` class for the same fade-in as other
+    // sections; render() usually re-triggers observeReveals() right after
+    // this, but do it here directly too so the row still fades in even on
+    // the "picked a category with zero current openings" edge case, where
+    // render() returns early before reaching its own observeReveals() call.
+    requestAnimationFrame(observeReveals);
+  }
+
   // ---- Fetch + render -------------------------------------------------
   function loadJobs() {
     showState("loading");
@@ -1183,6 +1328,7 @@
         if (allJobs.length === 0 && data.length > 0) allJobs = data;
         jobById = {};
         allJobs.forEach(function (j) { if (j && j.id != null) jobById[String(j.id)] = j; });
+        jobsLoaded = true;
         updateHeroMeta();
         renderContext();
         render();
@@ -1209,6 +1355,10 @@
 
   function filteredJobs() {
     return allJobs.filter(function (j) {
+      // Category narrows first (derived from the job's role via the
+      // taxonomy-built ROLE_CATEGORY map - postings only store `role`),
+      // then a specific role within that category narrows further.
+      if (activeCategory !== "all" && (ROLE_CATEGORY[j.role] || "") !== activeCategory) return false;
       if (activeRole !== "all" && j.role !== activeRole) return false;
       if (activeOutlet !== "all" && String(j.outlet_id == null ? "" : j.outlet_id) !== activeOutlet) return false;
       return true;
@@ -1299,7 +1449,14 @@
       var box = el("div", "state-box");
       box.appendChild(el("div", "state-eyebrow", "No matches"));
       box.appendChild(el("h2", "state-title display", "Nothing under that filter."));
-      box.appendChild(el("p", null, "No open " + roleLabel(activeRole) + " roles right now - try another filter or check back soon."));
+      // Prefer the more specific active filter: a picked role beats a
+      // category-only selection.
+      var filterLabel = activeRole !== "all" ? roleLabel(activeRole)
+        : (activeCategory !== "all" ? categoryLabel(activeCategory) : "");
+      var noMatchMsg = filterLabel
+        ? ("No open " + filterLabel + " roles right now - try another filter or check back soon.")
+        : "No open roles match that filter right now - try another filter or check back soon.";
+      box.appendChild(el("p", null, noMatchMsg));
       listings.appendChild(box);
       return;
     }
@@ -1856,17 +2013,9 @@
   });
   $("retryBtn").addEventListener("click", loadJobs);
 
-  // Filter toggles
-  var toggles = document.querySelectorAll(".chip-toggle");
-  Array.prototype.forEach.call(toggles, function (t) {
-    t.addEventListener("click", function () {
-      activeRole = t.dataset.role;
-      Array.prototype.forEach.call(toggles, function (x) {
-        x.setAttribute("aria-pressed", x === t ? "true" : "false");
-      });
-      render();
-    });
-  });
+  // Category/role filter chips are rendered dynamically - see
+  // renderCategoryChips()/renderRoleChips() (each pill wires its own click
+  // handler when created), called from the Boot section below.
 
   // ---- Reveal on scroll ----------------------------------------------
   var revealObserver = null;
@@ -1999,6 +2148,11 @@
   })();
 
   observeReveals();
+  // Render the "All" category pill immediately (no need to wait on the
+  // network), then fetch the real taxonomy and the job listings in
+  // parallel - neither blocks the other.
+  renderCategoryChips();
+  loadTaxonomy();
   loadJobs();
 })();
 </script>
