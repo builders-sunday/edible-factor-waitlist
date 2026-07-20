@@ -3003,6 +3003,29 @@ html.theme-light .bp-knob { left: 3px; }
   // Warm the lookup early so it's ready by the first interaction.
   fetchGeo();
 
+  // ── Marketing attribution (first-touch, standard UTM + ad click ids) ──────
+  // Captured once from the landing URL's query string and kept in localStorage
+  // for the life of the funnel, so a contact submitted days later still carries
+  // the original ad/campaign that brought the visitor in - not blank if they
+  // return with no params on a later visit.
+  var ATTR_KEY = 'eff_attr_v1';
+  var ATTR_FIELDS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'gbraid', 'fbclid'];
+  (function captureAttribution(){
+    if (lsGet(ATTR_KEY)) return; // first-touch only, never overwrite
+    var qs = new URLSearchParams(window.location.search);
+    var attr = {};
+    var found = false;
+    ATTR_FIELDS.forEach(function (k) {
+      var v = qs.get(k);
+      if (v) { attr[k] = v; found = true; }
+    });
+    if (found) lsSet(ATTR_KEY, JSON.stringify(attr));
+  })();
+  function getAttribution(){
+    try { var raw = lsGet(ATTR_KEY); if (raw) return JSON.parse(raw); } catch (e) {}
+    return null;
+  }
+
   // ── Turnstile token (invisible, single-use per POST) ──────────────────────
   // Loads the API only when a site key is configured. getToken() resolves ''
   // when Turnstile is dormant or unavailable, so callers never block.
@@ -3053,6 +3076,8 @@ html.theme-light .bp-knob { left: 3px; }
         if (geo.latitude) body.latitude = geo.latitude;
         if (geo.longitude) body.longitude = geo.longitude;
       }
+      var attr = getAttribution();
+      if (attr) Object.assign(body, attr);
       return fetch(ENDPOINT, {
         method: 'POST',
         mode: 'cors',
