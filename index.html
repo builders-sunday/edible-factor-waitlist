@@ -1071,106 +1071,81 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
   }
 
   /* === Form === */
+  /* One glass field that carries both the address and the ask. The submit
+     used to be a full-width bar reading "RESERVE MY SEAT" stacked under the
+     input; the call to action now lives in the placeholder and the button
+     reduces to a 44px arrow inside the same box. That removes a whole row
+     from the card and makes the field read as a single instruction rather
+     than a form plus a command.
+     The frosted treatment moved here from the input, where it only existed
+     inside the narrow-card container query - the glass is now the box itself
+     at every width, which is also the only surface on the page carrying a
+     live backdrop-filter (one persistent element, not a scrolling list). */
   .wl-form {
-    display: flex; align-items: center;
-    background: rgba(217,95,82,0.06);
-    border: 1px solid rgba(217,95,82,0.18);
+    display: flex; align-items: center; gap: 8px;
+    padding: 5px 5px 5px 18px;
     border-radius: 9999px;
-    padding: 6px 6px 6px 22px;
-    transition: border-color .2s ease;
+    background: linear-gradient(158deg,
+      color-mix(in srgb, var(--bg) 66%, transparent),
+      color-mix(in srgb, var(--bg) 38%, transparent));
+    -webkit-backdrop-filter: blur(22px) saturate(1.9);
+    backdrop-filter: blur(22px) saturate(1.9);
+    border: 1px solid color-mix(in srgb, var(--periwinkle) 30%, transparent);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.34),
+      inset 0 -12px 26px -18px color-mix(in srgb, var(--periwinkle) 55%, transparent),
+      0 12px 30px -18px rgba(0,0,0,0.45);
+    transition: border-color .2s ease, box-shadow .2s ease;
   }
-  .wl-form:focus-within { border-color: rgba(217,95,82,0.45); }
+  .wl-form:focus-within {
+    border-color: color-mix(in srgb, var(--periwinkle) 62%, transparent);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.34),
+      0 0 0 3px color-mix(in srgb, var(--periwinkle) 18%, transparent),
+      0 12px 30px -18px rgba(0,0,0,0.45);
+  }
   .wl-form input[type=email] {
     flex: 1; background: transparent; border: none; outline: none;
     color: var(--ink); font-family: 'Inter', sans-serif; font-size: 16px;
     padding: 12px 0; min-width: 0;
+    text-overflow: ellipsis;
     /* 16px prevents iOS Safari zoom-on-focus; helps avoid layout shift */
   }
-  .wl-form input::placeholder { color: var(--ink-low); }
+  /* The placeholder now carries the call to action, so it has to survive the
+     narrowest card rather than being cut off mid-sentence: the phrase wants
+     282px at 16px and the input is only 188px wide at a 1024px viewport. It
+     gets its OWN size, sized off the card - iOS decides whether to zoom on
+     focus from the input's font-size, not the placeholder's, so the field
+     itself stays at 16px and the no-zoom guarantee is untouched. */
+  .wl-form input::placeholder {
+    color: var(--ink-low);
+    font-size: clamp(10.5px, 3.8cqi, 15px);
+  }
+  /* A circle, not a bar. Its accessible name still reads "Reserve my seat"
+     from the visually-hidden label inside it, so nothing is lost to anyone
+     using a screen reader even though the words now live in the placeholder -
+     and placeholders vanish the moment you start typing, which is exactly why
+     the name cannot live there alone. */
   .wl-form button[type=submit] {
+    flex: 0 0 auto;
+    width: 44px; height: 44px; min-height: 44px; padding: 0;
+    border-radius: 9999px;
     background: var(--periwinkle); color: var(--bg);
-    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em;
-    text-transform: uppercase; font-weight: 500;
-    padding: 14px 22px; border-radius: 9999px;
-    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    transition: background .15s ease;
-    white-space: nowrap;
-    min-height: 44px;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background .15s ease, transform .1s ease;
   }
   .wl-form button[type=submit]:hover { background: var(--periwinkle-bright); }
-
-  /* Stack the input above the button so the CTA never overlaps the email
-     field. Both render full-width with the same 44pt tap height; a card wide
-     enough for the inline "pill" layout keeps it.
-
-     This used to key off a 560px VIEWPORT, which was only ever a proxy for
-     "the card is narrow". That proxy held while the card spanned the page and
-     broke the moment the card moved into the hero's right column: at a 1024px
-     viewport the column is 321px, and the inline layout squeezed the email
-     field to 36px wide - measured on the live page, not estimated - with the
-     button sitting on top of the placeholder. Keying off the CARD's own width
-     fixes every narrow-card case at once and cannot drift again.
-
-     476px is chosen to be exactly equivalent on mobile, not as a round number.
-     A size container resolves against its CONTENT box, so the number to match
-     is the card's inner width, not its border-box width. Measured on the live
-     page: a 560px viewport gives a 476px inner card and a 561px viewport gives
-     477px. Every phone and small-tablet width therefore resolves identically
-     to the rule this replaces, and 561-1023px keeps the inline pill it has
-     today. Card content widths were sampled at 18 viewports to pick this. */
-  .wl-card { container-type: inline-size; container-name: wlcard; }
-  @container wlcard (max-width: 476px) {
-    .wl-form {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 10px;
-      border-radius: 18px;
-      padding: 12px;
-    }
-    .wl-form input[type=email] {
-      box-sizing: border-box;
-      width: 100%;
-      padding: 14px 16px;
-      /* Liquid glass: a theme-aware frosted fill. The old hardcoded dark rgba
-         rendered dark-on-dark (illegible) in light mode; color-mix on var(--bg)
-         frosts eggshell in light + ink in dark, so var(--ink) text stays crisp
-         on both. Heavy blur + a bright top edge + a wine underglow = premium
-         glass that catches the light. */
-      background:
-        linear-gradient(158deg,
-          color-mix(in srgb, var(--bg) 66%, transparent),
-          color-mix(in srgb, var(--bg) 38%, transparent));
-      -webkit-backdrop-filter: blur(22px) saturate(1.9);
-      backdrop-filter: blur(22px) saturate(1.9);
-      border: 1px solid color-mix(in srgb, var(--periwinkle) 30%, transparent);
-      border-radius: 15px;
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.45),
-        inset 0 10px 20px -16px rgba(255, 255, 255, 0.7),
-        inset 0 -12px 26px -18px color-mix(in srgb, var(--periwinkle) 55%, transparent),
-        0 12px 30px -16px rgba(0, 0, 0, 0.4);
-      min-height: 50px;
-    }
-    .wl-form:focus-within input[type=email] {
-      border-color: color-mix(in srgb, var(--periwinkle) 60%, transparent);
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.4),
-        0 0 0 3px color-mix(in srgb, var(--periwinkle) 18%, transparent),
-        0 10px 28px -16px rgba(0, 0, 0, 0.42);
-    }
-    .wl-form button[type=submit] {
-      width: 100%;
-      padding: 14px 22px;
-      font-size: 12px;
-    }
-    /* Inset the cheer button by the form's own 12px padding so it lands at
-       exactly the submit button's width. Full-bleed to the card edge would be
-       12px wider on each side than the button it sits under, which reads as a
-       mistake rather than a pair. Scoped to the same container query as the
-       stacked form, because when the form falls back to its inline pill the
-       submit button is not full width and there is nothing to align to. */
-    .eff-cheer { padding-inline: 12px; }
+  .wl-form button[type=submit]:active { transform: scale(0.94); }
+  .wl-form button[type=submit] .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
   }
+
+  /* The card stays a size container: the meta line and the card heading both
+     size themselves off it. The form no longer needs a narrow-card variant -
+     it was stacked because a 199px "RESERVE MY SEAT" bar could not share a
+     row with the email field in a 265px card, and a 44px arrow can. */
+  .wl-card { container-type: inline-size; container-name: wlcard; }
 
   /* The smallest phones still in the wild (320px, iPhone SE 1) leave the card
      236px of inner space once it sits inside the padded container, and
@@ -1180,18 +1155,6 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
      tightly enough that 360px and up keep their 30px heading untouched. */
   @container wlcard (max-width: 260px) {
     .wl-card h2 { font-size: clamp(23px, 11.3cqi, 30px); }
-  }
-
-  /* Engines without container queries keep the old viewport rule, so they get
-     the previous behaviour rather than an email field with a button parked on
-     top of it. Structure only - the frosted-glass input treatment above is
-     decoration, and losing it is not a defect; losing the stack is. */
-  @supports not (container-type: inline-size) {
-    @media (max-width: 560px) {
-      .wl-form { flex-direction: column; align-items: stretch; gap: 10px; border-radius: 18px; padding: 12px; }
-      .wl-form input[type=email] { box-sizing: border-box; width: 100%; padding: 14px 16px; min-height: 50px; }
-      .wl-form button[type=submit] { width: 100%; }
-    }
   }
 
   /* iOS Safari zooms when an input's computed font-size is below 16px.
@@ -2135,11 +2098,15 @@ html.theme-light .bp-knob { left: 3px; }
           </h2>
           <form class="wl-form" data-form="hero" action="/api/waitlist" method="POST" novalidate>
             <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
-            <input type="email" id="email" class="email-input" name="email" placeholder="your@email.com" required aria-label="Email address" autocomplete="email">
+            <input type="email" id="email" class="email-input" name="email" placeholder="your@email.com to reserve your seat" required aria-label="Email address" autocomplete="email">
             <button type="submit">
-              <span>Reserve My Seat</span>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <path d="M1 7h12m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Kept, not deleted, and only visually hidden. The placeholder
+                   carries the ask for sighted users but disappears the instant
+                   they type, and a bare arrow would leave the button with no
+                   accessible name at all. -->
+              <span class="sr-only">Reserve my seat</span>
+              <svg width="15" height="15" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M1 7h12m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
           </form>
