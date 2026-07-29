@@ -11,7 +11,7 @@
 - **What the pass found** - three tiers of staleness, which is the useful
   taxonomy for next time:
   1. **Never swept** (legal.html): pre-wine in every dimension - Instrument
-     Serif, true periwinkle `#a8aaff`, old ground, `&mdash;` entities, and
+     Serif, true periwinkle `#a8aaff`, old ground, banned em-dash HTML entities, and
      internal REVIEW badges publicly visible because a local debug toggle
      (`display:inline-block` after `display:none`) had been committed.
   2. **Half swept** (why-not-petpooja): the wine sweep had re-pointed its
