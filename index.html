@@ -279,14 +279,6 @@
        band that leaves a narrow sliver of text beside a very wide card row. */
     .prob-grid { grid-template-columns: clamp(380px, 25%, 500px) minmax(0, 1fr); }
 
-    /* The walkthrough's text column is a bare 1fr while the copy inside it is
-       capped at 480px, so every pixel the band gains becomes dead space
-       between the sentence and the phone. Capping the column parks the two
-       next to each other and centres the pair in the band instead.
-       (The same slack exists below 1441px - about 400px of it at 1440 - but
-       that is the layout as it ships today and closing it there would change
-       a screen this pass promised not to touch.) */
-    #showcase .grid { grid-template-columns: minmax(0, clamp(560px, 46%, 880px)) 320px; justify-content: center; }
 
     /* The footer wordmark is meant to bleed off both edges; that is why it is
        absolutely positioned inside an overflow-hidden footer. Its 360px clamp
@@ -385,6 +377,20 @@
     }
   }
 
+
+  /* The walkthrough's text column was a bare 1fr while the copy inside it
+     caps at 480px, so at 1440 the sentence sat ~416px from the phone it
+     describes. Cap the column and centre the pair - at 1024 the clamp floor
+     equals the width the column already had, so the narrowest desktops are
+     untouched and the fix engages exactly where the slack does. First shipped
+     for >=1441px only during the ultrawide pass; extended to all desktop
+     widths once the hero freeze was lifted. */
+  @media (min-width: 1024px) {
+    #showcase .grid {
+      grid-template-columns: minmax(0, clamp(560px, 46%, 880px)) 320px;
+      justify-content: center;
+    }
+  }
 
   /* Mono micro-labels · eyebrow, section labels, kicker pills */
   .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
@@ -842,6 +848,7 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
 
   /* === Friction row (problem section) === */
   .friction {
+    container-type: inline-size;
     border: 1px solid rgba(217,95,82,0.12);
     background: linear-gradient(180deg, rgba(217,95,82,0.03), rgba(217,95,82,0.00));
     border-radius: 18px;
@@ -852,6 +859,12 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
   .friction__index { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.16em; color: var(--ink-low); text-transform: uppercase; }
   .friction strike { color: var(--ink-low); text-decoration-color: var(--ink-low); }
   .friction em { font-weight: 700; color: var(--periwinkle); font-family: 'Space Grotesk', sans-serif; font-size: 1.04em; }
+  /* The card copy sizes off the CARD. At a 1024px viewport the three cards
+     drop to ~157px wide and the flat 24px display type overflowed on
+     "Calorically," (measured scrollWidth 119 vs clientWidth 105). 13.4cqi
+     reaches the full 24px on any card wider than ~180px of content and
+     shrinks continuously below that, so no width clips a word again. */
+  .friction p.display { font-size: clamp(17px, 13.4cqi, 24px); }
 
   /* === Walkthrough · Card-Deck Flip ===
      A stack of 4 phone "cards". Top card is active. Advancing flips
@@ -1684,7 +1697,7 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
    ========================================================================== */
 .efmod{
   --void:#040407;--coal:#0a0a11;--panel:#101018;--panel2:#15151f;--ash:#232333;
-  --ink:#eceaf3;--ink-72:rgba(236,234,243,.72);--ink-dim:#9693ac;--ink-low:#6b6885;--ink-28:rgba(236,234,243,.28);
+  --ink:#eceaf3;--ink-72:rgba(236,234,243,.72);--ink-dim:#9693ac;--ink-low:#7d799a;--ink-28:rgba(236,234,243,.28);
   --line:rgba(236,234,243,.09);--line-2:rgba(236,234,243,.16);
   --peri:#d95f52;--peri-bright:#e8796b;--calorie:#6eddf0;--budget:#ff8a4a;
   --ease:cubic-bezier(.19,1,.22,1);
