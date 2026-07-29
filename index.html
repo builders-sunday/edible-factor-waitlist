@@ -483,10 +483,15 @@ html.theme-light .hero-section.bg-grid::after{opacity:.3}
 .hbz{position:relative;margin-top:18px}
 .hbz__stage{position:relative;display:grid;grid-template-columns:repeat(3,1fr);
   align-items:end;gap:clamp(6px,2vw,18px);padding-bottom:26px}
-.hbz__dish{position:relative;margin:0;opacity:0;
-  transform:translate3d(0,18px,0) scale(.9);
-  transition:opacity .55s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
-.hbz__dish.is-in{opacity:1;transform:none}
+/* Dormant, not absent. The dishes have to hold their space or the meter
+   jumps as each one lands, but at zero opacity that reserved space reads as
+   a hole in the layout. Dim and desaturated at rest, full colour once added,
+   so the space is legible and the add reads as the dish coming to life. */
+.hbz__dish{position:relative;margin:0;opacity:.24;
+  transform:translate3d(0,10px,0) scale(.94);filter:grayscale(.85);
+  transition:opacity .55s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1),
+             filter .55s cubic-bezier(.16,1,.3,1)}
+.hbz__dish.is-in{opacity:1;transform:none;filter:none}
 .hbz__dish img{width:100%;height:auto;display:block;
   filter:drop-shadow(0 18px 24px rgba(0,0,0,.55));transition:transform .45s cubic-bezier(.16,1,.3,1)}
 html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3))}
@@ -506,7 +511,9 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
 .hbz__tag .k{color:var(--calorie,#6eddf0)}
 .hbz__tag .r{color:var(--budget,#ff8a4a)}
 
-.hbz__meter{position:relative;max-width:520px;margin-top:20px}
+/* The meter tracks the stage width, not the lede width. Capping it at the
+   lede's 520px left a visible ragged edge under the dishes. */
+.hbz__meter{position:relative;margin-top:20px}
 .hbz__grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .hbz__h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px}
 .hbz__l{font-family:'Space Grotesk',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
