@@ -57,3 +57,4 @@ these sections:
 ## Index
 
 - [2026-07-10 - Experiences decision log added](2026-07-10-experiences-rollout.md) - the convention itself: why this folder exists and the standing rules around it.
+- [2026-07-29 - Hero: phone rotator removed, tagline on one line, colour rotors synced](2026-07-29-hero-one-line-tagline.md) - why the decorative screenshot carousel lost its place in the hero's motion budget, how the one-line headline is sized (container query units, measured not guessed), and the pre-existing stray `</div>` that leaves the hero's second column empty.
