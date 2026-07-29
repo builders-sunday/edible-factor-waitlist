@@ -447,64 +447,100 @@
 
   /* Trim the hero's top dead space (was 96px) while preserving notch safe-area. */
 
-/* ── Hero: scroll-driven dual budget ──────────────────────────────────
- * The three dishes fly in one at a time as the reader scrolls the hero,
- * each adding itself to the calorie and spend meters. When the third
- * lands the meters resolve to a caught-it state. Plain CSS on purpose:
- * this site ships a precompiled Tailwind subset, so new utility classes
- * would silently not exist.
- * ------------------------------------------------------------------ */
-.hbz{position:relative}
-.hbz__stage{position:relative;min-height:clamp(210px,30vh,320px);margin-top:6px}
-.hbz__dish{position:absolute;margin:0;width:var(--dw,38vw);opacity:0;pointer-events:none;
-  transform:translate3d(0,24px,0) scale(.84) rotate(var(--ro,0deg));
-  transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
-.hbz__dish.is-in{opacity:1;transform:translate3d(0,0,0) scale(1) rotate(var(--ro,0deg))}
-.hbz__dish img{width:100%;height:auto;display:block;
-  filter:drop-shadow(0 24px 30px rgba(0,0,0,.55))}
-html.theme-light .hbz__dish img{filter:drop-shadow(0 22px 28px rgba(120,92,48,.34))}
-.hbz__d1{left:-6%;top:2%;--dw:44vw;--ro:-8deg}
-.hbz__d2{right:-8%;top:16%;--dw:46vw;--ro:7deg}
-.hbz__d3{left:2%;bottom:2%;--dw:40vw;--ro:-5deg}
-@media(min-width:900px){
-  .hbz__stage{min-height:clamp(340px,46vh,470px)}
-  .hbz__d1{left:0;top:4%;--dw:20vw}
-  .hbz__d2{right:2%;top:0;--dw:20vw}
-  .hbz__d3{left:32%;bottom:0;--dw:17vw}
+
+/* Hero ground, ported from the approved landing artifact: a warm wash top
+   right, a cooler one bottom left, and a grain layer so a large flat field
+   does not band. Replaces the grid pattern on this section only. */
+.hero-section.bg-grid{
+  background:
+    radial-gradient(900px 620px at 82% -6%, rgba(255,138,74,.15), transparent 66%),
+    radial-gradient(1000px 620px at -8% 78%, rgba(110,221,240,.11), transparent 58%),
+    radial-gradient(900px 560px at 106% 34%, rgba(217,95,82,.10), transparent 58%),
+    var(--bg) !important;
+  isolation:isolate;
 }
-.hbz__meter{position:relative;z-index:3;margin-top:14px;max-width:520px;
-  border:1px solid color-mix(in srgb, var(--ink) 12%, transparent);border-radius:18px;padding:13px 16px 15px;
-  background:color-mix(in srgb, var(--bg-2) 86%, transparent);
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);overflow:visible}
+html.theme-light .hero-section.bg-grid{
+  background:
+    radial-gradient(900px 620px at 82% -6%, rgba(194,96,31,.13), transparent 66%),
+    radial-gradient(1000px 620px at -8% 78%, rgba(10,125,149,.09), transparent 58%),
+    radial-gradient(900px 560px at 106% 34%, rgba(192,71,47,.09), transparent 58%),
+    var(--bg) !important;
+}
+.hero-section.bg-grid::after{
+  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
+}
+html.theme-light .hero-section.bg-grid::after{opacity:.3}
+.hero-section.bg-grid > *{position:relative;z-index:1}
+
+/* ── Hero: scroll-driven dual budget ──────────────────────────────────
+ * Ported from the approved variant artifact so it reads identically: each
+ * dish carries a small tag with its name and both prices, and the meter
+ * shows a hatched ghost of what the next dish would add before it lands.
+ * On desktop the tag also follows the pointer on hover; on scroll the tags
+ * persist, because the reader is not hovering while they scroll.
+ * ------------------------------------------------------------------ */
+.hbz{position:relative;margin-top:18px}
+.hbz__stage{position:relative;display:grid;grid-template-columns:repeat(3,1fr);
+  align-items:end;gap:clamp(6px,2vw,18px);padding-bottom:26px}
+.hbz__dish{position:relative;margin:0;opacity:0;
+  transform:translate3d(0,18px,0) scale(.9);
+  transition:opacity .55s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
+.hbz__dish.is-in{opacity:1;transform:none}
+.hbz__dish img{width:100%;height:auto;display:block;
+  filter:drop-shadow(0 18px 24px rgba(0,0,0,.55));transition:transform .45s cubic-bezier(.16,1,.3,1)}
+html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3))}
+.hbz__dish:hover img{transform:scale(1.04)}
+
+/* the tag, exactly as the artifact draws it */
+.hbz__tag{position:absolute;left:50%;bottom:-14px;transform:translate(-50%,6px);
+  display:flex;flex-direction:column;gap:3px;align-items:center;white-space:nowrap;
+  padding:8px 12px;border-radius:12px;font-size:12px;pointer-events:none;
+  background:var(--bg-2);border:1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  box-shadow:0 10px 24px -12px rgba(0,0,0,.7);
+  opacity:0;transition:opacity .3s cubic-bezier(.16,1,.3,1),transform .3s cubic-bezier(.16,1,.3,1)}
+.hbz__dish.is-in .hbz__tag,.hbz__dish:hover .hbz__tag{opacity:1;transform:translate(-50%,0)}
+.hbz__tag b{font-size:12px;color:var(--ink);font-weight:600}
+.hbz__tag span{font-family:'Space Grotesk',sans-serif;font-size:10.5px;color:var(--ink-low)}
+.hbz__tag i{font-style:normal;font-weight:700}
+.hbz__tag .k{color:var(--calorie,#6eddf0)}
+.hbz__tag .r{color:var(--budget,#ff8a4a)}
+
+.hbz__meter{position:relative;max-width:520px;margin-top:20px}
 .hbz__grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.hbz__h{display:flex;align-items:baseline;justify-content:space-between;gap:6px;margin-bottom:5px}
-.hbz__l{font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.hbz__h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px}
+.hbz__l{font-family:'Space Grotesk',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
 .hbz__m--k .hbz__l{color:var(--calorie,#6eddf0)}
 .hbz__m--r .hbz__l{color:var(--budget,#ff8a4a)}
-.hbz__v{font-family:'Space Grotesk',sans-serif;font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:700;color:var(--ink)}
-.hbz__bar{height:6px;border-radius:99px;background:var(--bg-3);overflow:hidden}
-.hbz__bar i{display:block;height:100%;width:0;border-radius:99px;
-  transition:width .65s cubic-bezier(.16,1,.3,1)}
+.hbz__v{font-family:'Space Grotesk',sans-serif;font-variant-numeric:tabular-nums;font-size:13px;font-weight:700;color:var(--ink)}
+.hbz__bar{position:relative;height:7px;border-radius:99px;background:var(--bg-3);overflow:hidden}
+.hbz__bar i{position:absolute;left:0;top:0;height:100%;width:0;border-radius:99px;
+  transition:width .55s cubic-bezier(.16,1,.3,1)}
 .hbz__m--k .hbz__bar i{background:var(--calorie,#6eddf0)}
 .hbz__m--r .hbz__bar i{background:var(--budget,#ff8a4a)}
-.hbz__done{position:absolute;inset:0;display:grid;place-items:center;border-radius:18px;
-  background:color-mix(in srgb, var(--bg-2) 95%, transparent);color:var(--ink);
-  opacity:0;pointer-events:none;transition:opacity .3s}
-.hbz__meter.is-done .hbz__done{opacity:1}
-.hbz__doneln{display:flex;gap:16px;font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:700}
-.hbz__doneln span{display:inline-flex;align-items:center;gap:6px}
-.hbz__doneln svg{width:15px;height:15px}
-.hbz__px{position:absolute;width:7px;height:7px;pointer-events:none;opacity:0;image-rendering:pixelated}
-.hbz__meter.is-burst .hbz__px{animation:hbzpx .95s steps(9,end) forwards}
-@keyframes hbzpx{
-  0%{opacity:0;transform:translate(0,0) scale(.6)}
-  12%{opacity:1}
-  100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1.25)}
+/* the ghost: what the dish arriving next would add, before it lands */
+.hbz__bar u{position:absolute;top:0;height:100%;width:0;opacity:0;border-radius:99px;
+  transition:width .4s cubic-bezier(.16,1,.3,1),left .4s cubic-bezier(.16,1,.3,1),opacity .3s}
+.hbz__m--k .hbz__bar u{background:repeating-linear-gradient(115deg,color-mix(in srgb,var(--calorie,#6eddf0) 60%,transparent) 0 3px,transparent 3px 6px)}
+.hbz__m--r .hbz__bar u{background:repeating-linear-gradient(115deg,color-mix(in srgb,var(--budget,#ff8a4a) 60%,transparent) 0 3px,transparent 3px 6px)}
+.hbz__bar u.is-on{opacity:1}
+.hbz__note{font-size:12px;color:var(--ink-low);margin-top:12px}
+@media (max-width:640px){
+  /* The tag is nowrap and wider than a third of a phone screen, so overlaying
+     it clipped the dish names and let neighbours collide. Below 640 it sits
+     in flow under its dish and is allowed to wrap. */
+  .hbz__stage{align-items:start;gap:8px;padding-bottom:4px}
+  .hbz__tag{position:static;transform:none;white-space:normal;text-align:center;
+    margin-top:8px;padding:7px 8px;border-radius:10px;box-shadow:none;opacity:1}
+  .hbz__dish.is-in .hbz__tag,.hbz__dish:hover .hbz__tag{transform:none}
+  .hbz__tag b{font-size:11px;line-height:1.25}
+  .hbz__tag span{font-size:10px}
+  .hbz__meter{margin-top:14px}
 }
 @media (prefers-reduced-motion:reduce){
-  .hbz__dish{opacity:1;transform:none;transition:none}
-  .hbz__bar i{transition:none}
-  .hbz__meter.is-burst .hbz__px{animation:none;opacity:0}
+  .hbz__dish,.hbz__tag{opacity:1;transform:none;transition:none}
+  .hbz__tag{transform:translateX(-50%)}
+  .hbz__bar i,.hbz__bar u{transition:none}
 }
 
   .hero-section.bg-grid { padding-top: calc(74px + env(safe-area-inset-top)); }
@@ -1711,37 +1747,38 @@ html.theme-light .bp-knob { left: 3px; }
         </div>
 
         <!-- Scroll-driven dual budget. Each dish arrives as the reader moves
-             down the hero and adds itself to both meters; the third resolves
-             them. Sample figures, labelled as such. -->
+             down the hero, carrying its own tag, and adds itself to both
+             meters. The hatched ghost shows what the next one will add.
+             Sample figures, labelled as such. -->
         <div class="hbz" id="hbz">
           <div class="hbz__stage">
-            <figure class="hbz__dish hbz__d1" data-k="520" data-r="340">
-              <img src="/mockups/dishes/bowl.webp?v=20260725" width="680" height="509" alt="Harvest grain bowl" loading="lazy" decoding="async">
+            <figure class="hbz__dish" data-k="520" data-r="340">
+              <img src="/mockups/dishes/bowl.webp?v=20260729" width="680" height="509" alt="Harvest grain bowl" loading="lazy" decoding="async">
+              <figcaption class="hbz__tag"><b>Harvest grain bowl</b><span><i class="k">520</i> kcal <i class="r">340</i> rupees</span></figcaption>
             </figure>
-            <figure class="hbz__dish hbz__d2" data-k="610" data-r="290">
-              <img src="/mockups/dishes/panini.webp?v=20260725" width="680" height="501" alt="Grilled vegetable panini" loading="lazy" decoding="async">
+            <figure class="hbz__dish" data-k="610" data-r="290">
+              <img src="/mockups/dishes/panini.webp?v=20260729" width="680" height="501" alt="Grilled vegetable panini" loading="lazy" decoding="async">
+              <figcaption class="hbz__tag"><b>Grilled vegetable panini</b><span><i class="k">610</i> kcal <i class="r">290</i> rupees</span></figcaption>
             </figure>
-            <figure class="hbz__dish hbz__d3" data-k="430" data-r="260">
-              <img src="/mockups/dishes/toast.webp?v=20260725" width="680" height="572" alt="Avocado and beet toast" loading="lazy" decoding="async">
+            <figure class="hbz__dish" data-k="430" data-r="260">
+              <img src="/mockups/dishes/toast.webp?v=20260729" width="680" height="572" alt="Avocado and beet toast" loading="lazy" decoding="async">
+              <figcaption class="hbz__tag"><b>Avocado and beet toast</b><span><i class="k">430</i> kcal <i class="r">260</i> rupees</span></figcaption>
             </figure>
           </div>
-          <div class="hbz__meter" id="hbzMeter">
+          <div class="hbz__meter">
             <div class="hbz__grid">
               <div class="hbz__m hbz__m--k">
                 <div class="hbz__h"><span class="hbz__l">Calories</span><span class="hbz__v" id="hbzKv">0 / 2,000</span></div>
-                <div class="hbz__bar"><i id="hbzKb"></i></div>
+                <div class="hbz__bar"><i id="hbzKb"></i><u id="hbzKg"></u></div>
               </div>
               <div class="hbz__m hbz__m--r">
                 <div class="hbz__h"><span class="hbz__l">Spend</span><span class="hbz__v" id="hbzRv">0 / 1,200</span></div>
-                <div class="hbz__bar"><i id="hbzRb"></i></div>
+                <div class="hbz__bar"><i id="hbzRb"></i><u id="hbzRg"></u></div>
               </div>
             </div>
-            <div class="hbz__done">
-              <div class="hbz__doneln">
-                <span><svg viewBox="0 0 24 24" fill="none" stroke="#6eddf0" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg>Calories</span>
-                <span><svg viewBox="0 0 24 24" fill="none" stroke="#ff8a4a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg>Budget</span>
-              </div>
-            </div>
+            <p class="hbz__note" id="hbzNote">Hover a dish to preview what it costs both budgets. Sample figures.</p>
+          </div>
+        </div>
           </div>
         </div>
 
@@ -3378,74 +3415,98 @@ html.theme-light .bp-knob { left: 3px; }
 </script>
 
 <script>
-/* Hero dual-budget: scroll adds each dish, the third resolves the meters. */
+/* Hero dual-budget. Dishes arrive on scroll and their tags persist, because
+   nobody is hovering while they scroll. The hatched ghost previews the next
+   dish before it lands, and hovering any dish previews that one directly. */
 (function () {
   var root = document.getElementById('hbz');
   if (!root) return;
-  var meter = document.getElementById('hbzMeter');
   var dishes = [].slice.call(root.querySelectorAll('.hbz__dish'));
   var kv = document.getElementById('hbzKv'), rv = document.getElementById('hbzRv');
   var kb = document.getElementById('hbzKb'), rb = document.getElementById('hbzRb');
-  var KG = 2000, RG = 1200, on = [], burst = false;
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var kg = document.getElementById('hbzKg'), rg = document.getElementById('hbzRg');
+  var note = document.getElementById('hbzNote');
+  var KG = 2000, RG = 1200;
+  var DEFAULT_NOTE = 'Hover a dish to preview what it costs both budgets. Sample figures.';
   var fmt = function (n) { return Math.round(n).toLocaleString('en-IN'); };
+  var pct = function (v, g) { return Math.max(0, Math.min(100, v / g * 100)); };
+  var added = [];
 
-  function paint() {
-    var k = 0, r = 0;
-    on.forEach(function (d) { k += d.k; r += d.r; });
-    kv.textContent = fmt(k) + ' / ' + fmt(KG);
-    rv.textContent = fmt(r) + ' / ' + fmt(RG);
-    kb.style.width = Math.min(100, k / KG * 100) + '%';
-    rb.style.width = Math.min(100, r / RG * 100) + '%';
+  function totals() {
+    var t = { k: 0, r: 0 };
+    added.forEach(function (d) { t.k += d.k; t.r += d.r; });
+    return t;
   }
-  function pixels() {
-    var cols = ['#6eddf0', '#ff8a4a', '#4ade80', '#d95f52'];
-    for (var i = 0; i < 22; i++) {
-      var s = document.createElement('span');
-      s.className = 'hbz__px';
-      s.style.background = cols[i % cols.length];
-      s.style.left = (14 + Math.random() * 72) + '%';
-      s.style.top = (30 + Math.random() * 36) + '%';
-      s.style.setProperty('--dx', ((Math.random() - .5) * 170).toFixed(0) + 'px');
-      s.style.setProperty('--dy', (-60 - Math.random() * 120).toFixed(0) + 'px');
-      s.style.animationDelay = (Math.random() * .22).toFixed(2) + 's';
-      meter.appendChild(s);
+  function paint(preview) {
+    var t = totals();
+    kv.textContent = fmt(t.k) + ' / ' + fmt(KG);
+    rv.textContent = fmt(t.r) + ' / ' + fmt(RG);
+    kb.style.width = pct(t.k, KG) + '%';
+    rb.style.width = pct(t.r, RG) + '%';
+    if (preview) {
+      var kFrom = pct(t.k, KG), rFrom = pct(t.r, RG);
+      kg.style.left = kFrom + '%'; rg.style.left = rFrom + '%';
+      kg.style.width = Math.max(0, pct(t.k + preview.k, KG) - kFrom) + '%';
+      rg.style.width = Math.max(0, pct(t.r + preview.r, RG) - rFrom) + '%';
+      kg.classList.add('is-on'); rg.classList.add('is-on');
+      note.textContent = 'Adding the ' + preview.n.toLowerCase() +
+        ': plus ' + fmt(preview.k) + ' kcal and ' + fmt(preview.r) + ' rupees.';
+    } else {
+      kg.classList.remove('is-on'); rg.classList.remove('is-on');
+      note.textContent = added.length === dishes.length
+        ? 'Three dishes, ' + fmt(t.k) + ' kcal and ' + fmt(t.r) + ' rupees. Both budgets still intact.'
+        : DEFAULT_NOTE;
     }
   }
-  function resolve() {
-    if (burst) return;
-    burst = true;
-    meter.classList.add('is-done');
-    if (!reduce) { pixels(); requestAnimationFrame(function () { meter.classList.add('is-burst'); }); }
+
+  function data(d, i) {
+    return { k: +d.dataset.k, r: +d.dataset.r, i: i,
+             n: d.querySelector('.hbz__tag b').textContent };
   }
-  function reset() {
-    meter.classList.remove('is-done', 'is-burst');
-    burst = false;
-    [].forEach.call(meter.querySelectorAll('.hbz__px'), function (n) { n.remove(); });
-  }
-  /* Gated on real scroll distance from the top rather than on where the stage
-     happens to sit. The hero is a normal-height section here, so a viewport
-     ratio starts already advanced and the whole sequence would be over before
-     the reader had moved. This way it always begins empty and paces out. */
-  var GATES = [40, 190, 340];
+  /* Anchored to the module's own travel through the viewport. A fixed scroll
+     distance was wrong in both directions: on desktop the sequence started
+     already advanced, and on mobile - where the module sits below a tall hero
+     - it finished after the module had scrolled out of sight. Measuring the
+     stage's own position means it always begins empty as the module appears
+     and completes while it is still on screen. */
+  /* The module is already on screen at rest (measured: stage top 329 of an
+     844 viewport on a phone), so a position-based gate starts past its own
+     thresholds and everything is added before the reader moves. Scroll
+     distance it is - kept short so the sequence completes while the module
+     is still in view, which a longer run would not do on a phone. */
+  var GATES = [30, 130, 230];
+  var hovering = null;
   function tick() {
     var y = window.pageYOffset || document.documentElement.scrollTop || 0;
     dishes.forEach(function (d, i) {
-      var o = { k: +d.dataset.k, r: +d.dataset.r, i: i };
+      var o = data(d, i);
       if (y >= GATES[i]) {
-        if (!d.classList.contains('is-in')) {
-          d.classList.add('is-in');
-          on.push(o); paint();
-          if (on.length === dishes.length) setTimeout(resolve, 600);
-        }
+        if (!d.classList.contains('is-in')) { d.classList.add('is-in'); added.push(o); }
       } else if (d.classList.contains('is-in')) {
         d.classList.remove('is-in');
-        on = on.filter(function (x) { return x.i !== i; });
-        paint(); reset();
+        added = added.filter(function (x) { return x.i !== i; });
       }
     });
+    if (hovering !== null) { paint(hovering); return; }
+    // ghost the next dish that has not arrived yet, so the meter always shows
+    // what is coming rather than jumping
+    var next = null;
+    for (var i = 0; i < dishes.length; i++) {
+      if (!dishes[i].classList.contains('is-in')) { next = data(dishes[i], i); break; }
+    }
+    paint(next);
   }
-  paint(); tick();
+
+  dishes.forEach(function (d, i) {
+    d.addEventListener('pointerenter', function (e) {
+      if (e.pointerType === 'touch') return;
+      if (d.classList.contains('is-in')) return;   // already counted
+      hovering = data(d, i); paint(hovering);
+    });
+    d.addEventListener('pointerleave', function () { hovering = null; tick(); });
+  });
+
+  paint(null); tick();
   window.addEventListener('scroll', tick, { passive: true });
   window.addEventListener('resize', tick);
 })();
