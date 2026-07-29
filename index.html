@@ -95,7 +95,11 @@
     --bg-3: #101019;
     --ink: #eceaf3;
     --ink-dim: #9693ac;
-    --ink-low: #6b6885;     /* FE-10 · bumped from #4f4d63 (3.6:1) → #6b6885 (4.5:1 against bg) */
+    /* Lifted from #6b6885. Measured from painted pixels on the new #040407
+       ground it was 3.85:1 - under the 4.5:1 bar - and it is the colour of
+       the SMALLEST type on the page (the 10-12px kickers, the deck hint,
+       the friction card indices, the hbz note). #7d799a measures 4.9:1. */
+    --ink-low: #7d799a;     /* FE-10 · bumped from #4f4d63 (3.6:1) → #6b6885 (4.5:1 against bg) */
     --periwinkle: #d95f52;
     --periwinkle-bright: #e8796b;
     --calorie: #6eddf0;
@@ -108,6 +112,30 @@
     font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
+
+  /* ── Re-point the hardcoded background utilities at the tokens ─────────
+   * The precompiled Tailwind subset bakes literal colours it captured long
+   * ago: `.bg-bg` is `rgb(7 7 11)`, `.bg-bg/70` is `rgba(7,7,11,.7)`,
+   * `.bg-bg2/80` is `rgba(12,12,18,.8)`. <body> carries `.bg-bg`, and a class
+   * (0,1,0) outranks the `html, body` element selector (0,0,1) no matter what
+   * order they appear in - so the body kept painting the OLD background while
+   * `html` and the sticky nav had moved to the new one. Most of the page was
+   * therefore a different black from its own header.
+   * The light theme already re-pointed these; the base theme never did, which
+   * is why the drift only showed in dark. This is the general fix, so the next
+   * token change cannot silently leave the body behind again.
+   * -------------------------------------------------------------------- */
+  .bg-bg { background-color: var(--bg); }
+  .bg-bg\/70 { background-color: color-mix(in srgb, var(--bg) 72%, transparent); }
+  .bg-bg2\/80 { background-color: color-mix(in srgb, var(--bg-2) 80%, transparent); }
+  /* Same trap, text side: `.text-inklow` bakes rgb(107 104 133) and
+     `.text-inkdim` bakes rgb(150 147 172). The light theme re-points both;
+     the base theme never did, so lifting --ink-low for contrast moved every
+     element that used the VARIABLE and left every element using the UTILITY
+     exactly where it was - the deck hint and the section kickers stayed at
+     3.85:1 while their neighbours moved to 4.9:1. */
+  .text-inklow { color: var(--ink-low); }
+  .text-inkdim { color: var(--ink-dim); }
   /* Clip horizontal overflow WITHOUT making body a scroll container
      (overflow-x:hidden would; clip does not) so position:sticky keeps working. */
   /* margin:0 is load-bearing, not tidiness. There is no preflight reset in this
@@ -382,6 +410,40 @@
   }
   .pill-cta:hover { background: var(--periwinkle-bright); transform: translateY(-1px); }
 
+  /* ── Touch targets ────────────────────────────────────────────────────
+   * The fleet bar is 44x44. Several controls sat under it: the nav pills at
+   * 32-40px tall, the theme switch at 62x30, the footer links at 14px, and
+   * the two close buttons at ~30px square.
+   *
+   * The nav controls get an INVISIBLE expansion rather than a bigger box, so
+   * the chrome the design settled on is untouched while the tappable area
+   * reaches 44. The expansion is vertical only and deliberately so: these sit
+   * in a horizontal row, and growing them sideways would overlap the
+   * neighbouring control and start stealing its taps, which is a worse bug
+   * than the one being fixed. All three are already wider than 44.
+   * -------------------------------------------------------------------- */
+  /* The footer's legal row is a navigation row, not prose, so the inline-link
+     exception to the target-size rule does not apply to it - and at 14px tall
+     it was failing even the 24px AA floor, never mind the fleet's 44.
+     These get real height rather than an invisible pad: the row WRAPS to two
+     or three lines on a phone, and 44px pads stacked 8px apart would overlap
+     between rows and start handing taps to the link above. Real height makes
+     the rows lay out honestly around each other. */
+  .footer-links a { min-height: 44px; display: inline-flex; align-items: center; }
+
+  .pill-cta, .pill-glass, .bp-switch { position: relative; }
+  .pill-cta::after, .pill-glass::after, .bp-switch::after {
+    content: ''; position: absolute;
+    left: 0; right: 0; top: 50%;
+    height: 44px; transform: translateY(-50%);
+    /* No negative z-index here on purpose. Sending the pad behind the element
+       also sends it behind any ancestor background painted in the same
+       stacking context - the sticky nav has one - and a pad that is painted
+       over stops receiving the taps it exists to catch. Sitting on top is
+       harmless: it belongs to the control, so a tap on it still activates
+       that control and nothing else. */
+  }
+
   /* Mobile nav: compact the pills + switch so all three fit on one row with
      clear breathing room between the logo and the Careers bubble. */
   @media (max-width: 560px) {
@@ -479,26 +541,38 @@
 /* Hero ground, ported from the approved landing artifact: a warm wash top
    right, a cooler one bottom left, and a grain layer so a large flat field
    does not band. Replaces the grid pattern on this section only. */
+/* The glows are dialled back to roughly a third of what they were. Measured
+   against the header, which is the reference the rest of the page now matches:
+   the hero was painting srgb(17,17,20) to srgb(35,25,24) at its warm corner
+   while its own header sat at srgb(9,9,13), so the top of the page read as two
+   different grounds meeting at a seam. They are kept rather than deleted -
+   at this strength they still give the corner some depth and keep the calorie
+   and rupee hues present in the ground, but they no longer announce
+   themselves as a separate surface. */
 .hero-section.bg-grid{
   background:
-    radial-gradient(900px 620px at 82% -6%, rgba(255,138,74,.15), transparent 66%),
-    radial-gradient(1000px 620px at -8% 78%, rgba(110,221,240,.11), transparent 58%),
-    radial-gradient(900px 560px at 106% 34%, rgba(217,95,82,.10), transparent 58%),
+    radial-gradient(900px 620px at 82% -6%, rgba(255,138,74,.055), transparent 66%),
+    radial-gradient(1000px 620px at -8% 78%, rgba(110,221,240,.04), transparent 58%),
+    radial-gradient(900px 560px at 106% 34%, rgba(217,95,82,.038), transparent 58%),
     var(--bg) !important;
   isolation:isolate;
 }
 html.theme-light .hero-section.bg-grid{
   background:
-    radial-gradient(900px 620px at 82% -6%, rgba(194,96,31,.13), transparent 66%),
-    radial-gradient(1000px 620px at -8% 78%, rgba(10,125,149,.09), transparent 58%),
-    radial-gradient(900px 560px at 106% 34%, rgba(192,71,47,.09), transparent 58%),
+    radial-gradient(900px 620px at 82% -6%, rgba(194,96,31,.05), transparent 66%),
+    radial-gradient(1000px 620px at -8% 78%, rgba(10,125,149,.035), transparent 58%),
+    radial-gradient(900px 560px at 106% 34%, rgba(192,71,47,.035), transparent 58%),
     var(--bg) !important;
 }
+/* Grain at .5 was the last thing holding the hero off its own header: the
+   gradients only account for a few levels, the noise for the rest. At .26 the
+   ground still breaks up the banding it exists to prevent, measured at
+   srgb(9,10,12) against a header of srgb(7,7,10). */
 .hero-section.bg-grid::after{
-  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.26;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
 }
-html.theme-light .hero-section.bg-grid::after{opacity:.3}
+html.theme-light .hero-section.bg-grid::after{opacity:.18}
 .hero-section.bg-grid > *{position:relative;z-index:1}
 
 /* ── Converging arcs ──────────────────────────────────────────────────
@@ -923,8 +997,13 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
   .deck-pip::after {
     content: '';
     position: absolute;
-    left: 0;
-    right: 0;
+    /* Reach halfway into the 10px flex gap on each side. The pips are
+       flex:1 and get as narrow as 28px on a small screen, so the pad also
+       grows sideways - but only by half the gap, so two neighbouring pads
+       meet exactly and never overlap. Overlapping pads would hand taps to
+       the wrong chapter. */
+    left: -5px;
+    right: -5px;
     top: -21px;
     bottom: -21px;
   }
@@ -1371,6 +1450,14 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
     transition: color .15s ease, background .15s ease;
   }
   .eff-pop__close:hover { color: var(--ink); background: rgba(255,255,255,0.06); }
+  /* Both close buttons keep their compact 30/32px face - a 44px square in
+     the corner of a small toast would dominate it - and gain an invisible
+     44x44 pad centred on that face. Expanding in both axes is safe here
+     because nothing else is interactive in that corner. */
+  .eff-pop__close::after, .eff-modal__close::after {
+    content: ''; position: absolute; top: 50%; left: 50%;
+    width: 44px; height: 44px; transform: translate(-50%, -50%);
+  }
   @media (min-width: 1024px) {
     .eff-pop { left: auto; right: 22px; bottom: 22px; max-width: 360px; }
   }
@@ -1446,7 +1533,8 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
 
   .eff-chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .eff-chip {
-    padding: 9px 14px; min-height: 40px;
+    /* 40 -> 44: the fleet minimum, and only 4px of extra height. */
+    padding: 11px 14px; min-height: 44px;
     border-radius: 9999px;
     background: rgba(217,95,82,0.06);
     border: 1px solid rgba(217,95,82,0.18);
@@ -1512,6 +1600,9 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
   :focus { outline: none; }
   :focus-visible { outline: 2px solid var(--periwinkle); outline-offset: 2px; border-radius: 4px; }
   .skip-link {
+    /* Real height rather than a pad: this is off-screen until focused, so
+       growing it cannot shift anything. */
+    min-height: 44px; display: inline-flex; align-items: center;
     position: absolute; top: 8px; left: 8px; z-index: 999;
     background: var(--periwinkle); color: var(--bg);
     padding: 10px 16px; border-radius: 8px;
@@ -1698,11 +1789,21 @@ html.theme-light {
   --bg-3: #efeae1;   /* wells */
   --ink:     #23201d;
   --ink-dim: #5b564f;
-  --ink-low: #857f74;              /* >= 4.5:1 on eggshell */
+  /* Was #857f74, whose comment claimed >= 4.5:1 on eggshell. Measured from
+     painted pixels it is 3.97:1 against the light ground and 3.56:1 against
+     eggshell proper - the claim was never true. #6f6a60 measures 4.8:1. */
+  --ink-low: #6f6a60;
   --periwinkle: #d95f52;           /* wine-red brand accent - same in both themes */
   --periwinkle-bright: #e8796b;
   --calorie: #1697ab;              /* deepened cyan */
   --budget:  #d2691e;              /* deepened peach */
+  /* Text-only variants of the two data hues. The fill colours above are
+     tuned to read as MARKS (arcs, meter fills, rings) where the 3:1
+     non-text bar applies; as small TEXT on paper they measure 2.67:1 and
+     3.23:1. These darker cuts are used only where the hue has to carry
+     words, so the marks keep their brightness and the labels clear 4.5:1. */
+  --calorie-ink: #0d6d7d;
+  --budget-ink:  #a04f13;
 }
 
 /* Base surfaces + the hardcoded utility colours actually used in markup */
@@ -1717,6 +1818,18 @@ html.theme-light .text-inklow { color: var(--ink-low); }
 html.theme-light .text-periwinkle,
 html.theme-light .hover\:text-periwinkle:hover { color: var(--periwinkle); }
 html.theme-light .text-calorie { color: var(--calorie); }
+/* Small text carrying a data hue uses the text-safe cut. The meter fills,
+   arcs and rings keep var(--calorie)/var(--budget) - they are marks, not
+   words, and the brighter hue is what makes them read. */
+html.theme-light .hbz__l { color: var(--calorie-ink); }
+html.theme-light .hbz__m--r .hbz__l { color: var(--budget-ink); }
+html.theme-light .both-rotor { color: var(--calorie-ink); }
+html.theme-light .both-rotor.is-bud { color: var(--budget-ink); }
+html.theme-light .text-calorie { color: var(--calorie-ink); }
+html.theme-light .text-budget { color: var(--budget-ink); }
+/* The skip link is eggshell-on-wine in light, which measures 3.29:1. The
+   nav CTA already solved the same problem the same way. */
+html.theme-light .skip-link { color: #16130f; }
 html.theme-light .text-budget { color: var(--budget); }
 html.theme-light .text-white\/\[0\.025\] { color: rgba(0,0,0,0.045); }
 html.theme-light .bg-periwinkle { background-color: var(--periwinkle); }
@@ -1772,19 +1885,26 @@ html.origami-live.theme-light .bg-grid {
 }
 .ori-tile { position: relative; perspective: 680px; }
 /* static lower-left paper half (the sheet under the fold) */
+/* The paper halves mix toward --bg-2, the raised-surface token, instead of
+   pure #ffffff. At 66% white over the eggshell base these tiles painted the
+   whole light-theme page at srgb(255,255,255) while its own header sat at
+   srgb(244,241,237) - the page was literally whiter than its chrome, and
+   since the fixed layer IS the light backdrop, that was every section below
+   the hero. Mixing toward the paper token keeps the fold reading as a crease
+   without lifting the ground off the palette. */
 .ori-tile::before {
   content: ''; position: absolute; inset: 0;
   clip-path: polygon(0 0, 0 100%, 100% 100%);
   background: linear-gradient(135deg,
-    color-mix(in srgb, #ffffff 12%, transparent),
-    color-mix(in srgb, #60100b 8%, transparent));
+    color-mix(in srgb, var(--bg-2) 22%, transparent),
+    color-mix(in srgb, #60100b 7%, transparent));
 }
 /* folding upper-right paper half - rotates around the tile diagonal (1,1,0) */
 .ori-tile > i {
   position: absolute; inset: 0;
   clip-path: polygon(0 0, 100% 0, 100% 100%);
   background: linear-gradient(315deg,
-    color-mix(in srgb, #ffffff 66%, transparent),
+    color-mix(in srgb, var(--bg-2) 38%, transparent),
     color-mix(in srgb, #60100b 3%, transparent));
   transform-origin: center;
   backface-visibility: visible;
@@ -2466,7 +2586,7 @@ html.theme-light .bp-knob { left: 3px; }
         <span>·</span>
         <span>© 2026 · Made in Bengaluru</span>
       </div>
-      <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] tracking-[0.16em] uppercase text-ink" style="font-family: 'Space Grotesk', system-ui, sans-serif;">
+      <div class="footer-links flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] tracking-[0.16em] uppercase text-ink" style="font-family: 'Space Grotesk', system-ui, sans-serif;">
         <a href="legal.html#privacy" class="text-ink hover:text-periwinkle transition-colors">Privacy</a>
         <a href="legal.html#terms" class="text-ink hover:text-periwinkle transition-colors">Terms</a>
         <a href="legal.html#cookies" class="text-ink hover:text-periwinkle transition-colors">Cookies</a>
