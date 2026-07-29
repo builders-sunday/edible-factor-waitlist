@@ -11,13 +11,13 @@
   "lang": "en",
   "icons": [
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 192 192%27%3E%3Crect width=%27192%27 height=%27192%27 rx=%2740%27 fill=%27%23040407%27/%3E%3Ctext x=%2796%27 y=%27130%27 text-anchor=%27middle%27 font-family=%27serif%27 font-size=%27115%27 font-style=%27italic%27 fill=%27%23a8aaff%27%3Eef%3C/text%3E%3C/svg%3E",
+      "src": "data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 192 192%27%3E%3Crect width=%27192%27 height=%27192%27 rx=%2740%27 fill=%27%23040407%27/%3E%3Ctext x=%2796%27 y=%27130%27 text-anchor=%27middle%27 font-family=%27serif%27 font-size=%27115%27 font-style=%27italic%27 fill=%27%23d95f52%27%3Eef%3C/text%3E%3C/svg%3E",
       "sizes": "192x192",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 512 512%27%3E%3Crect width=%27512%27 height=%27512%27 rx=%27110%27 fill=%27%23040407%27/%3E%3Ctext x=%27256%27 y=%27345%27 text-anchor=%27middle%27 font-family=%27serif%27 font-size=%27305%27 font-style=%27italic%27 fill=%27%23a8aaff%27%3Eef%3C/text%3E%3C/svg%3E",
+      "src": "data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 512 512%27%3E%3Crect width=%27512%27 height=%27512%27 rx=%27110%27 fill=%27%23040407%27/%3E%3Ctext x=%27256%27 y=%27345%27 text-anchor=%27middle%27 font-family=%27serif%27 font-size=%27305%27 font-style=%27italic%27 fill=%27%23d95f52%27%3Eef%3C/text%3E%3C/svg%3E",
       "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "any"

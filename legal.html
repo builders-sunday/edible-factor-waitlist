@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#07070b">
-<title>edible·factor · Legal</title>
-<meta name="description" content="Privacy, terms, cookies, and dietary disclaimer for edible·factor.">
+<meta name="theme-color" content="#040407">
+<title>EdibleFactor · Legal</title>
+<meta name="description" content="Privacy, terms, cookies, and dietary disclaimer for EdibleFactor.">
 <meta name="robots" content="index, follow">
 
 <!--
@@ -17,13 +17,18 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
+  /* Tokens mirror the landing page (index.html :root) - the wine sweep and
+     the 2026-07-29 deep-ground + ink-low lift. This page had been left on the
+     pre-sweep set: true periwinkle #a8aaff, the old #07070b ground, and the
+     retired Instrument Serif display face. */
   :root {
-    --bg:#07070b; --bg-2:#0c0c12;
-    --ink:#eceaf3; --ink-dim:#9693ac; --ink-low:#6b6885;
-    --periwinkle:#a8aaff;
+    --bg:#040407; --bg-2:#0a0a11;
+    --ink:#eceaf3; --ink-dim:#9693ac; --ink-low:#7d799a;
+    --periwinkle:#d95f52; --periwinkle-bright:#e8796b;
+    --budget:#ff8a4a;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
@@ -35,19 +40,21 @@
   ::selection { background: var(--periwinkle); color: var(--bg); }
   a { color: var(--periwinkle); text-decoration: none; }
   a:hover { text-decoration: underline; }
-  .display { font-family: 'Instrument Serif', serif; font-weight: 400; line-height: 1; letter-spacing: -0.015em; }
-  .accent  { font-style: italic; color: var(--periwinkle); }
+  /* Space Grotesk has no italic cut; accents are weight + wine, never
+     font-style, matching the landing H1. */
+  .display { font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 700; line-height: 1.02; letter-spacing: -0.025em; }
+  .accent  { font-weight: 700; color: var(--periwinkle); }
   .mono    { font-family: 'JetBrains Mono', monospace; }
 
   header.appbar {
     position: sticky; top: 0; z-index: 10;
-    background: rgba(7,7,11,0.85); backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(168,170,255,0.06);
+    background: color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(217,95,82,0.10);
     padding: 14px 24px;
     display: flex; align-items: center; justify-content: space-between;
   }
-  .brand { font-family: 'Instrument Serif', serif; font-size: 22px; }
-  .brand em { font-style: italic; color: var(--periwinkle); }
+  .brand { font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 500; font-size: 20px; color: var(--ink); }
+  .brand em { font-style: normal; font-weight: 700; color: var(--periwinkle); }
   .nav-back {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
@@ -62,7 +69,7 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
     color: var(--ink-low); margin-bottom: 36px;
-    padding-bottom: 20px; border-bottom: 1px solid rgba(168,170,255,0.10);
+    padding-bottom: 20px; border-bottom: 1px solid rgba(217,95,82,0.16);
   }
 
   .toc {
@@ -70,30 +77,31 @@
     margin-bottom: 40px;
     padding: 16px;
     border-radius: 14px;
-    background: rgba(168,170,255,0.04);
-    border: 1px solid rgba(168,170,255,0.10);
+    background: rgba(217,95,82,0.05);
+    border: 1px solid rgba(217,95,82,0.16);
   }
   .toc a {
     padding: 7px 14px;
     border-radius: 9999px;
-    background: rgba(168,170,255,0.06);
-    border: 1px solid rgba(168,170,255,0.12);
+    background: rgba(217,95,82,0.07);
+    border: 1px solid rgba(217,95,82,0.20);
     color: var(--periwinkle);
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
   }
-  .toc a:hover { background: rgba(168,170,255,0.14); text-decoration: none; }
+  .toc a:hover { background: rgba(217,95,82,0.15); text-decoration: none; }
 
   section.legal {
     margin-bottom: 56px;
     scroll-margin-top: 80px;
   }
   section.legal h2 {
-    font-family: 'Instrument Serif', serif;
-    font-size: 36px; line-height: 1.05;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-weight: 700; letter-spacing: -0.02em;
+    font-size: 32px; line-height: 1.05;
     margin: 0 0 18px;
   }
-  section.legal h2 em { font-style: italic; color: var(--periwinkle); }
+  section.legal h2 em { font-style: normal; color: var(--periwinkle); }
   section.legal h3 {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px; letter-spacing: 0.20em; text-transform: uppercase;
@@ -111,12 +119,14 @@
      placeholders, not public-facing. Toggle display:inline-block locally
      to see what's pending review. */
   .review-flag {
+    /* The second declaration used to be display:inline-block - the local
+       debug toggle left ON, which won the cascade and put internal REVIEW
+       markers on the public page. */
     display: none;
-    display: inline-block;
     padding: 2px 8px; border-radius: 4px;
     background: rgba(255,138,74,0.10);
     border: 1px solid rgba(255,138,74,0.30);
-    color: #ff8a4a;
+    color: var(--budget);
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
   }
@@ -128,10 +138,10 @@
     border: 1px solid rgba(255,138,74,0.25);
     margin: 18px 0;
   }
-  .disclaimer-box p { color: var(--ink); font-style: italic; font-family: 'Instrument Serif', serif; font-size: 18px; line-height: 1.5; }
+  .disclaimer-box p { color: var(--ink); font-family: 'Inter', system-ui, sans-serif; font-weight: 500; font-size: 16.5px; line-height: 1.55; }
 
   footer {
-    border-top: 1px solid rgba(168,170,255,0.06);
+    border-top: 1px solid rgba(217,95,82,0.10);
     padding: 24px;
     text-align: center;
     color: var(--ink-low);
@@ -140,7 +150,7 @@
   }
 </style>
 
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2307070b'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='20' font-style='italic' fill='%23a8aaff'%3Eef%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23040407'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='20' font-style='italic' fill='%23d95f52'%3Eef%3C/text%3E%3C/svg%3E">
 <link rel="manifest" href="manifest.webmanifest">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; frame-ancestors 'none'; base-uri 'self';">
 <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -169,7 +179,7 @@
   <!-- ========================================================== -->
   <section class="legal" id="privacy">
     <h2>Privacy <em>policy.</em></h2>
-    <p>edible·factor (&ldquo;we&rdquo;, &ldquo;us&rdquo;) takes your data seriously. This policy explains what we collect, why, and your rights under India&apos;s Digital Personal Data Protection Act 2023 and GDPR (where applicable).</p>
+    <p>EdibleFactor (&ldquo;we&rdquo;, &ldquo;us&rdquo;) takes your data seriously. This policy explains what we collect, why, and your rights under India&apos;s Digital Personal Data Protection Act 2023 and GDPR (where applicable).</p>
 
     <h3>What we collect</h3>
     <ul>
@@ -207,10 +217,10 @@
   <!-- ========================================================== -->
   <section class="legal" id="terms">
     <h2>Terms of <em>service.</em></h2>
-    <p>By using edible·factor, you agree to these terms. If you do not agree, do not use the service.</p>
+    <p>By using EdibleFactor, you agree to these terms. If you do not agree, do not use the service.</p>
 
     <h3>The service</h3>
-    <p>edible·factor helps you browse partner restaurant menus in Bengaluru with calorie and budget tracking. We do not own the restaurants or prepare the food. Menu data, prices, and availability are provided by partners and may change without notice.</p>
+    <p>EdibleFactor helps you browse partner restaurant menus in Bengaluru with calorie and budget tracking. We do not own the restaurants or prepare the food. Menu data, prices, and availability are provided by partners and may change without notice.</p>
 
     <h3>Your account</h3>
     <ul>
@@ -259,7 +269,7 @@
     <h2>Dietary <em>disclaimer.</em></h2>
 
     <div class="disclaimer-box">
-      <p>Calorie and macro estimates shown in edible·factor are for informational purposes only. They are not medical or nutritional advice. Always consult a qualified healthcare professional or registered dietitian before making dietary decisions, especially if you have a medical condition, are pregnant, or are managing weight, blood sugar, or cholesterol.</p>
+      <p>Calorie and macro estimates shown in EdibleFactor are for informational purposes only. They are not medical or nutritional advice. Always consult a qualified healthcare professional or registered dietitian before making dietary decisions, especially if you have a medical condition, are pregnant, or are managing weight, blood sugar, or cholesterol.</p>
     </div>
 
     <h3>How we estimate</h3>
@@ -274,16 +284,16 @@
     <p>We do not currently surface allergen flags. <span class="review-flag">REVIEW</span> add allergen warnings before launch in any market with allergen-disclosure regulations. Always confirm with the restaurant if you have a serious allergy.</p>
 
     <h3>Not for medical use</h3>
-    <p>edible·factor is not a medical device and is not intended to diagnose, treat, cure, or prevent any disease. Any reference to &ldquo;protein gap&rdquo;, &ldquo;calorie cap&rdquo;, or similar terms is informational, not diagnostic.</p>
+    <p>EdibleFactor is not a medical device and is not intended to diagnose, treat, cure, or prevent any disease. Any reference to &ldquo;protein gap&rdquo;, &ldquo;calorie cap&rdquo;, or similar terms is informational, not diagnostic.</p>
   </section>
 
   <!-- ========================================================== -->
   <section class="legal" id="contact">
     <h2>Contact <em>us.</em></h2>
     <ul>
-      <li>General &mdash; <a href="mailto:hello@ediblefactor.com">hello@ediblefactor.com</a></li>
-      <li>Privacy / data requests &mdash; <a href="mailto:privacy@ediblefactor.com">privacy@ediblefactor.com</a></li>
-      <li>Partner restaurant inquiries &mdash; <a href="mailto:partners@ediblefactor.com">partners@ediblefactor.com</a></li>
+      <li>General · <a href="mailto:hello@ediblefactor.com">hello@ediblefactor.com</a></li>
+      <li>Privacy / data requests · <a href="mailto:privacy@ediblefactor.com">privacy@ediblefactor.com</a></li>
+      <li>Partner restaurant inquiries · <a href="mailto:partners@ediblefactor.com">partners@ediblefactor.com</a></li>
       <li>Bengaluru, India</li>
     </ul>
   </section>
@@ -291,7 +301,7 @@
 </main>
 
 <footer>
-  © 2026 edible<em style="font-style:italic;color:var(--periwinkle);">factor</em> · Made in Bengaluru ·
+  © 2026 <span style="font-family:'Space Grotesk',system-ui,sans-serif;">edible<em style="font-style:normal;font-weight:700;color:var(--periwinkle);">factor</em></span> · Made in Bengaluru ·
   <a href="/" style="color:var(--ink-dim);">Home</a> ·
   <a href="/careers" style="color:var(--ink-dim);">Careers</a>
 </footer>
