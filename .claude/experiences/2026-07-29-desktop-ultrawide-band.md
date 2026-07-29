@@ -115,9 +115,12 @@
   `.hbz__l`, `.hbz__note`), touch targets under 44px (the deck pips are 2px
   tall, the theme toggle is 62x30, the close buttons are 30x30, the eff-chips
   are 39px), and one friction card clipping its text at 1024px. They are
-  identical on the shipped build. Also: the walkthrough section still leaves
-  slack between its copy and the phone below 1441px; closing it there would
-  change a screen this pass promised not to touch.
+  identical on the shipped build. Also: the walkthrough section still left
+  slack between its copy and the phone below 1441px at the time of this pass.
+  CLOSED in PR #82 (2026-07-29, same day) once the user lifted the hero freeze
+  ("proceed to the rest"): the column cap + centring now applies from 1024px,
+  with the clamp floor equal to the 1024 column width so the narrowest
+  desktops stayed pixel-identical.
 
 - **Revisit if** - the band ceiling needs retuning (change `--band-grow`'s
   factor and ceiling in one place and everything follows), the CTA column's
