@@ -10,17 +10,29 @@
 /*.webp
   Cache-Control: public, max-age=31536000, immutable
 
+# HTML entry points: max-age=0, matching the Cloudflare Pages platform
+# default that /legal, /v2 and every uncovered page already serve. The
+# previous max-age=300 here was the bug it looked like a fix for: it made
+# the homepage - the ONE page whose staleness matters, since all CSS/JS is
+# inlined in it - the only page allowed to serve 5 minutes stale, while
+# every page this file did NOT cover was always fresh. Pages sends no ETag
+# on HTML, so there is no cheap 304 path being given up; the cost of
+# freshness is one compressed (~50KB) fetch per navigation, which is the
+# right trade for a marketing page whose fixes must be visible when they
+# ship ("The Unbumped Cache-Buster" class of failure). The ?v=N convention
+# still applies to referenced subresources; an entry URL cannot version
+# itself, so its freshness has to come from here.
 /
-  Cache-Control: public, max-age=300, must-revalidate
+  Cache-Control: public, max-age=0, must-revalidate
 
 /index.html
-  Cache-Control: public, max-age=300, must-revalidate
+  Cache-Control: public, max-age=0, must-revalidate
 
 /careers
-  Cache-Control: public, max-age=300, must-revalidate
+  Cache-Control: public, max-age=0, must-revalidate
 
 /careers.html
-  Cache-Control: public, max-age=300, must-revalidate
+  Cache-Control: public, max-age=0, must-revalidate
 
 # Private sales document. Belt + braces: HTML <meta robots> on the page
 # itself, this server-side header, and a robots.txt Disallow rule.

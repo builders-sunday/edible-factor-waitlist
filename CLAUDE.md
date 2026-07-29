@@ -66,7 +66,7 @@ When editing this file, do not introduce Node-only APIs (`process.env` is replac
 
 ### `_headers` — Cloudflare Pages headers config
 
-Pages reads this file to apply HTTP headers per path. Long-cache + immutable on `/mockups/*` and `*.webp`; short cache + must-revalidate on HTML; standard security headers. If you add a new asset type that should be long-cached, add a rule here.
+Pages reads this file to apply HTTP headers per path. Long-cache + immutable on `/mockups/*` and `*.webp`; `max-age=0, must-revalidate` on HTML entry points (matching the Pages platform default - a previous `max-age=300` override here was itself the source of 5-minute stale-homepage windows, since all CSS/JS is inlined in index.html and the entry URL cannot version itself with `?v=N`); standard security headers. If you add a new asset type that should be long-cached, add a rule here.
 
 ### `mockups/` — phone screenshots
 
@@ -108,6 +108,8 @@ To add or change a mockup, edit the `TARGETS` array in `capture.mjs`, run `npm r
 ```
 
 It's a plain static file at the repo root, written by `write-version.mjs` and committed like any other file (no build step exists to generate it fresh per deploy - see the workflow above). `_headers` sets `Cache-Control: no-store` on `/version.json` so every read hits the origin.
+
+One honest caveat: during the first minute or two after a merge, Pages' rollout can propagate `version.json` and the HTML at slightly different moments across edge nodes, so `version.json` may report the new commit while a plain fetch of `/` still returns the previous build (observed on 2026-07-29, twice). This is deployment propagation, not caching - with HTML now at `max-age=0` it settles as the rollout completes. If the two disagree, poll again before concluding anything; a content sentinel in the served HTML (grep for a fragment unique to the new build) is the stronger proof.
 
 **The check:**
 ```bash
