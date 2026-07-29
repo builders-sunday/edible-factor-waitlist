@@ -67,7 +67,7 @@
   <circle cx="32" cy="32" r="27" fill="none" stroke="#E6E6F0" stroke-width="1.2"/>
   <circle class="ef-ring" cx="32" cy="32" r="24" fill="none" stroke="#E6E6F0" stroke-width="0.5"/>
 
-  <g fill="#A3A2FF">
+  <g fill="#d95f52">
     <rect class="ef-dot ef-dot--tl" x="4"  y="4"  width="3" height="3"/>
     <rect class="ef-dot ef-dot--tr" x="57" y="4"  width="3" height="3"/>
     <rect class="ef-dot ef-dot--bl" x="4"  y="57" width="3" height="3"/>
