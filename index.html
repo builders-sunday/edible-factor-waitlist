@@ -127,18 +127,20 @@
      `.hero-grid-lg .x` instead of `.x` so they override the base rules
      via natural specificity, without leaning on !important. */
   @media (min-width: 1024px) {
+    /* The CTA column is a percentage of the grid, capped at 440px, rather
+       than a flat 440px. At 1024px a flat column left only ~432px for the
+       headline, which the one-line rule then had to render at ~42px. Sizing
+       it proportionally hands the narrow desktops their width back and makes
+       the headline scale continuously through 1024 instead of stepping. */
     .hero-grid-lg {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
-      gap: 56px;
+      grid-template-columns: minmax(0, 1fr) minmax(0, min(440px, 34%));
+      gap: 40px;
       align-items: center;
     }
-    /* Cap the H1 so the LEFT column does not need 800+px to fit
-       "You are HOW" on one line. This keeps the headline at a
-       tablet-comparable size on desktop. */
+    /* Fallback only, for engines without container query units. The
+       @supports block below sizes the H1 from its container so the whole
+       tagline sits on one line at every width. */
     .hero-grid-lg .hero__title { font-size: clamp(60px, 5.8vw, 84px); }
-    /* Desktop drops the glimpse rotator entirely - the dial behind the
-       CTA card carries the visual motion on this breakpoint. */
-    .hero-grid-lg .glimpse { display: none; }
     /* Center the CTA card vertically in the right column so it reads
        as the visual anchor of the right side. The right column's grid
        cell already vertically centers via align-items: center on the
@@ -188,145 +190,42 @@
     .rotor__word { transition: none; }
   }
 
-  /* Hero title row · wraps H1 + glimpse. On mobile the glimpse is
-     absolute in the top-right corner (legacy behaviour). On tablet+ it
-     flexes alongside the H1 and vertically centers, so the two read as
-     a deliberate pair instead of a corner-floating accent. */
-  .hero-title-row { position: relative; }
-  @media (min-width: 768px) {
-    .hero-title-row {
-      display: flex;
-      align-items: center;
-      gap: 32px;
+  /* Hero title row · sole job now is to be the sizing container for the
+     H1. Declaring an inline-size container lets the headline scale off
+     the column width rather than the viewport, which is what keeps
+     "You are HOW you eat." on a single line in both the full-width
+     mobile layout and the 820px desktop left column. */
+  .hero-title-row { position: relative; container-type: inline-size; }
+
+  /* One-line tagline. The string measures 10.03em wide at the display
+     face's tracking, so 9.6cqi fills ~96% of the container and never
+     wraps. Gated on @supports: engines without container query units
+     keep the previous viewport-based sizing and simply wrap as before,
+     rather than overflowing behind a nowrap they cannot size for. */
+  @supports (font-size: 1cqi) {
+    .hero-title-row .hero__title,
+    .hero-grid-lg .hero-title-row .hero__title {
+      font-size: 9.6cqi;
+      white-space: nowrap;
     }
-    .hero-title-row .hero__title { flex: 1 1 0%; min-width: 0; }
-    .hero-title-row .glimpse { order: 1; }  /* push to right of H1 */
-  }
-  @media (min-width: 1024px) {
-    .hero-title-row { gap: 56px; }
-  }
-
-  /* Glimpse rotator · phone card that iris-reveals through 4 app mockups.
-     Visual language matches the section 02 walkthrough deck card
-     (.deck__card) so the hero sneak peak and the showcase read as the same
-     device, scaled down.
-
-     Mobile: positioned top-right of the H1 row (absolute, ~96px wide). A
-     compact 88:128 ratio (~1:1.45) keeps the phone-card sitting beside the
-     H1 without overlapping the lede that follows the title row in normal
-     flow. The notch + chassis bezel still read as a device.
-
-     Tablet (>=768px): static flex sibling at clamp(180px, 28vw, 360px)
-     wide with the full 88:184 portrait phone ratio (~1:2.09) that mirrors
-     the deck stage's 280:580 (~1:2.07) one-to-one.
-
-     Desktop (>=1024px): hidden via .hero-grid-lg .glimpse {display:none}
-     because the rotating dial + CTA card carry the visual motion. */
-  .glimpse {
-    position: absolute;
-    top: 0;
-    right: 0;
-    /* Shrunk on mobile so the phone stays within the 2-line headline height
-       and never overhangs onto the calorie/budget rotator in the lede below.
-       Desktop (>=768px) overrides this with the large flex-sibling size. */
-    width: clamp(56px, 15vw, 78px);
-    aspect-ratio: 88 / 128;
-    height: auto;
-    z-index: 5;
-    pointer-events: none;
-  }
-  @media (min-width: 768px) {
-    .glimpse {
-      position: static;
-      flex-shrink: 0;
-      width: clamp(180px, 28vw, 360px);
-      aspect-ratio: 88 / 184;
-      height: auto;
+    /* Tablet is still single-column, so 9.6cqi of the FULL width would push
+       the headline to ~79px, only for the 1024px two-column split to halve
+       the column and drop it to ~42px. Holding it near the post-split size
+       turns that cliff into a 6% step. A cap can only ever shrink the type,
+       so the one-line guarantee is unaffected. */
+    /* Must carry .hero-grid-lg too: that class is on the grid at every
+       width (its rules are what sit behind a media query, not the class),
+       so the 3-class selector above would otherwise always outrank this. */
+    /* Starts at 640px, not 768px: 9.6cqi crosses 56px at a ~583px
+       container, which is a ~631px viewport. Beginning the cap there means
+       it engages exactly where it starts to bind, so no step appears at
+       the 768px padding change either. */
+    @media (min-width: 640px) and (max-width: 1023px) {
+      .hero-title-row .hero__title,
+      .hero-grid-lg .hero-title-row .hero__title { font-size: min(9.6cqi, 56px); }
     }
   }
-  /* Phone chassis · matches .deck__card from section 02. Linear gradient
-     reads as the device body; layered shadow gives the sit-on-the-page
-     depth; inset 1px highlight is the bevel. Padding holds the inner screen
-     inside the chassis the same way the deck card does. */
-  .glimpse__frame {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    border-radius: 13%/6%;
-    background: linear-gradient(180deg, #1a1a26, #0c0c12);
-    border: 1px solid rgba(217, 95, 82, 0.16);
-    box-shadow:
-      0 18px 44px rgba(0, 0, 0, 0.55),
-      0 3px 8px rgba(0, 0, 0, 0.45),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.04);
-    padding: 3.2%;
-    box-sizing: border-box;
-  }
-  /* Notch · proportional pill matching .deck__notch (118x28 inside a 280-wide
-     card = 42% width). Sits above the screen at ~3.8% from the top. */
-  .glimpse__notch {
-    position: absolute;
-    top: 3.8%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 42%;
-    height: 4.6%;
-    border-radius: 9999px;
-    background: #000;
-    z-index: 2;
-    pointer-events: none;
-  }
-  /* Inner screen · holds the mockup images and clips them to the rounded
-     screen window. Mirrors .deck__screen. */
-  .glimpse__screen {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    border-radius: 10%/5%;
-    overflow: hidden;
-    background: var(--bg-2, #0c0c12);
-  }
-  .glimpse__img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top center;
-    /* Iris reveal · clip-path circle expands from center to reveal the
-       active frame. Opacity rides alongside so the off-frame doesn't
-       fight the active one when z-index ties. */
-    opacity: 0;
-    clip-path: circle(0% at 50% 50%);
-    transition:
-      clip-path 900ms cubic-bezier(0.65, 0, 0.35, 1),
-      opacity 600ms ease-in-out;
-    /* Match the screen's clip so iOS Safari paints the image inside the
-       rounded screen corners. Same trick as .deck__screen img. */
-    border-radius: inherit;
-    transform: translateZ(0);
-  }
-  .glimpse__img.is-active {
-    opacity: 1;
-    clip-path: circle(75% at 50% 50%);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .glimpse__img {
-      transition: none;
-      clip-path: circle(75% at 50% 50%);
-    }
-  }
-  /* Subtle vignette inside the screen so the mockup edges fade into the
-     chassis. Sits on the screen, not the chassis, so it never bleeds onto
-     the notch or bezel. */
-  .glimpse__screen::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(180deg, transparent 60%, rgba(7, 7, 11, 0.45));
-    pointer-events: none;
-  }
+
 
   /* Mono micro-labels · eyebrow, section labels, kicker pills */
   .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
@@ -439,10 +338,8 @@
   .reveal.in-view { opacity: 1; transform: translateY(0); }
 
   /* === Hero title staged reveal === */
-  /* Mobile floor 44px (was 64px) so the 2-line "You are HOW you eat."
-     leaves room for the lede + glimpse rotator above the fold on 375px
-     viewports. Slope bumped to 12vw so the H1 still grows aggressively
-     on tablet/desktop. */
+  /* Fallback sizing for engines without container query units; the
+     @supports block above supersedes it and holds the tagline to one line. */
   .hero__title { font-size: clamp(40px, 11vw, 132px); }
 
   /* Trim the hero's top dead space (was 96px) while preserving notch safe-area. */
@@ -563,28 +460,37 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
     -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M3 7 C60 3 140 3 197 6' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M3 7 C60 3 140 3 197 6' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
   }
-  .both-rotor { font-weight: 600; animation: both-color 3.4s ease-in-out infinite; }
-  @keyframes both-color {
-    0%, 42%   { color: var(--calorie); }
-    58%, 100% { color: var(--budget); }
+  /* "both" is driven by the lede rotor's own clock, not its own keyframe.
+     It used to run a 3.4s CSS animation against the rotor's 2400ms JS
+     interval, so the two colour changes drifted apart continuously and
+     only agreed by coincidence. Now initRotors() toggles .is-bud on the
+     same tick that swaps the rotor word, and the 480ms transition matches
+     the rotor's cross-fade duration, so both changes start and finish
+     together. Colour follows the word currently showing: cyan with
+     "calories", peach with "budget". */
+  .both-rotor {
+    font-weight: 600;
+    color: var(--calorie);
+    transition: color 480ms cubic-bezier(0.4, 0, 0.2, 1);
   }
-  @media (prefers-reduced-motion: reduce) { .both-rotor { animation: none; color: var(--calorie); } }
-  /* Mobile only: reserve right-side space for the absolutely-positioned
-     glimpse rotator so the H1 does not slide under it. At >=768px the
-     glimpse is a flex sibling of the H1, so no padding is needed
-     (the flex `gap` handles separation). */
+  .both-rotor.is-bud { color: var(--budget); }
+  @media (prefers-reduced-motion: reduce) {
+    /* The rotor keeps swapping words under reduced motion (only its
+       transition is dropped), so "both" stays in step and just loses the
+       fade. Pinning it to one colour here would re-break the sync. */
+    .both-rotor { transition: none; }
+  }
   @media (max-width: 767px) {
     /* Tighten the mobile hero so the whole waitlist card - the primary hook -
        lands inside the first viewport on load. Smaller top padding, a shorter
        headline, and reduced gaps pull the card up above the fold. */
     .hero-section { padding-top: 52px; }
     .hero-section .hero-grid { gap: 10px; }
-    .hero__title { padding-right: 84px; font-size: clamp(31px, 8.6vw, 120px); line-height: 0.95; }
-    /* The (now smaller) glimpse phone still overhangs the short 2-line H1 a
-       little, so the lede keeps a clearance gap that fully clears it - this
-       is the fix for the phone landing on the calorie/budget rotator.
-       Verified no overlap from 360px up. */
-    .hero__lede-block { margin-top: 24px; }
+    /* No padding-right here any more: the phone rotator that used to sit in
+       the corner is gone, so the headline owns the full column width. */
+    .hero__title { font-size: clamp(31px, 8.6vw, 120px); line-height: 0.95; }
+    /* The headline is one line now, so the lede sits closer to it. */
+    .hero__lede-block { margin-top: 14px; }
     .hero__lede-block p:first-child { font-size: 14.5px; }
     .hero__lede-block p:last-child { margin-top: 4px; font-size: 12.5px; line-height: 1.45; }
     /* Compress the card so the full CTA (through "Cheer us on") lands inside
@@ -1714,29 +1620,12 @@ html.theme-light .bp-knob { left: 3px; }
 
       <!-- LEFT: title + lede -->
       <div>
-        <!-- H1 + glimpse row: stacks on mobile (glimpse absolute in
-             corner) and flexes on tablet+ (glimpse vertically centered
-             beside the H1, so the two feel paired instead of floating) -->
+        <!-- Title row: sizing container for the one-line H1. -->
         <div class="hero-title-row">
-        <div class="glimpse" aria-hidden="true">
-          <div class="glimpse__frame">
-            <div class="glimpse__notch"></div>
-            <div class="glimpse__screen">
-              <img class="glimpse__img is-active" src="/mockups/home-dashboard.webp" alt="" width="392" height="852" loading="eager">
-              <img class="glimpse__img" src="/mockups/restaurants-browse.webp" alt="" width="392" height="852" loading="lazy">
-              <img class="glimpse__img" src="/mockups/ai-sommelier.webp" alt="" width="392" height="852" loading="lazy">
-              <img class="glimpse__img" src="/mockups/calorie-trend.webp" alt="" width="392" height="852" loading="lazy">
-            </div>
-          </div>
-        </div>
         <h1 class="hero__title display text-[clamp(44px,12vw,160px)]">
-          <span class="block">
-            <span class="word">You&nbsp;are</span>
-            <span class="word accent">HOW</span>
-          </span>
-          <span class="block">
-            <span class="word">you&nbsp;eat</span><span class="period word">.</span>
-          </span>
+          <span class="word">You&nbsp;are</span>
+          <span class="word accent">HOW</span>
+          <span class="word">you&nbsp;eat</span><span class="period word">.</span>
         </h1>
         </div><!-- /.hero-title-row -->
 
@@ -2796,37 +2685,30 @@ html.theme-light .bp-knob { left: 3px; }
   // handles every .rotor on the page (currently just the hero lede).
   (function initRotors() {
     var rotors = document.querySelectorAll('.rotor');
-    rotors.forEach(function(rotor) {
+    var boths = document.querySelectorAll('.both-rotor');
+    // "both" in the second lede line takes its colour from whichever rotor
+    // word is showing, on the same tick, so the two never drift.
+    function syncBoth(word) {
+      var isBud = word.classList.contains('rotor__word--bud');
+      boths.forEach(function(b) { b.classList.toggle('is-bud', isBud); });
+    }
+    rotors.forEach(function(rotor, rotorIdx) {
       var words = rotor.querySelectorAll('.rotor__word');
       if (words.length < 2) return;
       var idx = 0;
+      // Only the first rotor drives "both"; a second rotor on the page
+      // would otherwise fight it for the same class.
+      var lead = rotorIdx === 0;
+      if (lead) syncBoth(words[idx]);
       setInterval(function() {
         words[idx].classList.remove('is-active');
         idx = (idx + 1) % words.length;
         words[idx].classList.add('is-active');
+        if (lead) syncBoth(words[idx]);
       }, 2400);
     });
   })();
 
-  // Glimpse rotator · cross-fades the 4 mockup screenshots inside the
-  // mobile/tablet phone card at the top-right of the hero. 2800ms cadence
-  // so it's not synchronized with the rotor word (visually busier
-  // otherwise). The descendant query (.glimpse__img inside .glimpse__frame)
-  // reaches through .glimpse__screen, so adding the inner screen wrapper
-  // for the phone-chrome treatment does not change selector behaviour.
-  (function initGlimpses() {
-    var frames = document.querySelectorAll('.glimpse__frame');
-    frames.forEach(function(frame) {
-      var imgs = frame.querySelectorAll('.glimpse__img');
-      if (imgs.length < 2) return;
-      var idx = 0;
-      setInterval(function() {
-        imgs[idx].classList.remove('is-active');
-        idx = (idx + 1) % imgs.length;
-        imgs[idx].classList.add('is-active');
-      }, 2800);
-    });
-  })();
 
   /* Grand finale: build the animated origami field. A grid of paper tiles sized
      to the viewport; each folds along its diagonal, staggered by (row + col) so
