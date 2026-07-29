@@ -1895,17 +1895,21 @@ html.origami-live.theme-light .bg-grid {
 .ori-tile::before {
   content: ''; position: absolute; inset: 0;
   clip-path: polygon(0 0, 0 100%, 100% 100%);
+  /* Stops re-toned 2026-07-29 (second pass): at 22%/7% the facets averaged a
+     cool grey field that visibly did not match the hero's smooth eggshell
+     directly above it - the maroon stop is what greys the paper. Halved and
+     better, the fold should be a watermark, not a pattern. */
   background: linear-gradient(135deg,
-    color-mix(in srgb, var(--bg-2) 22%, transparent),
-    color-mix(in srgb, #60100b 7%, transparent));
+    color-mix(in srgb, var(--bg-2) 12%, transparent),
+    color-mix(in srgb, #60100b 2.5%, transparent));
 }
 /* folding upper-right paper half - rotates around the tile diagonal (1,1,0) */
 .ori-tile > i {
   position: absolute; inset: 0;
   clip-path: polygon(0 0, 100% 0, 100% 100%);
   background: linear-gradient(315deg,
-    color-mix(in srgb, var(--bg-2) 38%, transparent),
-    color-mix(in srgb, #60100b 3%, transparent));
+    color-mix(in srgb, var(--bg-2) 20%, transparent),
+    color-mix(in srgb, #60100b 1.5%, transparent));
   transform-origin: center;
   backface-visibility: visible;
   animation: ori-fold var(--ori-dur, 7s) cubic-bezier(.5, 0, .15, 1) infinite;
