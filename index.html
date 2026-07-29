@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#07070b">
+<meta name="theme-color" content="#040407">
 <script>
   /* Pre-paint theme init: honour a saved choice, else the OS preference.
      Runs before body paints so there is no dark-to-light flash. */
@@ -16,7 +16,7 @@
       }
       if (t === 'light') document.documentElement.classList.add('theme-light');
       var m = document.querySelector('meta[name="theme-color"]');
-      if (m) m.setAttribute('content', t === 'light' ? '#f5f2ed' : '#07070b');
+      if (m) m.setAttribute('content', t === 'light' ? '#f5f2ed' : '#040407');
     } catch (e) {}
   })();
 </script>
@@ -90,9 +90,9 @@
 
 <style>
   :root {
-    --bg: #07070b;
-    --bg-2: #0c0c12;
-    --bg-3: #13131c;
+    --bg: #040407;
+    --bg-2: #0a0a11;
+    --bg-3: #101019;
     --ink: #eceaf3;
     --ink-dim: #9693ac;
     --ink-low: #6b6885;     /* FE-10 · bumped from #4f4d63 (3.6:1) → #6b6885 (4.5:1 against bg) */
@@ -110,7 +110,12 @@
   }
   /* Clip horizontal overflow WITHOUT making body a scroll container
      (overflow-x:hidden would; clip does not) so position:sticky keeps working. */
-  body { overflow-x: clip; }
+  /* margin:0 is load-bearing, not tidiness. There is no preflight reset in this
+     file, so body kept the UA default 8px and every full-bleed band - the dark
+     .efmod module, the marquee, the footer - was inset by it. On the dark
+     sections that read as an 8px white stripe down both edges of the screen at
+     every width. Verified by pixel crop before and after. */
+  body { overflow-x: clip; margin: 0; }
 
   ::selection { background: var(--periwinkle); color: var(--bg); }
 
@@ -127,18 +132,20 @@
      `.hero-grid-lg .x` instead of `.x` so they override the base rules
      via natural specificity, without leaning on !important. */
   @media (min-width: 1024px) {
+    /* The CTA column is a percentage of the grid, capped at 440px, rather
+       than a flat 440px. At 1024px a flat column left only ~432px for the
+       headline, which the one-line rule then had to render at ~42px. Sizing
+       it proportionally hands the narrow desktops their width back and makes
+       the headline scale continuously through 1024 instead of stepping. */
     .hero-grid-lg {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
-      gap: 56px;
+      grid-template-columns: minmax(0, 1fr) minmax(0, min(440px, 34%));
+      gap: 40px;
       align-items: center;
     }
-    /* Cap the H1 so the LEFT column does not need 800+px to fit
-       "You are HOW" on one line. This keeps the headline at a
-       tablet-comparable size on desktop. */
+    /* Fallback only, for engines without container query units. The
+       @supports block below sizes the H1 from its container so the whole
+       tagline sits on one line at every width. */
     .hero-grid-lg .hero__title { font-size: clamp(60px, 5.8vw, 84px); }
-    /* Desktop drops the glimpse rotator entirely - the dial behind the
-       CTA card carries the visual motion on this breakpoint. */
-    .hero-grid-lg .glimpse { display: none; }
     /* Center the CTA card vertically in the right column so it reads
        as the visual anchor of the right side. The right column's grid
        cell already vertically centers via align-items: center on the
@@ -149,6 +156,117 @@
       flex-direction: column;
       justify-content: center;
     }
+    /* Size the card's headline off the CARD, not the viewport. The flat
+       md:text-[2.4rem] was written when the card spanned the page; in the
+       hero's right column the column is a percentage, so between 1024px and
+       1373px it resolves to 321-440px and 38.4px type broke
+       "Skip the problem. / Join the waitlist." from the intended two lines
+       into four, taking the card from 364px to 504px tall. 9.4cqi holds it at
+       two lines at every card width from 265px of inner space up to 452px,
+       and because it is one continuous expression there is no step at the
+       1441px boundary where the band starts growing. Card-relative units are
+       the house rule here for exactly this reason - vw in a card has
+       regressed three times. */
+    .hero-grid-lg .wl-card h2 { font-size: clamp(24px, 9.4cqi, 46px); }
+  }
+
+  /* ==========================================================================
+     WIDE DESKTOP AND ULTRAWIDE
+
+     Below 1441px not one rule in here applies, so every laptop keeps exactly
+     the layout it has today. The page was drawn on a 1400px band and stopped
+     growing there, which meant a 1512px MacBook and a 3440px ultrawide were
+     served the identical pixels - measured, byte for byte, from 1512 all the
+     way to 3840. On a wide monitor that reads as a small island in an empty
+     field rather than a page designed for the screen.
+
+     The fix is one number, --band-grow, and everything else is derived from
+     it so there is a single place to retune. The band takes a SHARE of the
+     extra width (46%), not all of it: claiming all of it would drag the lede
+     and the friction cards out to a line length nobody can read, and claiming
+     none of it is the bug. The ceilings are stops, not guesses - past them the
+     text blocks stop looking composed and start looking stretched.
+
+     This has to live in bespoke CSS. The inlined Tailwind is a precompiled
+     subset whose widest breakpoint is lg (1024px), so there is no xl/2xl to
+     write against, and a new utility class in the markup would silently do
+     nothing. Overriding the utilities from here works because the subset is
+     emitted in the <style id="tailwind-static"> ABOVE this block, so an
+     equal-specificity rule down here wins on source order. The same trick
+     does NOT work against #efmod-styles, which is emitted BELOW this block -
+     that module's own override is written in place down there instead.
+     ========================================================================== */
+
+  /* Declared unconditionally at 0 so rules outside the media query can be
+     written in terms of it and still evaluate below 1441px. An undefined
+     custom property inside calc() invalidates the whole declaration, which
+     would have silently dropped a width rather than leaving it alone. */
+  :root { --band-grow: 0px; }
+
+  @media (min-width: 1441px) {
+    :root { --band-grow: calc((100vw - 1400px) * 0.46); }
+
+    /* The page-level band: nav, hero, problem, numbers, footer. */
+    .max-w-\[1400px\] { max-width: min(calc(1400px + var(--band-grow)), 2040px); }
+    /* The walkthrough deck runs deliberately narrower than the rest of the
+       page. Growing it on the same curve keeps that relationship intact
+       instead of letting it converge on the main band. */
+    .max-w-\[1280px\] { max-width: min(calc(1280px + var(--band-grow)), 1880px); }
+
+    /* With the band wider, a flat 440px CTA column would shrink against a
+       1500px headline column and stop reading as the hero's other half. Let
+       it grow on its own curve, and open the gutter between the columns with
+       it so the two halves never touch. */
+    /* The gutter is derived from --band-grow rather than written as a vw
+       clamp on purpose. A clamp would have jumped straight to ~52px the
+       moment this block engaged at 1441px, stealing 12px from the headline
+       column and stepping the one-line H1 down by 1.2% at a single pixel of
+       viewport. Growing from the same zero the band grows from keeps 1440
+       and 1441 identical. */
+    .hero-grid-lg {
+      grid-template-columns: minmax(0, 1fr) minmax(0, clamp(440px, 26%, 560px));
+      gap: min(calc(40px + var(--band-grow) * 0.038), 76px);
+    }
+
+    /* The hero's supporting type has to move with the headline or the hero
+       stops reading as one object. The H1 sizes itself off its container
+       (9.6cqi), so widening the band took it from 84px to 138px while the
+       lede stayed pinned at a flat 18px - a 4.7:1 relationship became 7.7:1
+       and the lede read as a footnote under a billboard. These grow on a much
+       flatter curve than the headline: body copy has a comfortable range and
+       none of this leaves it, but the proportions hold. Everything is derived
+       from --band-grow, which is 0 at 1440, so nothing steps at the boundary. */
+    /* The measure has to grow with the type or the two cancel out: at 23px
+       inside a flat 520px block the lede dropped to ~45 characters a line and
+       wrapped into a narrow ragged stack. This holds it near 60. */
+    .hero__lede-block { max-width: min(calc(520px + var(--band-grow) * 0.20), 700px); }
+    .hero__lede-block .lede-line { font-size: min(calc(18px + var(--band-grow) * 0.0060), 23px); }
+    .hero-grid-lg .wl-card { padding: min(calc(28px + var(--band-grow) * 0.012), 40px); }
+    /* The card h2 is NOT listed here: it is sized in cqi off the card itself
+       in the min-width:1024px block above, which already grows it as the
+       column widens. A second viewport-driven rule would only fight it. */
+    .hero-stats .display { font-size: min(calc(36px + var(--band-grow) * 0.010), 46px); }
+
+    /* The problem section pins its header column at a flat 380px. On a wide
+       band that leaves a narrow sliver of text beside a very wide card row. */
+    .prob-grid { grid-template-columns: clamp(380px, 25%, 500px) minmax(0, 1fr); }
+
+    /* The walkthrough's text column is a bare 1fr while the copy inside it is
+       capped at 480px, so every pixel the band gains becomes dead space
+       between the sentence and the phone. Capping the column parks the two
+       next to each other and centres the pair in the band instead.
+       (The same slack exists below 1441px - about 400px of it at 1440 - but
+       that is the layout as it ships today and closing it there would change
+       a screen this pass promised not to touch.) */
+    #showcase .grid { grid-template-columns: minmax(0, clamp(560px, 46%, 880px)) 320px; justify-content: center; }
+
+    /* The footer wordmark is meant to bleed off both edges; that is why it is
+       absolutely positioned inside an overflow-hidden footer. Its 360px clamp
+       ceiling landed at a 1636px viewport, so on anything wider it stopped
+       short of the right edge and the deliberate bleed turned into a word
+       stranded in the middle of the footer. 680px is what it takes for the
+       glyphs to run past 3440px. */
+    .footer-wordmark { font-size: min(22vw, 680px); }
   }
 
   /* Display type · Space Grotesk with bold periwinkle accent. Italic
@@ -188,145 +306,57 @@
     .rotor__word { transition: none; }
   }
 
-  /* Hero title row · wraps H1 + glimpse. On mobile the glimpse is
-     absolute in the top-right corner (legacy behaviour). On tablet+ it
-     flexes alongside the H1 and vertically centers, so the two read as
-     a deliberate pair instead of a corner-floating accent. */
-  .hero-title-row { position: relative; }
-  @media (min-width: 768px) {
-    .hero-title-row {
-      display: flex;
-      align-items: center;
-      gap: 32px;
+  /* The three lede lines share one size at every breakpoint. Sized here in
+     bespoke CSS rather than with `text-base md:text-lg` utilities so there is
+     a single declaration to change, and because the three-line block needs a
+     tighter rhythm between lines than the utility margins gave it. */
+  .hero__lede-block .lede-line { font-size: 16px; }
+  .hero__lede-block .lede-line + .lede-line { margin-top: 5px; }
+  @media (min-width: 768px) { .hero__lede-block .lede-line { font-size: 18px; } }
+
+  /* Hero title row · sole job now is to be the sizing container for the
+     H1. Declaring an inline-size container lets the headline scale off
+     the column width rather than the viewport, which is what keeps
+     "You are HOW you eat." on a single line in both the full-width
+     mobile layout and the 820px desktop left column. */
+  .hero-title-row { position: relative; container-type: inline-size; }
+
+  /* One-line tagline. The string measures 10.03em wide at the display
+     face's tracking, so 9.6cqi fills ~96% of the container and never
+     wraps. Gated on @supports: engines without container query units
+     keep the previous viewport-based sizing and simply wrap as before,
+     rather than overflowing behind a nowrap they cannot size for. */
+  @supports (font-size: 1cqi) {
+    .hero-title-row .hero__title,
+    .hero-grid-lg .hero-title-row .hero__title {
+      font-size: 9.6cqi;
+      /* Deliberately NOT white-space: nowrap. At 9.6cqi the line already
+         measures ~96% of the container, so it fits on one line without
+         being forced to. Forcing it would mean that anyone whose text is
+         wider than we assumed - a user text-spacing override per WCAG
+         1.4.12, or the display face failing to load and a wider fallback
+         taking over - gets the tagline clipped by the hero's
+         overflow:hidden instead of wrapping to two lines. Letting it wrap
+         in those cases degrades gracefully; nowrap loses the words. */
     }
-    .hero-title-row .hero__title { flex: 1 1 0%; min-width: 0; }
-    .hero-title-row .glimpse { order: 1; }  /* push to right of H1 */
-  }
-  @media (min-width: 1024px) {
-    .hero-title-row { gap: 56px; }
-  }
-
-  /* Glimpse rotator · phone card that iris-reveals through 4 app mockups.
-     Visual language matches the section 02 walkthrough deck card
-     (.deck__card) so the hero sneak peak and the showcase read as the same
-     device, scaled down.
-
-     Mobile: positioned top-right of the H1 row (absolute, ~96px wide). A
-     compact 88:128 ratio (~1:1.45) keeps the phone-card sitting beside the
-     H1 without overlapping the lede that follows the title row in normal
-     flow. The notch + chassis bezel still read as a device.
-
-     Tablet (>=768px): static flex sibling at clamp(180px, 28vw, 360px)
-     wide with the full 88:184 portrait phone ratio (~1:2.09) that mirrors
-     the deck stage's 280:580 (~1:2.07) one-to-one.
-
-     Desktop (>=1024px): hidden via .hero-grid-lg .glimpse {display:none}
-     because the rotating dial + CTA card carry the visual motion. */
-  .glimpse {
-    position: absolute;
-    top: 0;
-    right: 0;
-    /* Shrunk on mobile so the phone stays within the 2-line headline height
-       and never overhangs onto the calorie/budget rotator in the lede below.
-       Desktop (>=768px) overrides this with the large flex-sibling size. */
-    width: clamp(56px, 15vw, 78px);
-    aspect-ratio: 88 / 128;
-    height: auto;
-    z-index: 5;
-    pointer-events: none;
-  }
-  @media (min-width: 768px) {
-    .glimpse {
-      position: static;
-      flex-shrink: 0;
-      width: clamp(180px, 28vw, 360px);
-      aspect-ratio: 88 / 184;
-      height: auto;
+    /* Tablet is still single-column, so 9.6cqi of the FULL width would push
+       the headline to ~79px, only for the 1024px two-column split to halve
+       the column and drop it to ~42px. Holding it near the post-split size
+       turns that cliff into a 6% step. A cap can only ever shrink the type,
+       so the one-line guarantee is unaffected. */
+    /* Must carry .hero-grid-lg too: that class is on the grid at every
+       width (its rules are what sit behind a media query, not the class),
+       so the 3-class selector above would otherwise always outrank this. */
+    /* Starts at 640px, not 768px: 9.6cqi crosses 56px at a ~583px
+       container, which is a ~631px viewport. Beginning the cap there means
+       it engages exactly where it starts to bind, so no step appears at
+       the 768px padding change either. */
+    @media (min-width: 640px) and (max-width: 1023px) {
+      .hero-title-row .hero__title,
+      .hero-grid-lg .hero-title-row .hero__title { font-size: min(9.6cqi, 56px); }
     }
   }
-  /* Phone chassis · matches .deck__card from section 02. Linear gradient
-     reads as the device body; layered shadow gives the sit-on-the-page
-     depth; inset 1px highlight is the bevel. Padding holds the inner screen
-     inside the chassis the same way the deck card does. */
-  .glimpse__frame {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    border-radius: 13%/6%;
-    background: linear-gradient(180deg, #1a1a26, #0c0c12);
-    border: 1px solid rgba(217, 95, 82, 0.16);
-    box-shadow:
-      0 18px 44px rgba(0, 0, 0, 0.55),
-      0 3px 8px rgba(0, 0, 0, 0.45),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.04);
-    padding: 3.2%;
-    box-sizing: border-box;
-  }
-  /* Notch · proportional pill matching .deck__notch (118x28 inside a 280-wide
-     card = 42% width). Sits above the screen at ~3.8% from the top. */
-  .glimpse__notch {
-    position: absolute;
-    top: 3.8%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 42%;
-    height: 4.6%;
-    border-radius: 9999px;
-    background: #000;
-    z-index: 2;
-    pointer-events: none;
-  }
-  /* Inner screen · holds the mockup images and clips them to the rounded
-     screen window. Mirrors .deck__screen. */
-  .glimpse__screen {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    border-radius: 10%/5%;
-    overflow: hidden;
-    background: var(--bg-2, #0c0c12);
-  }
-  .glimpse__img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top center;
-    /* Iris reveal · clip-path circle expands from center to reveal the
-       active frame. Opacity rides alongside so the off-frame doesn't
-       fight the active one when z-index ties. */
-    opacity: 0;
-    clip-path: circle(0% at 50% 50%);
-    transition:
-      clip-path 900ms cubic-bezier(0.65, 0, 0.35, 1),
-      opacity 600ms ease-in-out;
-    /* Match the screen's clip so iOS Safari paints the image inside the
-       rounded screen corners. Same trick as .deck__screen img. */
-    border-radius: inherit;
-    transform: translateZ(0);
-  }
-  .glimpse__img.is-active {
-    opacity: 1;
-    clip-path: circle(75% at 50% 50%);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .glimpse__img {
-      transition: none;
-      clip-path: circle(75% at 50% 50%);
-    }
-  }
-  /* Subtle vignette inside the screen so the mockup edges fade into the
-     chassis. Sits on the screen, not the chassis, so it never bleeds onto
-     the notch or bezel. */
-  .glimpse__screen::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(180deg, transparent 60%, rgba(7, 7, 11, 0.45));
-    pointer-events: none;
-  }
+
 
   /* Mono micro-labels · eyebrow, section labels, kicker pills */
   .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
@@ -439,13 +469,225 @@
   .reveal.in-view { opacity: 1; transform: translateY(0); }
 
   /* === Hero title staged reveal === */
-  /* Mobile floor 44px (was 64px) so the 2-line "You are HOW you eat."
-     leaves room for the lede + glimpse rotator above the fold on 375px
-     viewports. Slope bumped to 12vw so the H1 still grows aggressively
-     on tablet/desktop. */
+  /* Fallback sizing for engines without container query units; the
+     @supports block above supersedes it and holds the tagline to one line. */
   .hero__title { font-size: clamp(40px, 11vw, 132px); }
 
   /* Trim the hero's top dead space (was 96px) while preserving notch safe-area. */
+
+
+/* Hero ground, ported from the approved landing artifact: a warm wash top
+   right, a cooler one bottom left, and a grain layer so a large flat field
+   does not band. Replaces the grid pattern on this section only. */
+.hero-section.bg-grid{
+  background:
+    radial-gradient(900px 620px at 82% -6%, rgba(255,138,74,.15), transparent 66%),
+    radial-gradient(1000px 620px at -8% 78%, rgba(110,221,240,.11), transparent 58%),
+    radial-gradient(900px 560px at 106% 34%, rgba(217,95,82,.10), transparent 58%),
+    var(--bg) !important;
+  isolation:isolate;
+}
+html.theme-light .hero-section.bg-grid{
+  background:
+    radial-gradient(900px 620px at 82% -6%, rgba(194,96,31,.13), transparent 66%),
+    radial-gradient(1000px 620px at -8% 78%, rgba(10,125,149,.09), transparent 58%),
+    radial-gradient(900px 560px at 106% 34%, rgba(192,71,47,.09), transparent 58%),
+    var(--bg) !important;
+}
+.hero-section.bg-grid::after{
+  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
+}
+html.theme-light .hero-section.bg-grid::after{opacity:.3}
+.hero-section.bg-grid > *{position:relative;z-index:1}
+
+/* ── Converging arcs ──────────────────────────────────────────────────
+ * Two budget lines arrive from opposite heights, converge on one point, and
+ * leave as a single line. Ported from the hero artifact, with two changes:
+ * the artifact's arcs CROSSED and then diverged again, and they drew once and
+ * froze. These converge and stay converged, and they never stop moving.
+ *
+ * The z-index is 0, not the 1 that `.bg-grid > *` hands every child, so the
+ * layer sits under the content but still above the section background. The
+ * grain ::after is also 0 and, being a pseudo-element, paints after it - so
+ * the arcs pick up the same grain as the ground and do not look pasted on.
+ * ------------------------------------------------------------------ */
+.hero-section .arcs{position:absolute;inset:-10% -6%;z-index:0;pointer-events:none}
+.arcs svg{width:100%;height:100%;display:block;overflow:visible}
+
+/* Resting lines. Colour comes from the page's own budget tokens, which are
+   already re-pointed per theme (cyan #6eddf0 -> teal #1697ab, peach #ff8a4a ->
+   burnt orange #d2691e), so the arcs follow the theme for free and keep the
+   colour law: cyan is always calories, peach is always rupees. Neutrals go
+   through color-mix on --ink rather than a hardcoded white alpha, which is
+   what made the artifact's ghost arc and ring invisible on paper. */
+.arc{fill:none;stroke-linecap:round;stroke-width:1.15;
+     stroke-dasharray:var(--len);stroke-dashoffset:var(--len);
+     animation:arcDraw 2.4s cubic-bezier(.16,1,.3,1) forwards}
+/* --len is each path's own getTotalLength(), read off the rendered page and
+   written back here rather than estimated. It has to be per-path: one shared
+   value would make the shorter arcs finish early and the longer ones never
+   finish at all, and an UNDEFINED --len is worse still - the whole
+   stroke-dasharray declaration goes invalid and the draw-in silently does
+   nothing. Re-measure if any `d` changes. */
+.arc--ghost{--len:975px;stroke:color-mix(in srgb, var(--ink) 13%, transparent);stroke-width:.9;animation-delay:0s}
+.arc--cal{--len:904px;stroke:var(--calorie);opacity:.42;animation-delay:.12s}
+.arc--inr{--len:971px;stroke:var(--budget);opacity:.44;animation-delay:.24s}
+.arc--one{--len:866px;stroke:var(--periwinkle);opacity:.34;animation-delay:1.5s}
+@keyframes arcDraw{to{stroke-dashoffset:0}}
+
+/* On paper the same alphas wash out: the ground is light, so a translucent
+   line loses contrast against it rather than gaining it. */
+html.theme-light .arc--cal{opacity:.5}
+html.theme-light .arc--inr{opacity:.52}
+html.theme-light .arc--one{opacity:.42}
+html.theme-light .arc--ghost{stroke:color-mix(in srgb, var(--ink) 16%, transparent)}
+
+/* The pulses are what make it dynamic. One short dash runs each budget line
+   into the convergence point; both are timed to land together, the point
+   flares, and a single pulse leaves along the merged line. The whole cycle is
+   one 9s clock shared by every animation here, so the arrivals cannot drift
+   apart the way two independent timers would. */
+.pulse{fill:none;stroke-linecap:round;stroke-width:2.1;opacity:0;
+       stroke-dasharray:var(--dash) 6000;
+       animation:var(--run-name) 9s cubic-bezier(.45,0,.55,1) infinite;
+       animation-delay:2.4s}
+/* --run is the path length plus the dash length, so the pulse travels all the
+   way off the far end instead of stopping with its tail still on the line. */
+.pulse--cal{stroke:var(--calorie);--dash:120px;--run:1024px;--run-name:runIn}
+.pulse--inr{stroke:var(--budget); --dash:120px;--run:1091px;--run-name:runIn}
+.pulse--one{stroke:var(--periwinkle);--dash:104px;--run:970px;--run-name:runOut}
+
+@keyframes runIn{
+  0%   {stroke-dashoffset:0;opacity:0}
+  5%   {opacity:.95}
+  33%  {opacity:.95}
+  40%  {stroke-dashoffset:calc(var(--run) * -1);opacity:0}
+  100% {stroke-dashoffset:calc(var(--run) * -1);opacity:0}
+}
+@keyframes runOut{
+  0%,42%{stroke-dashoffset:0;opacity:0}
+  47%  {opacity:.9}
+  74%  {opacity:.9}
+  82%  {stroke-dashoffset:calc(var(--run) * -1);opacity:0}
+  100% {stroke-dashoffset:calc(var(--run) * -1);opacity:0}
+}
+
+/* The convergence point. It flares on the same clock, at the moment the two
+   budget pulses land on it - that arrival is the whole idea, so it gets the
+   one piece of punctuation on the layer. */
+.cross__ring{stroke:color-mix(in srgb, var(--ink) 20%, transparent);stroke-width:1}
+.cross__dot{fill:var(--periwinkle)}
+.cross{opacity:0;transform-box:fill-box;transform-origin:center;
+       animation:crossIn .9s cubic-bezier(.16,1,.3,1) 2s forwards,
+                 crossFlare 9s cubic-bezier(.45,0,.55,1) 2.4s infinite}
+@keyframes crossIn{from{opacity:0}to{opacity:1}}
+@keyframes crossFlare{
+  0%,30%{transform:scale(1);opacity:.75}
+  40%   {transform:scale(1.5);opacity:1}
+  52%   {transform:scale(1);opacity:.75}
+  100%  {transform:scale(1);opacity:.75}
+}
+
+/* Nothing here is ever perfectly still: the whole field drifts on a long,
+   slow cycle that is deliberately not a multiple of the 9s pulse clock, so
+   the layer never lands in exactly the same arrangement twice.
+   The drift rides on the wrapper div rather than the <svg> so it is a plain
+   compositor transform on an HTML box, instead of a transform on the same
+   element whose stroke geometry is already being repainted by the pulses. */
+.hero-section .arcs{animation:arcDrift 29s ease-in-out infinite alternate}
+@keyframes arcDrift{
+  from{transform:translate3d(0,0,0) scale(1)}
+  to  {transform:translate3d(-1.1%, 1.4%, 0) scale(1.035)}
+}
+
+@media (prefers-reduced-motion: reduce){
+  /* Reduced motion means no motion, not slower motion. The lines land in
+     their finished, converged state - which is the state that carries the
+     meaning - and the pulses simply do not exist. */
+  .arc{animation:none;stroke-dashoffset:0}
+  .hero-section .arcs{animation:none;transform:none}
+  .pulse{display:none}
+  .cross{animation:none;opacity:1}
+}
+
+/* ── Hero: scroll-driven dual budget ──────────────────────────────────
+ * Ported from the approved variant artifact so it reads identically: each
+ * dish carries a small tag with its name and both prices, and the meter
+ * shows a hatched ghost of what the next dish would add before it lands.
+ * On desktop the tag also follows the pointer on hover; on scroll the tags
+ * persist, because the reader is not hovering while they scroll.
+ * ------------------------------------------------------------------ */
+.hbz{position:relative;margin-top:18px}
+.hbz__stage{position:relative;display:grid;grid-template-columns:repeat(3,1fr);
+  align-items:end;gap:clamp(6px,2vw,18px);padding-bottom:26px}
+/* Dormant, not absent. The dishes have to hold their space or the meter
+   jumps as each one lands, but at zero opacity that reserved space reads as
+   a hole in the layout. Dim and desaturated at rest, full colour once added,
+   so the space is legible and the add reads as the dish coming to life. */
+.hbz__dish{position:relative;margin:0;opacity:.24;
+  transform:translate3d(0,10px,0) scale(.94);filter:grayscale(.85);
+  transition:opacity .55s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1),
+             filter .55s cubic-bezier(.16,1,.3,1)}
+.hbz__dish.is-in{opacity:1;transform:none;filter:none}
+.hbz__dish img{width:100%;height:auto;display:block;
+  filter:drop-shadow(0 18px 24px rgba(0,0,0,.55));transition:transform .45s cubic-bezier(.16,1,.3,1)}
+html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3))}
+.hbz__dish:hover img{transform:scale(1.04)}
+
+/* the tag, exactly as the artifact draws it */
+.hbz__tag{position:absolute;left:50%;bottom:-14px;transform:translate(-50%,6px);
+  display:flex;flex-direction:column;gap:3px;align-items:center;white-space:nowrap;
+  padding:8px 12px;border-radius:12px;font-size:12px;pointer-events:none;
+  background:var(--bg-2);border:1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  box-shadow:0 10px 24px -12px rgba(0,0,0,.7);
+  opacity:0;transition:opacity .3s cubic-bezier(.16,1,.3,1),transform .3s cubic-bezier(.16,1,.3,1)}
+.hbz__dish.is-in .hbz__tag,.hbz__dish:hover .hbz__tag{opacity:1;transform:translate(-50%,0)}
+.hbz__tag b{font-size:12px;color:var(--ink);font-weight:600}
+.hbz__tag span{font-family:'Space Grotesk',sans-serif;font-size:10.5px;color:var(--ink-low)}
+.hbz__tag i{font-style:normal;font-weight:700}
+.hbz__tag .k{color:var(--calorie,#6eddf0)}
+.hbz__tag .r{color:var(--budget,#ff8a4a)}
+
+/* The meter tracks the stage width, not the lede width. Capping it at the
+   lede's 520px left a visible ragged edge under the dishes. */
+.hbz__meter{position:relative;margin-top:20px}
+.hbz__grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.hbz__h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px}
+.hbz__l{font-family:'Space Grotesk',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.hbz__m--k .hbz__l{color:var(--calorie,#6eddf0)}
+.hbz__m--r .hbz__l{color:var(--budget,#ff8a4a)}
+.hbz__v{font-family:'Space Grotesk',sans-serif;font-variant-numeric:tabular-nums;font-size:13px;font-weight:700;color:var(--ink)}
+.hbz__bar{position:relative;height:7px;border-radius:99px;background:var(--bg-3);overflow:hidden}
+.hbz__bar i{position:absolute;left:0;top:0;height:100%;width:0;border-radius:99px;
+  transition:width .55s cubic-bezier(.16,1,.3,1)}
+.hbz__m--k .hbz__bar i{background:var(--calorie,#6eddf0)}
+.hbz__m--r .hbz__bar i{background:var(--budget,#ff8a4a)}
+/* the ghost: what the dish arriving next would add, before it lands */
+.hbz__bar u{position:absolute;top:0;height:100%;width:0;opacity:0;border-radius:99px;
+  transition:width .4s cubic-bezier(.16,1,.3,1),left .4s cubic-bezier(.16,1,.3,1),opacity .3s}
+.hbz__m--k .hbz__bar u{background:repeating-linear-gradient(115deg,color-mix(in srgb,var(--calorie,#6eddf0) 60%,transparent) 0 3px,transparent 3px 6px)}
+.hbz__m--r .hbz__bar u{background:repeating-linear-gradient(115deg,color-mix(in srgb,var(--budget,#ff8a4a) 60%,transparent) 0 3px,transparent 3px 6px)}
+.hbz__bar u.is-on{opacity:1}
+.hbz__note{font-size:12px;color:var(--ink-low);margin-top:12px}
+@media (max-width:640px){
+  /* The tag is nowrap and wider than a third of a phone screen, so overlaying
+     it clipped the dish names and let neighbours collide. Below 640 it sits
+     in flow under its dish and is allowed to wrap. */
+  .hbz__stage{align-items:start;gap:8px;padding-bottom:4px}
+  .hbz__tag{position:static;transform:none;white-space:normal;text-align:center;
+    margin-top:8px;padding:7px 8px;border-radius:10px;box-shadow:none;opacity:1}
+  .hbz__dish.is-in .hbz__tag,.hbz__dish:hover .hbz__tag{transform:none}
+  .hbz__tag b{font-size:11px;line-height:1.25}
+  .hbz__tag span{font-size:10px}
+  .hbz__meter{margin-top:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  .hbz__dish,.hbz__tag{opacity:1;transform:none;transition:none}
+  .hbz__tag{transform:translateX(-50%)}
+  .hbz__bar i,.hbz__bar u{transition:none}
+}
+
   .hero-section.bg-grid { padding-top: calc(74px + env(safe-area-inset-top)); }
 
   /* Lede marks: a smooth BLACK pencil underline under "any menu" / "any meal"
@@ -459,35 +701,59 @@
     -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M3 7 C60 3 140 3 197 6' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M3 7 C60 3 140 3 197 6' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
   }
-  .both-rotor { font-weight: 600; animation: both-color 3.4s ease-in-out infinite; }
-  @keyframes both-color {
-    0%, 42%   { color: var(--calorie); }
-    58%, 100% { color: var(--budget); }
+  /* "both" is driven by the lede rotor's own clock, not its own keyframe.
+     It used to run a 3.4s CSS animation against the rotor's 2400ms JS
+     interval, so the two colour changes drifted apart continuously and
+     only agreed by coincidence. Now initRotors() toggles .is-bud on the
+     same tick that swaps the rotor word, and the 480ms transition matches
+     the rotor's cross-fade duration, so both changes start and finish
+     together. Colour follows the word currently showing: cyan with
+     "calories", peach with "budget". */
+  .both-rotor {
+    font-weight: 600;
+    color: var(--calorie);
+    transition: color 480ms cubic-bezier(0.4, 0, 0.2, 1);
   }
-  @media (prefers-reduced-motion: reduce) { .both-rotor { animation: none; color: var(--calorie); } }
-  /* Mobile only: reserve right-side space for the absolutely-positioned
-     glimpse rotator so the H1 does not slide under it. At >=768px the
-     glimpse is a flex sibling of the H1, so no padding is needed
-     (the flex `gap` handles separation). */
+  .both-rotor.is-bud { color: var(--budget); }
+  @media (prefers-reduced-motion: reduce) {
+    /* Pin the colour outright. Dropping only the transition would leave
+       the JS still toggling .is-bud every 2400ms, turning what used to be
+       a smooth ease into a hard cut that flashes indefinitely - strictly
+       worse than the behaviour this replaced, and the opposite of what
+       the preference asks for. Sync is a property of the animated
+       experience; with motion reduced there is nothing to keep in step. */
+    .both-rotor,
+    .both-rotor.is-bud { color: var(--calorie); transition: none; }
+  }
   @media (max-width: 767px) {
     /* Tighten the mobile hero so the whole waitlist card - the primary hook -
        lands inside the first viewport on load. Smaller top padding, a shorter
        headline, and reduced gaps pull the card up above the fold. */
     .hero-section { padding-top: 52px; }
     .hero-section .hero-grid { gap: 10px; }
-    .hero__title { padding-right: 84px; font-size: clamp(31px, 8.6vw, 120px); line-height: 0.95; }
-    /* The (now smaller) glimpse phone still overhangs the short 2-line H1 a
-       little, so the lede keeps a clearance gap that fully clears it - this
-       is the fix for the phone landing on the calorie/budget rotator.
-       Verified no overlap from 360px up. */
-    .hero__lede-block { margin-top: 24px; }
-    .hero__lede-block p:first-child { font-size: 14.5px; }
-    .hero__lede-block p:last-child { margin-top: 4px; font-size: 12.5px; line-height: 1.45; }
+    /* No padding-right here any more: the phone rotator that used to sit in
+       the corner is gone, so the headline owns the full column width. */
+    .hero__title { font-size: clamp(31px, 8.6vw, 120px); line-height: 0.95; }
+    /* The headline is one line now, so the lede sits closer to it. */
+    .hero__lede-block { margin-top: 14px; }
+    .hero__lede-block .lede-line { font-size: 14.5px; line-height: 1.45; }
     /* Compress the card so the full CTA (through "Cheer us on") lands inside
        the first viewport on load, not the next scroll section. */
     .wl-card { padding: 18px 18px 16px; }
     .wl-card h2 { margin-bottom: 10px; }
     .wl-card .eff-cheer { margin-top: 10px; padding-top: 10px; }
+  }
+  /* Narrow phones only. Returning the stats row to the padded container took
+     32px off it, which was enough to break its flex-wrap from two rows to
+     three at 360px and add 79px of height. 375px and up were never affected,
+     so the gap only tightens where the row actually runs out of room.
+     16px is measured, not chosen for looks: the three items are 134, 159 and
+     142px wide, so the first pair needs 293px plus one gap and a 360px phone
+     leaves 312px. 20px overshot by a single pixel and still wrapped. At 320px
+     nothing fits two to a row and it stays three, exactly as it already did
+     before any of this. */
+  @media (max-width: 374px) {
+    .hero-stats { gap: 18px 16px; }
   }
   .hero__title .word {
     display: inline-block;
@@ -833,10 +1099,27 @@
   }
   .wl-form button[type=submit]:hover { background: var(--periwinkle-bright); }
 
-  /* Mobile (<= 560px): stack the input above the button so the CTA never
-     overlaps the email field. Both elements render full-width with the
-     same 44pt tap height. Desktop keeps the inline "pill" layout. */
-  @media (max-width: 560px) {
+  /* Stack the input above the button so the CTA never overlaps the email
+     field. Both render full-width with the same 44pt tap height; a card wide
+     enough for the inline "pill" layout keeps it.
+
+     This used to key off a 560px VIEWPORT, which was only ever a proxy for
+     "the card is narrow". That proxy held while the card spanned the page and
+     broke the moment the card moved into the hero's right column: at a 1024px
+     viewport the column is 321px, and the inline layout squeezed the email
+     field to 36px wide - measured on the live page, not estimated - with the
+     button sitting on top of the placeholder. Keying off the CARD's own width
+     fixes every narrow-card case at once and cannot drift again.
+
+     476px is chosen to be exactly equivalent on mobile, not as a round number.
+     A size container resolves against its CONTENT box, so the number to match
+     is the card's inner width, not its border-box width. Measured on the live
+     page: a 560px viewport gives a 476px inner card and a 561px viewport gives
+     477px. Every phone and small-tablet width therefore resolves identically
+     to the rule this replaces, and 561-1023px keeps the inline pill it has
+     today. Card content widths were sampled at 18 viewports to pick this. */
+  .wl-card { container-type: inline-size; container-name: wlcard; }
+  @container wlcard (max-width: 476px) {
     .wl-form {
       flex-direction: column;
       align-items: stretch;
@@ -879,6 +1162,35 @@
       width: 100%;
       padding: 14px 22px;
       font-size: 12px;
+    }
+    /* Inset the cheer button by the form's own 12px padding so it lands at
+       exactly the submit button's width. Full-bleed to the card edge would be
+       12px wider on each side than the button it sits under, which reads as a
+       mistake rather than a pair. Scoped to the same container query as the
+       stacked form, because when the form falls back to its inline pill the
+       submit button is not full width and there is nothing to align to. */
+    .eff-cheer { padding-inline: 12px; }
+  }
+
+  /* The smallest phones still in the wild (320px, iPhone SE 1) leave the card
+     236px of inner space once it sits inside the padded container, and
+     "Join the waitlist." needs about 262px at 30px - so the heading broke from
+     two lines to three and the card grew 61px. Same card-relative treatment as
+     the desktop column uses, just at the other end of the range, and gated
+     tightly enough that 360px and up keep their 30px heading untouched. */
+  @container wlcard (max-width: 260px) {
+    .wl-card h2 { font-size: clamp(23px, 11.3cqi, 30px); }
+  }
+
+  /* Engines without container queries keep the old viewport rule, so they get
+     the previous behaviour rather than an email field with a button parked on
+     top of it. Structure only - the frosted-glass input treatment above is
+     decoration, and losing it is not a defect; losing the stack is. */
+  @supports not (container-type: inline-size) {
+    @media (max-width: 560px) {
+      .wl-form { flex-direction: column; align-items: stretch; gap: 10px; border-radius: 18px; padding: 12px; }
+      .wl-form input[type=email] { box-sizing: border-box; width: 100%; padding: 14px 16px; min-height: 50px; }
+      .wl-form button[type=submit] { width: 100%; }
     }
   }
 
@@ -972,16 +1284,26 @@
      ============================================================ */
 
   /* Inline Stage 1 block inside the hero CTA card, below the email form. */
+  /* The cheer block now stacks under the submit button instead of sitting in
+     a bordered row beside its own caption. Two reasons: the button reads as
+     the second half of a CTA pair when it is directly beneath the first, and
+     the old side-by-side row was the tallest thing in the card - the caption
+     set its own height by wrapping to three lines in a narrow column while
+     the button idled next to it. The divider went with it; the button's own
+     weight is enough of a break. */
   .eff-cheer {
-    margin-top: 16px; padding-top: 16px;
-    border-top: 1px solid rgba(217,95,82,0.10);
-    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    margin-top: 10px;
+    display: flex; flex-direction: column; align-items: stretch; gap: 8px;
   }
   .eff-cheer__copy {
-    font-size: 12.5px; color: var(--ink-dim); line-height: 1.4; flex: 1 1 160px;
+    font-size: 12px; color: var(--ink-dim); line-height: 1.4;
+    text-align: center;
   }
+  /* Full width, matching the submit button above it, so the two line up as a
+     pair rather than a primary action with a stray pill hanging off it. */
   .eff-heart {
-    display: inline-flex; align-items: center; gap: 8px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%;
     min-height: 44px; padding: 9px 16px;
     border-radius: 9999px;
     background: rgba(217,95,82,0.08);
@@ -991,6 +1313,28 @@
     font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
     cursor: pointer; white-space: nowrap;
     transition: background .15s ease, border-color .15s ease, transform .1s ease;
+  }
+  /* One line, always, at every card width. nowrap alone would overflow, so the
+     type is sized off the CARD (the .wl-card container query context) rather
+     than the viewport: the string measures 301px at 11px, and the narrowest
+     card - 265px of inner width at a 1024px viewport - needs 9.5px to fit it.
+     2.9cqi hits 11px at a 380px card and floors at 9.5px below that, so the
+     line grows on wide cards and never wraps on narrow ones. Re-measure if
+     the copy changes; the constant is specific to this string. */
+  .wl-meta {
+    margin-top: 14px;
+    display: flex; flex-wrap: nowrap; align-items: baseline;
+    gap: 0 8px;
+    white-space: nowrap;
+    font-size: clamp(9.5px, 2.9cqi, 11px);
+    letter-spacing: 0.12em;
+  }
+  /* One line is the goal, but not at the cost of running out of the card. A
+     320px phone leaves only 236px of inner width and the string needs 260px
+     even at the 9.5px floor, so below that it wraps rather than overflowing.
+     Every width from 375 up stays on one line. */
+  @container wlcard (max-width: 250px) {
+    .wl-meta { flex-wrap: wrap; white-space: normal; row-gap: 2px; }
   }
   .eff-heart:hover { background: rgba(217,95,82,0.14); border-color: rgba(217,95,82,0.4); }
   .eff-heart:active { transform: scale(0.96); }
@@ -1285,7 +1629,7 @@
    scroll) so it cannot leak into or inherit from the rest of the page.
    ========================================================================== */
 .efmod{
-  --void:#07070b;--coal:#0c0c12;--panel:#101018;--panel2:#15151f;--ash:#232333;
+  --void:#040407;--coal:#0a0a11;--panel:#101018;--panel2:#15151f;--ash:#232333;
   --ink:#eceaf3;--ink-72:rgba(236,234,243,.72);--ink-dim:#9693ac;--ink-low:#6b6885;--ink-28:rgba(236,234,243,.28);
   --line:rgba(236,234,243,.09);--line-2:rgba(236,234,243,.16);
   --peri:#d95f52;--peri-bright:#e8796b;--calorie:#6eddf0;--budget:#ff8a4a;
@@ -1299,7 +1643,14 @@
 .efmod .plate .pin{position:sticky;top:0;height:100svh;overflow:hidden;display:flex;align-items:center;}
 .efmod .plate-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;}
 .efmod .plate .frame{position:relative;z-index:2;width:100%;pointer-events:none;}
-.efmod .plate .frame .wrap{position:relative;width:min(100% - 44px,1200px);margin-inline:auto;height:100svh;}
+/* The 1200px cap is this module's own, independent of the page band, so once
+   the band started growing above 1441px the scrub module stopped tracking it
+   and the heading and budget readouts pulled in from the edges of everything
+   around them. --band-grow is 0 below 1441px, so this is exactly 1200px on
+   every screen that had it before. It is written here rather than in the
+   ultrawide block above because this stylesheet is emitted after that one and
+   an equal-specificity rule up there would lose on source order. */
+.efmod .plate .frame .wrap{position:relative;width:min(100% - 44px,calc(1200px + var(--band-grow)));margin-inline:auto;height:100svh;}
 .efmod .plate .heading{position:absolute;top:9vh;left:0;max-width:min(560px,58%);}
 .efmod .plate .heading .eyebrow{margin-bottom:12px;}
 .efmod .plate .heading h2{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;letter-spacing:-.03em;line-height:.98;font-size:clamp(32px,5.2vw,66px);color:var(--ink);}
@@ -1541,7 +1892,7 @@ html.theme-light .bp-knob { left: 3px; }
 <div id="origami-layer" aria-hidden="true"></div>
 
 <noscript>
-<div style="background:#07070b;color:#eceaf3;padding:18px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#9693ac;border-bottom:1px solid rgba(217,95,82,0.20);">
+<div style="background:#040407;color:#eceaf3;padding:18px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#9693ac;border-bottom:1px solid rgba(217,95,82,0.20);">
   Some animations need JavaScript. The page works without it · join the waitlist below.
 </div>
 </noscript>
@@ -1588,7 +1939,7 @@ html.theme-light .bp-knob { left: 3px; }
       var isLight = document.documentElement.classList.toggle('theme-light');
       try { localStorage.setItem('ef-theme', isLight ? 'light' : 'dark'); } catch (e) {}
       var m = document.querySelector('meta[name="theme-color"]');
-      if (m) m.setAttribute('content', isLight ? '#f5f2ed' : '#07070b');
+      if (m) m.setAttribute('content', isLight ? '#f5f2ed' : '#040407');
     });
   })();
 </script>
@@ -1597,11 +1948,64 @@ html.theme-light .bp-knob { left: 3px; }
      HERO  ·  split layout: title left, CTA right (with rotating dial)
      ============================================================ -->
 <section class="hero-section relative bg-grid pt-[96px] pb-6 md:pb-8 overflow-hidden">
+
+  <!-- Converging arcs · the hero's ground layer, and an argument rather than
+       decoration: the calorie line and the spend line arrive from opposite
+       heights, converge on one point, and leave as a single line. Delete them
+       and the page loses the sentence it is trying to say, which is the test
+       a background has to pass to earn its pixels.
+
+       The convergence point sits at the exact horizontal centre of the
+       viewBox (720 of 1440). That is load-bearing, not aesthetic:
+       preserveAspectRatio="xMidYMid slice" crops symmetrically about the
+       midpoint, so a point on the centre line is the one point guaranteed to
+       stay on screen at every aspect ratio from a 375px phone to a 3440px
+       ultrawide. Move it off-centre and it crops away on mobile.
+
+       Its height, 355 of 900, is the other half of that: a tall phone crops
+       horizontally and keeps the full height, an ultrawide crops vertically
+       and keeps only y 208-692, so the point has to sit inside that band too.
+       Within the band it is pushed up out of the dish stage - the first
+       attempt put it at y 462, dead behind the three photos, where the two
+       lines met somewhere no one could see and the whole argument was lost. -->
+  <div class="arcs" aria-hidden="true">
+    <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" focusable="false">
+      <!-- Faint outer echo, so the funnel reads as depth and not as two stray strokes. -->
+      <path class="arc arc--ghost" d="M-140 -70 C 300 -20, 520 210, 720 355" />
+      <!-- The two budgets, arriving from above and below. -->
+      <path class="arc arc--cal"  d="M-140 90 C 230 120, 430 270, 720 355" />
+      <path class="arc arc--inr"  d="M-140 780 C 260 745, 480 470, 720 355" />
+      <!-- One plate: what leaves the convergence point. -->
+      <path class="arc arc--one"  d="M720 355 C 1010 322, 1230 288, 1580 250" />
+
+      <!-- Travelling pulses. Separate paths from the resting lines so the line
+           stays visible while the pulse runs along it. Both budgets arrive
+           together, the point flares, and one pulse leaves. -->
+      <path class="pulse pulse--cal" d="M-140 90 C 230 120, 430 270, 720 355" />
+      <path class="pulse pulse--inr" d="M-140 780 C 260 745, 480 470, 720 355" />
+      <path class="pulse pulse--one" d="M720 355 C 1010 322, 1230 288, 1580 250" />
+
+      <!-- The translate lives on an OUTER group and the animation on an inner
+           one, deliberately. A CSS transform beats a transform presentation
+           attribute rather than composing with it, so animating transform on
+           the same element that carries translate(720 355) silently threw the
+           marker back to the viewBox origin and drew it off screen. Splitting
+           them lets the scale animate about the dot while the position stays
+           an attribute. -->
+      <g transform="translate(720 355)">
+        <g class="cross">
+          <circle class="cross__ring" r="16" fill="none" />
+          <circle class="cross__dot"  r="3.5" />
+        </g>
+      </g>
+    </svg>
+  </div>
+
   <div class="max-w-[1400px] mx-auto px-6 md:px-10">
 
     <!-- Hero stack · single-column on mobile + tablet (tablet-like
-         density), two-column on desktop so everything (H1, glimpse,
-         lede, CTA card) fits inside the opening viewport without
+         density), two-column on desktop so everything (H1, lede,
+         CTA card) fits inside the opening viewport without
          scrolling. items-start kills the "extra black space on top"
          that items-end produced in the prior 2-col version. Desktop
          columns are wired in custom CSS (.hero-grid-lg) because
@@ -1610,45 +2014,73 @@ html.theme-light .bp-knob { left: 3px; }
 
       <!-- LEFT: title + lede -->
       <div>
-        <!-- H1 + glimpse row: stacks on mobile (glimpse absolute in
-             corner) and flexes on tablet+ (glimpse vertically centered
-             beside the H1, so the two feel paired instead of floating) -->
+        <!-- Title row: sizing container for the one-line H1. -->
         <div class="hero-title-row">
-        <div class="glimpse" aria-hidden="true">
-          <div class="glimpse__frame">
-            <div class="glimpse__notch"></div>
-            <div class="glimpse__screen">
-              <img class="glimpse__img is-active" src="/mockups/home-dashboard.webp" alt="" width="392" height="852" loading="eager">
-              <img class="glimpse__img" src="/mockups/restaurants-browse.webp" alt="" width="392" height="852" loading="lazy">
-              <img class="glimpse__img" src="/mockups/ai-sommelier.webp" alt="" width="392" height="852" loading="lazy">
-              <img class="glimpse__img" src="/mockups/calorie-trend.webp" alt="" width="392" height="852" loading="lazy">
-            </div>
-          </div>
-        </div>
         <h1 class="hero__title display text-[clamp(44px,12vw,160px)]">
-          <span class="block">
-            <span class="word">You&nbsp;are</span>
-            <span class="word accent">HOW</span>
-          </span>
-          <span class="block">
-            <span class="word">you&nbsp;eat</span><span class="period word">.</span>
-          </span>
+          <span class="word">You&nbsp;are</span>
+          <span class="word accent">HOW</span>
+          <span class="word">you&nbsp;eat</span><span class="period word">.</span>
         </h1>
         </div><!-- /.hero-title-row -->
 
+        <!-- Three plain statements, one per line, all at the same size. This
+             was two paragraphs at two different sizes, the second of which ran
+             two claims together in one wrapped block ("...both budgets.
+             EdibleFactor solves the equation..."). Splitting at the full stop
+             and levelling the type makes each line a single readable claim
+             instead of a headline with a footnote under it. Colour still
+             carries the hierarchy: the first line is the product claim and
+             holds the rotor, so it stays brighter. -->
         <div class="hero__lede-block reveal mt-6 max-w-[520px]">
-          <p class="text-base md:text-lg text-ink/90 leading-relaxed">
+          <p class="lede-line lede-line--lead text-ink/90 leading-relaxed">
             The only app that tracks your <span class="rotor display text-2xl align-baseline" aria-live="polite">
               <span class="rotor__sizer" aria-hidden="true">calories</span>
               <span class="rotor__word rotor__word--cal is-active" data-word="calories">calories</span>
               <span class="rotor__word rotor__word--bud" data-word="budget">budget</span>
             </span> at the same time.
           </p>
-          <p class="mt-2 text-inkdim text-sm leading-relaxed">
-            Scan <span class="pencil-ul">any menu</span>, log <span class="pencil-ul">any meal</span>, stay inside <span class="both-rotor">both</span> budgets. EdibleFactor solves the equation every other app leaves half-done.
+          <p class="lede-line text-inkdim leading-relaxed">
+            Scan <span class="pencil-ul">any menu</span>, log <span class="pencil-ul">any meal</span>, stay inside <span class="both-rotor">both</span> budgets.
+          </p>
+          <p class="lede-line text-inkdim leading-relaxed">
+            Solving the equation that every other app leaves half-done.
           </p>
         </div>
-      </div>
+
+        <!-- Scroll-driven dual budget. Each dish arrives as the reader moves
+             down the hero, carrying its own tag, and adds itself to both
+             meters. The hatched ghost shows what the next one will add.
+             Sample figures, labelled as such. -->
+        <div class="hbz" id="hbz">
+          <div class="hbz__stage">
+            <figure class="hbz__dish" data-k="520" data-r="340">
+              <img src="/mockups/dishes/bowl.webp?v=20260729" width="680" height="509" alt="Harvest grain bowl" decoding="async" fetchpriority="high">
+              <figcaption class="hbz__tag"><b>Harvest grain bowl</b><span><i class="k">520</i> kcal <i class="r">340</i> rupees</span></figcaption>
+            </figure>
+            <figure class="hbz__dish" data-k="610" data-r="290">
+              <img src="/mockups/dishes/panini.webp?v=20260729" width="680" height="501" alt="Grilled vegetable panini" decoding="async" fetchpriority="high">
+              <figcaption class="hbz__tag"><b>Grilled vegetable panini</b><span><i class="k">610</i> kcal <i class="r">290</i> rupees</span></figcaption>
+            </figure>
+            <figure class="hbz__dish" data-k="430" data-r="260">
+              <img src="/mockups/dishes/toast.webp?v=20260729" width="680" height="572" alt="Avocado and beet toast" decoding="async" fetchpriority="high">
+              <figcaption class="hbz__tag"><b>Avocado and beet toast</b><span><i class="k">430</i> kcal <i class="r">260</i> rupees</span></figcaption>
+            </figure>
+          </div>
+          <div class="hbz__meter">
+            <div class="hbz__grid">
+              <div class="hbz__m hbz__m--k">
+                <div class="hbz__h"><span class="hbz__l">Calories</span><span class="hbz__v" id="hbzKv">0 / 2,000</span></div>
+                <div class="hbz__bar"><i id="hbzKb"></i><u id="hbzKg"></u></div>
+              </div>
+              <div class="hbz__m hbz__m--r">
+                <div class="hbz__h"><span class="hbz__l">Spend</span><span class="hbz__v" id="hbzRv">0 / 1,200</span></div>
+                <div class="hbz__bar"><i id="hbzRb"></i><u id="hbzRg"></u></div>
+              </div>
+            </div>
+            <p class="hbz__note" id="hbzNote">Hover a dish to preview what it costs both budgets. Sample figures.</p>
+          </div>
+        </div><!-- /.hbz -->
+      </div><!-- /LEFT column -->
 
       <!-- RIGHT: CTA card with rotating dial behind -->
       <div id="waitlist-hero" class="relative reveal">
@@ -1713,29 +2145,43 @@ html.theme-light .bp-knob { left: 3px; }
           </form>
           <div class="wl-error mt-3 text-sm text-budget hidden" role="alert">Please enter a valid email.</div>
           <div class="wl-success mt-3 text-sm text-calorie hidden" role="status">You're on the list. Watch your inbox.</div>
-          <div class="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-[11px] mono uppercase tracking-[0.14em] text-inklow">
-            <span>No spam</span>
-            <span>·</span>
-            <span>Unsubscribe anytime</span>
-            <span>·</span>
-            <span>India + Global rollout</span>
-          </div>
-
-          <!-- Engagement funnel · Stage 1 inline tap (additive, below the email form) -->
+          <!-- Engagement funnel · Stage 1 inline tap. Sits directly under the
+               submit button so the two calls to action read as one pair: the
+               committed one, then the free one. -->
           <div class="eff-cheer">
-            <div class="eff-cheer__copy">Not ready to sign up? Your encouragement still means a lot.</div>
             <button type="button" class="eff-heart" id="effHeartTap" data-eff-tap aria-label="Send some encouragement">
               <span class="eff-heart__glyph" aria-hidden="true">🫶🏻</span>
               <span class="eff-heart__label">Cheer us on</span>
             </button>
+            <div class="eff-cheer__copy">Not ready to sign up? Your encouragement still means a lot.</div>
           </div>
 
-        </div>
-      </div>
-    </div>
+          <!-- Reassurance line, last thing in the card and deliberately one
+               line. The wording is shortened from "Unsubscribe anytime" and
+               "India + Global rollout" because the full string measures 440px
+               and the card's inner width is only 265px at a 1024px viewport -
+               there is no legible type size at which the long version is one
+               line. This version needs 260px at its floor. Measured, not
+               guessed: see .wl-meta in the stylesheet. -->
+          <!-- text-inkdim, not text-inklow: at --ink-low this line measured
+               3.66:1 against the card, under the 4.5:1 bar for informational
+               text, and this pass makes it smaller still on narrow cards.
+               Shrinking type that already fails contrast is the one thing not
+               to do, so the colour comes up as the size comes down. -->
+          <div class="wl-meta mono uppercase text-inkdim">
+            <span>No spam</span>
+            <span aria-hidden="true">·</span>
+            <span>Unsubscribe</span>
+            <span aria-hidden="true">·</span>
+            <span>India + Global</span>
+          </div>
+
+        </div><!-- /.wl-card -->
+      </div><!-- /#waitlist-hero, the grid's RIGHT column -->
+    </div><!-- /.hero-grid -->
 
     <!-- Hero meta stats -->
-    <div class="reveal mt-8 md:mt-10 flex flex-wrap gap-8 md:gap-14 pt-6 border-t border-white/5">
+    <div class="hero-stats reveal mt-8 md:mt-10 flex flex-wrap gap-8 md:gap-14 pt-6 border-t border-white/5">
       <div>
         <div class="display text-3xl md:text-4xl text-ink">02</div>
         <div class="mono text-[11px] tracking-[0.16em] uppercase text-inkdim mt-1">Budgets, one app</div>
@@ -1749,7 +2195,7 @@ html.theme-light .bp-knob { left: 3px; }
         <div class="mono text-[11px] tracking-[0.16em] uppercase text-inkdim mt-1">Languages scanned</div>
       </div>
     </div>
-  </div>
+  </div><!-- /.max-w band -->
 </section>
 
 <!-- ============================================================
@@ -1782,7 +2228,7 @@ html.theme-light .bp-knob { left: 3px; }
      ============================================================ -->
 <section id="problem" class="pt-12 pb-6 md:pt-16 md:pb-8">
   <div class="max-w-[1400px] mx-auto px-6 md:px-10">
-    <div class="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-8 lg:gap-14 items-start">
+    <div class="prob-grid grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-8 lg:gap-14 items-start">
       <!-- Left: section header -->
       <div class="reveal lg:sticky lg:top-28">
         <div class="section-label mb-6"><span class="ml-3">The real problem</span></div>
@@ -2038,7 +2484,7 @@ html.theme-light .bp-knob { left: 3px; }
      ============================================================ -->
 <footer class="border-t border-white/5 py-10 overflow-hidden relative">
   <!-- Big italic wordmark, partially clipped -->
-  <div class="display absolute -bottom-6 -left-2 text-[clamp(140px,22vw,360px)] leading-none text-white/[0.025] pointer-events-none select-none whitespace-nowrap">
+  <div class="footer-wordmark display absolute -bottom-6 -left-2 text-[clamp(140px,22vw,360px)] leading-none text-white/[0.025] pointer-events-none select-none whitespace-nowrap">
     edible<span style="font-style:italic">factor</span>
   </div>
   <div class="relative max-w-[1400px] mx-auto px-6 md:px-10 flex flex-col gap-4">
@@ -2655,37 +3101,34 @@ html.theme-light .bp-knob { left: 3px; }
   // handles every .rotor on the page (currently just the hero lede).
   (function initRotors() {
     var rotors = document.querySelectorAll('.rotor');
+    var boths = document.querySelectorAll('.both-rotor');
+    // "both" in the second lede line takes its colour from whichever rotor
+    // word is showing, on the same tick, so the two never drift.
+    function syncBoth(word) {
+      var isBud = word.classList.contains('rotor__word--bud');
+      boths.forEach(function(b) { b.classList.toggle('is-bud', isBud); });
+    }
+    // Only one rotor drives "both"; a second would otherwise fight it for
+    // the same class. Elected after the guard below, not from the loop
+    // index, so a first rotor that cannot cycle does not claim the role
+    // and leave "both" driven by nothing.
+    var leadTaken = false;
     rotors.forEach(function(rotor) {
       var words = rotor.querySelectorAll('.rotor__word');
       if (words.length < 2) return;
       var idx = 0;
+      var lead = !leadTaken;
+      if (lead) leadTaken = true;
+      if (lead) syncBoth(words[idx]);
       setInterval(function() {
         words[idx].classList.remove('is-active');
         idx = (idx + 1) % words.length;
         words[idx].classList.add('is-active');
+        if (lead) syncBoth(words[idx]);
       }, 2400);
     });
   })();
 
-  // Glimpse rotator · cross-fades the 4 mockup screenshots inside the
-  // mobile/tablet phone card at the top-right of the hero. 2800ms cadence
-  // so it's not synchronized with the rotor word (visually busier
-  // otherwise). The descendant query (.glimpse__img inside .glimpse__frame)
-  // reaches through .glimpse__screen, so adding the inner screen wrapper
-  // for the phone-chrome treatment does not change selector behaviour.
-  (function initGlimpses() {
-    var frames = document.querySelectorAll('.glimpse__frame');
-    frames.forEach(function(frame) {
-      var imgs = frame.querySelectorAll('.glimpse__img');
-      if (imgs.length < 2) return;
-      var idx = 0;
-      setInterval(function() {
-        imgs[idx].classList.remove('is-active');
-        idx = (idx + 1) % imgs.length;
-        imgs[idx].classList.add('is-active');
-      }, 2800);
-    });
-  })();
 
   /* Grand finale: build the animated origami field. A grid of paper tiles sized
      to the viewport; each folds along its diagonal, staggered by (row + col) so
@@ -3279,5 +3722,104 @@ html.theme-light .bp-knob { left: 3px; }
   else ready();
 })();
 </script>
+
+<script>
+/* Hero dual-budget. Dishes arrive on scroll and their tags persist, because
+   nobody is hovering while they scroll. The hatched ghost previews the next
+   dish before it lands, and hovering any dish previews that one directly. */
+(function () {
+  var root = document.getElementById('hbz');
+  if (!root) return;
+  var dishes = [].slice.call(root.querySelectorAll('.hbz__dish'));
+  var kv = document.getElementById('hbzKv'), rv = document.getElementById('hbzRv');
+  var kb = document.getElementById('hbzKb'), rb = document.getElementById('hbzRb');
+  var kg = document.getElementById('hbzKg'), rg = document.getElementById('hbzRg');
+  var note = document.getElementById('hbzNote');
+  var KG = 2000, RG = 1200;
+  var DEFAULT_NOTE = 'Hover a dish to preview what it costs both budgets. Sample figures.';
+  var fmt = function (n) { return Math.round(n).toLocaleString('en-IN'); };
+  var pct = function (v, g) { return Math.max(0, Math.min(100, v / g * 100)); };
+  var added = [];
+
+  function totals() {
+    var t = { k: 0, r: 0 };
+    added.forEach(function (d) { t.k += d.k; t.r += d.r; });
+    return t;
+  }
+  function paint(preview) {
+    var t = totals();
+    kv.textContent = fmt(t.k) + ' / ' + fmt(KG);
+    rv.textContent = fmt(t.r) + ' / ' + fmt(RG);
+    kb.style.width = pct(t.k, KG) + '%';
+    rb.style.width = pct(t.r, RG) + '%';
+    if (preview) {
+      var kFrom = pct(t.k, KG), rFrom = pct(t.r, RG);
+      kg.style.left = kFrom + '%'; rg.style.left = rFrom + '%';
+      kg.style.width = Math.max(0, pct(t.k + preview.k, KG) - kFrom) + '%';
+      rg.style.width = Math.max(0, pct(t.r + preview.r, RG) - rFrom) + '%';
+      kg.classList.add('is-on'); rg.classList.add('is-on');
+      note.textContent = 'Adding the ' + preview.n.toLowerCase() +
+        ': plus ' + fmt(preview.k) + ' kcal and ' + fmt(preview.r) + ' rupees.';
+    } else {
+      kg.classList.remove('is-on'); rg.classList.remove('is-on');
+      note.textContent = added.length === dishes.length
+        ? 'Three dishes, ' + fmt(t.k) + ' kcal and ' + fmt(t.r) + ' rupees. Both budgets still intact.'
+        : DEFAULT_NOTE;
+    }
+  }
+
+  function data(d, i) {
+    return { k: +d.dataset.k, r: +d.dataset.r, i: i,
+             n: d.querySelector('.hbz__tag b').textContent };
+  }
+  /* Anchored to the module's own travel through the viewport. A fixed scroll
+     distance was wrong in both directions: on desktop the sequence started
+     already advanced, and on mobile - where the module sits below a tall hero
+     - it finished after the module had scrolled out of sight. Measuring the
+     stage's own position means it always begins empty as the module appears
+     and completes while it is still on screen. */
+  /* The module is already on screen at rest (measured: stage top 329 of an
+     844 viewport on a phone), so a position-based gate starts past its own
+     thresholds and everything is added before the reader moves. Scroll
+     distance it is - kept short so the sequence completes while the module
+     is still in view, which a longer run would not do on a phone. */
+  var GATES = [30, 130, 230];
+  var hovering = null;
+  function tick() {
+    var y = window.pageYOffset || document.documentElement.scrollTop || 0;
+    dishes.forEach(function (d, i) {
+      var o = data(d, i);
+      if (y >= GATES[i]) {
+        if (!d.classList.contains('is-in')) { d.classList.add('is-in'); added.push(o); }
+      } else if (d.classList.contains('is-in')) {
+        d.classList.remove('is-in');
+        added = added.filter(function (x) { return x.i !== i; });
+      }
+    });
+    if (hovering !== null) { paint(hovering); return; }
+    // ghost the next dish that has not arrived yet, so the meter always shows
+    // what is coming rather than jumping
+    var next = null;
+    for (var i = 0; i < dishes.length; i++) {
+      if (!dishes[i].classList.contains('is-in')) { next = data(dishes[i], i); break; }
+    }
+    paint(next);
+  }
+
+  dishes.forEach(function (d, i) {
+    d.addEventListener('pointerenter', function (e) {
+      if (e.pointerType === 'touch') return;
+      if (d.classList.contains('is-in')) return;   // already counted
+      hovering = data(d, i); paint(hovering);
+    });
+    d.addEventListener('pointerleave', function () { hovering = null; tick(); });
+  });
+
+  paint(null); tick();
+  window.addEventListener('scroll', tick, { passive: true });
+  window.addEventListener('resize', tick);
+})();
+</script>
+
 </body>
 </html>
