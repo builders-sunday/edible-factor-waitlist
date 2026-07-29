@@ -16,11 +16,11 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
   :root {
-    --bg: #07070b;
+    --bg: #040407;
     --bg-2: #0c0c12;
     --bg-3: #13131c;
     --ink: #eceaf3;
@@ -52,8 +52,8 @@
   }
 
   /* Display + accent type. Matches legal.html. */
-  .display { font-family: 'Instrument Serif', serif; font-weight: 400; line-height: 1.0; letter-spacing: -0.015em; }
-  .accent  { font-style: italic; color: var(--periwinkle); }
+  .display { font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 400; line-height: 1.0; letter-spacing: -0.015em; }
+  .accent  { font-style: normal; font-weight: 700; color: var(--periwinkle); }
   .mono    { font-family: 'JetBrains Mono', monospace; }
 
   /* Internal banner: makes it clear this is not a public page. */
@@ -80,14 +80,14 @@
     min-height: 56px;
   }
   .brand {
-    font-family: 'Instrument Serif', serif;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
     font-size: 22px;
     color: var(--ink);
     display: inline-flex;
     align-items: center;
     gap: 4px;
   }
-  .brand em { font-style: italic; color: var(--periwinkle); }
+  .brand em { font-style: normal; font-weight: 700; color: var(--periwinkle); }
   .doc-stamp {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
@@ -113,16 +113,16 @@
     margin: 0 0 20px;
     color: var(--ink);
   }
-  .hero h1 em { font-style: italic; color: var(--periwinkle); }
+  .hero h1 em { font-style: normal; font-weight: 700; color: var(--periwinkle); }
   .hero p.subhead {
-    font-family: 'Instrument Serif', serif;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
     font-size: clamp(20px, 3vw, 26px);
     line-height: 1.4;
     color: var(--ink);
     max-width: 640px;
     margin: 0;
   }
-  .hero p.subhead em { font-style: italic; color: var(--periwinkle); }
+  .hero p.subhead em { font-style: normal; font-weight: 700; color: var(--periwinkle); }
 
   /* Section primitive */
   section.block {
@@ -130,14 +130,14 @@
     scroll-margin-top: 80px;
   }
   section.block h2 {
-    font-family: 'Instrument Serif', serif;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
     font-weight: 400;
     font-size: clamp(28px, 4.5vw, 40px);
     line-height: 1.1;
     margin: 0 0 8px;
     color: var(--ink);
   }
-  section.block h2 em { font-style: italic; color: var(--periwinkle); }
+  section.block h2 em { font-style: normal; font-weight: 700; color: var(--periwinkle); }
   section.block .sect-tag {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
@@ -184,13 +184,13 @@
   }
   .cost-card.flat .label { color: var(--calorie); }
   .cost-card .big {
-    font-family: 'Instrument Serif', serif;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
     font-size: clamp(28px, 5vw, 36px);
     line-height: 1.1;
     color: var(--ink);
     margin: 0 0 10px;
   }
-  .cost-card .big em { font-style: italic; color: var(--budget); }
+  .cost-card .big em { font-style: normal; font-weight: 700; color: var(--budget); }
   .cost-card.flat .big em { color: var(--calorie); }
   .cost-card .small {
     color: var(--ink-dim);
@@ -296,13 +296,13 @@
     text-align: center;
   }
   .chart-savings .pct {
-    font-family: 'Instrument Serif', serif;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
     font-size: clamp(36px, 7vw, 56px);
     color: var(--calorie);
     line-height: 1;
     margin: 0;
   }
-  .chart-savings .pct em { font-style: italic; }
+  .chart-savings .pct em { font-style: normal; font-weight: 700; }
   .chart-savings .caption {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
@@ -341,7 +341,7 @@
     margin: 0 0 10px;
   }
   .wedge-card h3 {
-    font-family: 'Instrument Serif', serif;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
     font-weight: 400;
     font-size: 22px;
     line-height: 1.25;
@@ -425,14 +425,14 @@
     text-align: center;
   }
   .cta h2 {
-    font-family: 'Instrument Serif', serif;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
     font-weight: 400;
     font-size: clamp(28px, 5vw, 40px);
     line-height: 1.1;
     margin: 0 0 12px;
     color: var(--ink);
   }
-  .cta h2 em { font-style: italic; color: var(--periwinkle); }
+  .cta h2 em { font-style: normal; font-weight: 700; color: var(--periwinkle); }
   .cta p {
     color: var(--ink-dim);
     font-size: 16px;
