@@ -1,0 +1,44 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Edible Factor">
+  <!-- Circular favicon, wine (#d95f52) disc with the EF dial knocked out of it.
+
+       Deliberately a SEPARATE file from the site's visible 44px header logo
+       (ef-mark.svg), which is unchanged. A favicon has to survive being drawn at
+       16px; the header mark does not, so they should not share a file.
+
+       Chosen by rendering three candidates at 16px and looking at them:
+         - a faithful reframe (dark disc, ink EF, thin ring, wine dots) became
+           grey mud: eight elements inside sixteen pixels
+         - a dark disc with a wine ring lost the ring completely, because a
+           4-unit stroke at r=26 is a sub-pixel sliver at the rim once scaled
+         - this inverse reads as a single shape at 16px, and is the only one of
+           the three where the wine is actually visible in a tab
+
+       Kept from the original mark: the symmetric glyph, where the F is mirrored
+       so the pair reads as a dial, and four cardinal ticks doing the job the
+       square mark's corner dots did. Those dots have no home on a circle, and
+       12/3/6/9 is exactly where the animated mark already travels them.
+
+       Dropped, all sub-pixel at favicon sizes and only muddying the glyph: the
+       second dial ring, the letterform overhang ticks, the peach hairline.
+
+       Glyph keeps the ORIGINAL stroke-to-counter ratio (5 wide strokes against
+       4.5 counters). An earlier attempt thickened the strokes to 6 against
+       3-wide counters and the negative space filled in, reading as a solid dark
+       block rather than letters. -->
+  <circle cx="32" cy="32" r="32" fill="#d95f52"/>
+  <g fill="#0A0B10">
+    <circle cx="32.00" cy="5.00" r="2.3"/>
+    <circle cx="59.00" cy="32.00" r="2.3"/>
+    <circle cx="32.00" cy="59.00" r="2.3"/>
+    <circle cx="5.00" cy="32.00" r="2.3"/>
+  </g>
+  <g fill="#0A0B10" transform="translate(32 32) scale(0.70) translate(-32 -32)">
+    <rect x="17" y="20" width="5" height="24"/>
+    <rect x="17" y="20" width="14" height="5"/>
+    <rect x="17" y="29.5" width="11" height="4.5"/>
+    <rect x="17" y="39" width="14" height="5"/>
+    <rect x="33" y="20" width="14" height="5"/>
+    <rect x="36" y="29.5" width="11" height="4.5"/>
+    <rect x="42" y="20" width="5" height="24"/>
+  </g>
+</svg>
