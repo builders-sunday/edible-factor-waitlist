@@ -12,8 +12,12 @@
 <meta property="og:url" content="https://ediblefactor.com/plate">
 <meta property="og:title" content="Plate - one console for every outlet and every dish">
 <meta property="og:description" content="The operator console behind Edible Factor. One subscription, every outlet, no commission on covers.">
-<meta property="og:image" content="https://ediblefactor.com/og-image.png">
+<meta property="og:image" content="https://ediblefactor.com/og-plate-hybrid.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Plate. One Plate manages every outlet and dish. Six listing switches and analytics, included.">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://ediblefactor.com/og-plate-hybrid.png">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/ef-favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/ef-mark-180.png">
@@ -518,11 +522,35 @@ body.ann .v{cursor:crosshair}
 }
 
 
-/* The whole site runs on wine. --peri keeps its name because it is threaded
-   through the dashboard mock, the demo and the marks, but it now resolves to
-   the wine accent so there is a single place to change it and no straggler can
-   stay periwinkle. */
-:root{--peri:#e8705a}
+/* The whole site runs on the Velvet red.
+ *
+ * The previous accent, #e8705a, sits at hue 9 degrees - measurably
+ * orange-leaning, which is what it read as. #dd4a45 is hue 2, an unambiguous
+ * red, and still clears AA on the page at 4.94:1.
+ *
+ * Velvet splits the colour and so do we: a light red carries TEXT, marks and
+ * hairlines, while fills go deep. Cream on #9e2a2a measures 6.60:1, where dark
+ * ink on the light red only managed a muddy mid-contrast and looked orange
+ * again at button size.
+ *
+ * --peri keeps its name because it is threaded through the dashboard mock, the
+ * demo and the marks; it resolves here so one edit moves everything and no
+ * straggler can stay behind. */
+:root{
+  --wine:#dd4a45;
+  --wine-fill:#9e2a2a;
+  --wine-fill-2:#7d1f20;
+  --peri:#dd4a45;
+}
+/* Fills take the deep claret with cream on top, matching the Velvet menu's own
+   button treatment rather than tinting the accent. */
+.btn--go{background:linear-gradient(135deg,var(--wine-fill),var(--wine-fill-2));
+  border-color:var(--wine-fill);color:var(--cream)}
+.dcard__cta{background:linear-gradient(135deg,var(--wine-fill),var(--wine-fill-2));color:var(--cream)}
+.scr__act{background:var(--wine-fill);color:var(--cream)}
+.lst__btns b.go{background:var(--wine-fill);border-color:var(--wine-fill);color:var(--cream)}
+.vt__t.on{background:var(--wine-fill);border-color:var(--wine-fill);color:var(--cream)}
+.tab[aria-selected=true]{background:var(--wine-fill);border-color:var(--wine-fill);color:var(--cream)}
 
 /* ---------- site chrome ---------- */
 .nv{position:sticky;top:0;z-index:70;display:flex;align-items:center;gap:20px;padding:12px 28px;
