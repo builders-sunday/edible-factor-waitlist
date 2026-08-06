@@ -1519,6 +1519,12 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
   }
   .eff-pop.is-open { opacity: 1; transform: translateY(0); pointer-events: auto; }
   .eff-pop__body { flex: 1; min-width: 0; }
+  /* .eff-heart is width:100% because in the waitlist form it stacks under the
+     submit button and spans it. Inside this popup it is a flex ROW item, where
+     100% means "demand the whole container" - which squeezed the copy beside it
+     down to about one word per line. Here it sizes to its own content and
+     refuses to grow or shrink. */
+  .eff-pop .eff-heart { width: auto; flex: 0 0 auto; }
   .eff-pop__title { font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 600; font-size: 15px; color: var(--ink); letter-spacing: -0.01em; }
   .eff-pop__sub { font-size: 12px; color: var(--ink-dim); margin-top: 2px; line-height: 1.35; }
   .eff-pop__close {
@@ -1530,6 +1536,18 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
     transition: color .15s ease, background .15s ease;
   }
   .eff-pop__close:hover { color: var(--ink); background: rgba(255,255,255,0.06); }
+  /* The two dismiss buttons draw at 30px because a bigger X would shout at the
+     copy it sits beside. Same pad the nav pills and the deck pips already use:
+     the glyph stays 30, the tap area reaches 44. No negative z-index, for the
+     reason given on .pill-cta::after - a pad painted over stops receiving the
+     taps it exists to catch. */
+  .eff-pop__close, .eff-modal__close { position: relative; }
+  .eff-pop__close::before, .eff-modal__close::before {
+    content: ''; position: absolute;
+    top: 50%; left: 50%;
+    width: 44px; height: 44px;
+    transform: translate(-50%, -50%);
+  }
   /* Both close buttons keep their compact 30/32px face - a 44px square in
      the corner of a small toast would dominate it - and gain an invisible
      44x44 pad centred on that face. Expanding in both axes is safe here
