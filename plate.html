@@ -610,7 +610,7 @@ section h2 span{color:var(--dim)}
 .rt__t.on{color:var(--ink);border-color:color-mix(in srgb,var(--peri) 42%,transparent)}
 .rt__bar{position:absolute;left:0;bottom:0;height:2px;width:100%;background:transparent}
 .rt__bar i{display:block;height:100%;width:0;background:var(--peri)}
-.rt__t.on .rt__bar i{animation:rtp var(--rtd,6s) linear forwards}
+.rt__t.on .rt__bar i{animation:rtp var(--rtd,3s) linear forwards}
 @keyframes rtp{to{width:100%}}
 .rt__stage{flex:1;min-height:0;position:relative;overflow:hidden}
 .rt__p{position:absolute;inset:0;opacity:0;transform:translateY(10px);pointer-events:none;overflow:auto}
@@ -714,9 +714,54 @@ section h2 span{color:var(--dim)}
 .olt i{display:block;font-style:normal;font-size:9.5px;color:var(--dim);margin-top:2px}
 .olt div{flex:1;min-width:0}
 
+/* ---------- the switch demo, side by side ----------
+ * CSS2 sets 1fr 340px, which tucks the card into a narrow right rail. The card
+ * is the thing the switches change, so it gets equal billing and sits
+ * optically level with the switch stack rather than hanging off the top.
+ */
+.demo__grid{grid-template-columns:1.05fr .95fr;gap:40px;margin-top:30px;align-items:center}
+.demo__out{display:flex;flex-direction:column;align-items:center}
+.demo__out .dcard,.demo__out .dcard__off{width:100%;max-width:360px}
+/* The image band was a bare gradient. At the size the card now gets, an empty
+   colour field reads as a missing asset rather than as a choice. */
+.dcard__img{position:relative;overflow:hidden}
+.dcard__img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.dcard__img::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 40%,color-mix(in srgb,var(--sf) 82%,transparent))}
+.dcard__trend,.dcard__veg{z-index:2}
+.demo__hd{text-align:center;max-width:70ch;margin-inline:auto}
+.demo__sw{max-width:440px;margin-left:auto;width:100%}
+@media (max-width:820px){
+  .demo__grid{grid-template-columns:1fr;gap:28px}
+  .demo__sw{margin-inline:auto}
+}
+
 /* ---------- why / distinction ---------- */
 .why{max-width:1140px;margin:0 auto;padding:96px 28px 0}
-.why__grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:40px}
+.why__hd{text-align:center;max-width:74ch;margin:0 auto}
+.why__hd .sec__eye{text-align:center}
+
+/* The live-typed terminal. Types the request, prints the response, flips the
+ * calories switch and reprints it without the field - which is the whole
+ * argument, demonstrated rather than asserted. */
+.term{max-width:760px;margin:36px auto 0;background:#07050a;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  box-shadow:0 1px 2px rgba(0,0,0,.6),0 30px 60px -26px rgba(0,0,0,.8)}
+.term__bar{display:flex;align-items:center;gap:7px;padding:10px 13px;border-bottom:1px solid var(--line);background:var(--sf)}
+.term__bar i{width:9px;height:9px;border-radius:50%;background:var(--mute);opacity:.45}
+.term__bar b{margin-left:6px;font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);font-weight:400}
+.term__b{padding:15px 16px 18px;font-family:var(--mono);font-size:12.5px;line-height:1.75;min-height:250px}
+.term__l{white-space:pre-wrap;color:var(--dim)}
+.term__l.cmd{color:var(--ink)}
+.term__l.cmd::before{content:'$ ';color:var(--wine)}
+.term__l.key{color:var(--mute)}
+.term__l.hit{color:var(--em)}
+.term__l.gone{color:var(--wine)}
+.term__l.note{color:var(--mute);font-style:italic}
+.term__cur{display:inline-block;width:8px;height:15px;background:var(--wine);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.term__cur{animation:none}}
+
+.why__grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:44px}
 .wc{background:var(--sf);border:1px solid var(--line);border-radius:18px;padding:24px 22px}
 .wc__n{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--peri)}
 .wc h3{font-size:21px;margin:10px 0 10px;letter-spacing:-.025em}
@@ -1036,14 +1081,20 @@ section h2 span{color:var(--dim)}
   </div>
 </div>
 <section class="why" id="control">
-  <p class="sec__eye">The distinction</p>
-  <h2>Everyone says &ldquo;you control your listing&rdquo;.<br><span>Here is what that means when it is true.</span></h2>
+  <div class="why__hd">
+    <p class="sec__eye">The distinction</p>
+    <h2>Everyone says &ldquo;you control your listing&rdquo;.<br><span>Here is what that means when it is true.</span></h2>
+  </div>
+
+  <div class="term" data-term aria-label="A demonstration of the public menu API with calories switched off">
+    <div class="term__bar"><i></i><i></i><i></i><b>your public menu, live</b></div>
+    <div class="term__b" data-term-b></div>
+  </div>
   <div class="why__grid">
     <article class="wc reveal">
       <span class="wc__n">Off means gone</span>
       <h3>Enforced by the API, not the page</h3>
       <p>Turn calories off on most platforms and the number is still in the page source, hidden by a stylesheet. Turn it off in Plate and the field never leaves our server. There is nothing to inspect, scrape or leak.</p>
-      <div class="wc__code"><span class="c-off">"calories": 310,</span><span class="c-on">// field absent</span></div>
     </article>
     <article class="wc reveal" style="--d:.06s">
       <span class="wc__n">No pay-to-rank</span>
@@ -1104,18 +1155,19 @@ section h2 span{color:var(--dim)}
       <p class="demo__cap">What a diner sees</p>
       <div class="dcard" data-card>
         <div class="dcard__img">
+          <img src="data:image/webp;base64,UklGRiwdAABXRUJQVlA4WAoAAAAQAAAAvQAAkAAAQUxQSNoFAAABoIZt2/FGer40yVebx9i2bdu2bdv2tGPb5o6tbpnabtOmTPXhXRTJh2fxKyImAKRUaelWrUX3MdM37bl+/8EXjUbjH5Cki/TXaDSaT/fvndy+YsLANg3L25kqAJkUbV+l/aiFe6+/84pMzMwpZHliSI7Jz0qNCf728PSWGT3ruVmYoICyKNdy+OqzL32T9QwRboEu/MuNnZPaVbKi5Ezp2GjI2us/4nI4Is68JO9b60Y2dlTJEWXXeNz+V5HZHBE5p496dWRCfStKVlRluy57EKknkpkbcmd1t7JKmaCrDD7wRcsQiWW1n3cPqkJLnrJsf3evTCLNfKbX4YFlTaTMtsOOLzoi6emfN7ezliiTypPvxHNE8rnYGxMrKKTHrOmGH3oik9lfVjegpcWms3s4S2SUCTzU1kw6bPpcSeSJzPJR7m3NpMGs25VkIsd89OHGKvHRbTxiiVxzgZurU+JStdoXzhMZL/wx01VMbktCeSLzOY97m4rFatjzHILAuD01REHVcdcSHLKfh1sIz3Tod46gMeVAFaGV2ZRAMMm86qIUEtX8Xj5BZugCW+Go+nsSfGYdKCcUi3lRBKOFd+sLw36NjuCU/9CJEoDL4WyCVq+ulNHKnMkjiPUfqTKSs3sBQW30OJVRXI7mEeRGD6GMYL03n6DXtxtlMHpZBkGwd3tDqSYkEBS/rmEYakAUwTF7ztEgDX4SLOtX0AZwusijicT0Kp1ysZ4g+lWVUrUNIZhm9pmXwvk2wXXSwFKMz0IWeVG2RE5PCLbzlihKoJyXhS7ye+0SNAkk+GY2q4pR7eIQRgIbF1PPn2Cc3aIsQrGKQRnxrFqE828E57kzi+irRRp54gAAqgME64mdAaDsV7RxW0wAhmWgjbxzBdqd4D2lC5T9gDh2JdU1HnHkru1cPeY0dT1YzKUOfkUwX7AhCHX8ZS3qyGsd7gKQl4w83f85UpEXirwfuIu9xKPOb3ke6l4MSsUce7SOP+b08+wfYC6xu8kOzHnVgCGZiLtoAZW98MYsAjA7i7eUzgAwQY+2r2UBoHYg2o7TAGB5GWuZw+HvU3KR5lmpiGpeOOP3q4tQH8FZai8oul8ayt66FePyCmPMakUx1IpChMW2huIbBCHsnl0J6IM8unImQEm7JKPrR8USOdzDFrvBpEQwVIesmFZQcod7yDpnVQoYqkNVYncorcM9VF22LhUM0SIqvjuU3vocnngPCwNA2wg0RbQBQ9JbC5HEbFEbBCq/R9L3GmDgQYkoyphAGcp8N4Mg/pwdGLzKawT5NAYj9olFT9oEhTHoVXrkcO6WYFSnSzxuPtcCIzfyRE1MXzA2NTwRMdlL1UYD0xXZaGGP24EA7TwYrDyvBoKseJfHiXdLEGj9DyiJHkoJBVp5IiRtphIES/UNQkfacgsQsKJ/IDJ0yy1A0Ir+gajI22UJAlf09URE+h4nEDzV6iMa0pZbgRibf+BxkLLMAsTZ8HYBBiInmYFYyx7Klj+vQUoQr93yeJnj3ncAUdPDvWQt71JtEDnV7GG+fCVucAHxl10TJVPcz2GmIIXq7u84Ocq5UI8Ciax5Qis/IYsdQTqthn8ulBf97bZKkNSqO+JlhPeb7wJSa9bjdo5cpJ5oogAJdp7xMU8O8l4OtwZppiou8ymUOtZ7aVmQbmXtdX6slHEhu+qYgKQr6233zpcqLmR3UxokX1Vj/me9FHEhu5uqQRYVFWY8SJKaAv/dTdUgn7Y9j2vyJSTrw7LaapBX0zoLf9NKAxd3a0w5Bcgv5dzriL9edNk/t7ezAbmma004H5wnIjbs7OjKSpB1i3ozr4ey4mBD9zU1BwRaNtnhoxee/uemJjQgUV1t0pXwQiGxMdcnVzEBTFo2WXgvIlcYBXEv17a2AnzaNpp84ltCgXEKtN6X5rZyUgBS6TJtpu9/5BufzfClYQuyEryeHJnRubI5IFdpX6vT1G0XH3tqgrU6nS41xF/z/d7hNRO6VrdXg9QCVlA4ICwXAADwWwCdASq+AJEAPpU6l0gloyIhMNrryLASiWgAy2ZPXB675s/X3nSJp8nzE/ee+j/0PVvt9fN750vpu/1m+470R/g9//4FX+gef7x5/L+C/ln+Z6G2QPsS1LO/fHLvn+VOoL+Tf1jzk4PPT7kN7Cnf7wOda1X+9T9g7yaf9vyx/Y3sG7sM4FEB4+eN6i6//EDW+Egg6ClhD1ft0MAPpMyaaBc9sgD3EQ7nhK8lVmXAOwS9Fky/TFUaZZUR7swv4S2x1dpLUL03lJH6ppTUzBrkMShypYfWCd6arW1c0/njpdrGinvBWVLc47xQEP4dg3cU8EdZiu6evJyY788Rl61MM21n5mys5CuTjKdmS+eMqKv6A9nZvAC16HmZa5/tmUTMse6wYyb899047t+BHEpnf4GCylHDbYno8WjPidJHn4giaJCT+U5FkXgZRVs9BuvCGjJJh6ZAMiAOnqpdlBOjVR8xLbBFTJV6Ih4tRPwdCbYacptU0Yi68az7gCx+Ragr8XudYdBcDDZTjSgXsnxj7FVp+4PCF+ABpbOQ1LD/DL/JrX6FIN/cJSy5amE71tCSGSaiutuOJ6qpNSYuKQj5X8WK/sKGH1G7HEvaYu9sqMMtAogT7KfH2e4yH6PxEhcNwLE8AwVn5ycpMZomxBfG7TIvtGLipGa1Qo/4lsiVoHwHEPVicWmWVps5/I2G2j2+cw8X3Xf+dEfrD/jRaBL+I+HMWplwYTQFL0XiaYn4r1LecxhH4KRRd3MOnPPrGsXyaQR/G4GexMlAdFeTeDN2kEVed8qVoyN8/Z62WiNs14i4/gBUx2LSmwQh1be6GdTi/PqXSNEam5gZOjSRS0Fxv5jgzs1CaUul5h33TAt3XVQ1+woJ5Z69SSHVrycv80LJp/daQWeJYk21DedvHUp2JKgbN//BKJf0tJKMQM9uYYvCPAGJRPFNU0Ff4jexqoINUZOC81O9I+XqF1TU+0zDsvS2a8OpPjQA/v206sZWEUYRrnAe6kMTZojBKJridWjpMUjI+HkRWiCTEb+NKIlOvITNRkQfgadZTIBgRxVal8mY81NKrjy4evQzOf7oJiuv7VtVYJwJV5EKDO5DbGWLLqxpS8XFs7ElQhuSE/mnTDYzUxjNblRyK9PUHcyX+P+htrG9RxISbrOV/ifO5FrkEdchKtO+4UBoTXK+zxA0wMIMkGZ3Iyw391y4RSicXadHNmxWO+9Adpte9HescmZatQ+E9mF3t9kwNHTCONHhFtFNo6J5yz+NzG8Ih8DMBz+EUOQTpmu0F5I4N3EGx8SEwmL+wDlmRwRd4CJmy1UYa/z4N4X3o2RAi0JNwC9klL23IE7Gcbe0VWu0ffySbV3VYhLWp2MW1sU3pDk+M18ZjF60jh0HdCJgqetCUUkRd5CNLx8walRumYBxGwajJWLyrPEOPP8kYJl/VBO6cu/0+3xPjngr+fFPYzxZgqHK0yfxeDDxHr23/qJa03QFIpP/4IutqZNg+F9ZMPseL+PgZ85gmBFb3rsAUN1aOFY8Lj9qzPqMZ65oRORDaGJl9sj1gacQEIBwIu0yo2bSc/UuA1lJXXMskQapPuqvEsNTSafO3eWjRjJA/4DFb4A27besb8leqg8+Vk4C8cQlsNllwb7ImwsJieaGCaFnZG6Iz5FlhgXR1eHa7PGo1wlDBSshaS5b4DnpzHfrr+2w6P7DXosbAzV6HkiDItBsscnqxPxJ/5yzbaPTEU8uaNY1Uopvjh7Srtbe5RZ8R2MmiatrSEHwJ8YitQsooBQld/lhqleRvFbYzusqbo+qrvMEa7sZrACPVkd5ceRjiyFCZoulk2114xEupoLF2ZLPXrwHANthgnGv5U9O7g4NiPfWAa+fDR+T2foMUixBrp5cjzn61DlbyB+2rZeV5rMVYvimpIO5lidGEA+LlhQzL4fDEAQcb2aqAE3ySp5XHYQpuqRbXgqVFh8qnt4p5W7SqqShQwmREC88vQmCsDKm6QohpvnC+ppG5m0APaAt+tvMALQwouq1ypWJAA17g0NjZ2ccwV+Tv4kr3OeNIad2MJqHkXjVRkyJLTPD4uF3eNCcBtPEt71v+ywWqy6FPHAkdTPRg6cvx1v7WJEA6KJ3ZdABnFDllSYNqBjdhixR9bgHoZeN8lm+OzngAtMpxf7TzbVHgL4GLc072k+pPAoU5YQh8RvO/fXumXthVTLzvAN9nZqcx0yrnSzuk0mRewkcwRJ/9yqU/+wiOnn6U0dShqS57KePvTOvOWOwpL6DVvs0QUppLPRE4rGwZOZ5iok28VRi/D89q8iBweZV+gfG3P0v+gLQcYcphOFKO4pzTHAwGePy2XVFZjv03VG9dstpqteo9/MJEg4Dh/OygZH69IVdKVbJ+sijMj7LHf0TneGm4o4oz7wXReQF9ew+kcf8VE1U2vOTiI++CWUrHyfzoweOwwsjCSaToumHuGuljpqZd99HkOU3JlZ660IMip0IxjDrJzHR0BSxkPWNytUg9g+tiJp5xq6IP3ra+HIiE3bCijXD4egm1xucILsK/tyoTVxcGtUv818k4RWea78ORjJZoqb1BQeCj5Cdy2GSx94az3ZgaoguYIQXv9Xdk77ENO4WTBVxB6M4cAT6xtPeHmxH/KYnpRx6cPSo23EctsxrnIN8pWY2Es8OwJNe28orsjWNLUz3cYREc6SHBrq7bfYXaT+Hpfik+zICMydgXn5SSJlfWUEXBVzT0l3DjQ4/jhzdRz9tIZPmrYOZw6gUveBSR+nhYJqPuxD1WbgZG2GtWmORccpXhCXe8BQ2KTE9CIMHFtry5IInsSi8N0fLyCd9BjtI9bn/Rq3kfvjbEtaE9w8rR6V3oE9ZGWuvYQL/csqYPIRPtqK1AhewEzu8PwUb1OCRgIs1iKndXBO4vFCZYXv1D4Y7jgnlaiWGR1jIqJNgA8x6BSBTT/nNuEF0O9nd1UHiufiRYm3cRQKIC8VUKUjw+I1ToK4Qnu5iH8lA7EKyJqLInWYHzML51sAd4HUn64wIuHmMhCApp/XHAIt7Z4vv1SuPPlJt4cH707zpskU+KpyxNqPKMyFx4MherMROvZgAy/LQ7GOCaRMSgFNed2UBgXKzgBkQiMhQ4YS1ZuK3v6ya5P0FtpDgchu8Q9VGNlZQKpitBXCCzAX9IYvTC4X47mebr0QjS+TwI2wXA7+EYNdkHhUhGRuXViYsXnvGqUUTLXKmBrp4eJQ1t66+v8WuuerJaIguok7heN2Bfq/MKkkqmC6MC4rlOMNXeonmpRxNBLr9fWHozms5pTMob9zuJ70UleRCJq2l+KQd5s8ZAaPjRyJT6morcEzhA8tU6fOYZznrJUH04r1L90dIhO0hLerZcioZ99WkmXi7wtsIz9ADxO2fbF0Qvl9vyPq393pzdq9sHL4LdbaaQRjYkC8y+xrADV/2s9JpkkQpD6lXZHAlzelOOkTrsNeQJvJM578+2qj0DWb2Fsyy06PNPuhQansYfj6If2Vz3q/y2Kq2IryfRVMM00MZj0sLcX6yvb7/atizalWLIJDLRQsJZcI+0QmTQWaTu7V8ZLg92vGOS9IcHykjwHqdN0qDXfHBb9CRWY3cND+cFA174O8zW3T17vd9xSheF+TZNkV6VXffCyUvOHL0Ft7XPNASaCXu75AixpjiyfhaVU7HXIZU2+oBrQbfQU+n4mUCY9M03JOJTiFTHWZBDpbZpAY8WjD5O/xv56xYzxO4BhYxkZd7LmPkZKcujhEFPnFd/EaoD7N+EzSwYQzVmor1Y1mJjCQH+q2WpYUXUNWFRsS+qtLNpbhHmQqDohAOpKkZ5MN5+xbnem8t1nC+TXtsVeo61DGAwB+71IyqzaNZQZ7/dL3AWt0xARD0TCfGYHzWvSzBK2ySQLFHf1k/xt9sltKXx38AilcSt+gfdRtX+/WAvpFx8IyySlKG2HqwZI0fpIZtJI8wuWI5OLvUif6H//SSSFeETbM1hibLSsz2wKclEhd6tZAKNkT4f+/eBmeyfWM/Zux/YKYp/JdCM5oCCMKlWxWdP1X6vH2hL4WuzC61QCMpeD56+o15Ex2vg/9AmZbegqwVb7+lucvb/067Beg3vGK8i5hBXBDh0ZHr2fRXLeeaBEyHelFCo+JVbqAaufmnARPHOSZLkG4z4eN6AM3+iscOF3QQx0mtQpd860UPhvaSbMa3O7/BvKtOY282luJelvztw1Qz6ysMYxQiVSqME9qresg7OfGmnfTK/dESwgWR0rSALCZiW6+xcqXr5ZcAFCd+A4oE0cHnAT0jg4S+hyXaSogWyHiGev3sBydDZzl8tNAlY13vNar3mcLjL8Qs4cCE1MTAlmQGCU4GIYK9nZxErCe+90dQvV/L8Csj3mtbMOEqtCtKXMqBOvM/t16KSpnN7MqM6/U/HRonwpEKrm5sZogKeygP4Ju3NOsda5ar2tanii6yJsu4ZPUVNpI67XsHa3cvlUJueEfb73JTZqGE614JhZSYFspAp6iQvSmGQ4PXmRcC7Ina18Fwf+ABcSOmBvQgroSpurub1G6bqzY8WculyftAFAZGvkLkhg4/waIoQt/kYKyRw1NhijPxP2MfezxgV3IV7YSB1ue/so2OsZk5OcMwxoo+mXwYMM9ipWKKIpAgcnVr6SHvJq6m7NLn/yDBer8ViptlVEj5x7FX/OMb5mMhm9YQkVsGaJp5Z3MsP1kMu93eYh0rEU3DmwKM/3PNljIhxrKNJ0fIDNF7qCTkQtRREw9QAreOT9bLVFPOlzE9hd8vb8NwIrglc4+/X7LhB7M2aG3m4WIdbrXxBO+YRqC3L5QrTN8eJBgcjRObc+zhF2/wqPN0jLBAs4zV2P9XN5QbaAtm7RVwNxPZ4+CEfcyFUQ7V9lXrzrV+N12sSVf/q3ndW7to7WBcIRjleec18pHfvh1k3RyVov4EVr5Wq6mu3Dhm6FmdjAnwnHigI0CLCmoMYHvqtyYV/ySzfjZ5qsX/WsfRzouS45ytjSwDvJXZYr6yJUBvwDk0gIVPgp6OTat4dvZvXmzJXncMDB3m9otc+vSfztfBfOw7JkF+24/94xedGjZjCkLn+cYo8yxPkb3pzPenyPdCYqH5f7m71Be4w3bKjcPBr4mE8Ti4VwMot08y0VivXrtcEMDOv6HPjhl8A1AgJQDg9sOnoRKFGERzIh0oGsNXw9qL9iR9VPlUFxcBjTExcdW4SsPzG5p9zVO2FOEHK7m4VE4NKDgKmdUNBlAfJz8esq9oaEC7nqUtTrYIQhOa9e+d2boWBSY/NbKfqb7bB7GpaROwyfCqrbmpZp7rfts5syTvKcQmowDoICQSDtP1JkL9qECnrvc2Fi+PB9jRfNZgmz7QTSfwKgRmd1tHcOFgUH+KhGArsDwlmR+mzCo7YcEaGRYzHEl658TaVnU6+m01OdaDp9T4hkyL+ge5GqspBm1Xmcpf8D5Ax2N1EjwiB0Wz4TwH4C2swl4UV+xu6dJA9Yyiukb6RDzRnc4F6Rd2idm2orZkt2RWlAINWmNHdW+WqX+6+LFaL3XptjltczO+2RBDU9hiIx4j+YmpNI3QGacZPrTrN03Iqyz0zy+FPFBu6JSDKVvrFgmXbZcNz904inPaIIfKd1NZnJhAZaTXRMHV7j/NfhHj8ld9ftHEHYMY2vVNmqk6aREF+MJwDEyrDeJPO6LBXnGCrjIwquPviq8nuTF82cTrH+dliZda/E1rF9JKOsuVV1+hIZJyfyiKJAAro1G09JgOFcjaZ0WbrHeCmdgO742kirLK4P+0eqzcPpD9R6DcfzJoqGiguIB/Izjnl+MnAydDDcH9Cj2QyeoS3Vad9Fn5O9ytaHbyibkptOGct2aEdKoggWSa5oqt/T9TmOejG4YQrUIGQTdGd91RHvyZrbRKj6Ndf3whNvngPV9UHQ7Kgun0jmPkDoJOkhobeH0Z53DgZ9r8caBvEHet3OQKKNSwgIy9NLw6SWdynkIs9vINUq44CCeuhLdyvt0qexPHdq+pkNL0l6cexRvg7xe6lZlLlnjMnEALED0SziO7IpPwhIb101XbFuWXcaEKuEx9C2RggyBZFnO1WYo+wptHoWeYHY7f0Tmpzi4HrDdkn3XiXDcuCSs8jRCtULT06ie3re5l/WaeWRycKihiBBfZFfGQTo/pkgMoSMJjXgRefqiGohH2tp263kS+WqhCInwyyUytB2AM1oIMj6nZcJNmInyGOk9OlCLWw+yQ5H9imeAiLAXH8eJ1ALw0hqrE8EXmQIf29mpKh6IG8TEZKHv70Tp3pyn4o1XB9BcAdZh7W4rIm5bwuMkPjrXJzksugBVnw0p+ilTtD2L+hNFa0DW6TFZUlOI1DI6VxL5q4nSSadtbHgt1gSDGQ221pWypB8PAhozK2mQTqCi47MIoN/Y0L266y75wWxDY2KPbfCcRqJSKZG+KeRBnmchi+diAy0E4U6sjTlcqR6LaDlDE4eYSskLuya2KpxVSTq+tew7mp1USiMvaE5BzeWNlEvPuKng3rkOJbOB6kQPqGQVuvR5p9k/ppe7PnYQHrfrHMzg8ioyN5hFZYjlKYZWiwraM3gqSyImfwjf2mhdbMjVupkctoePU6wqIS6VUscK7/Icug57AKzda2pYgP0GFw7Si3Fa4/vtjoZgH6I+md8abDT8lCl4eS1cxWt3ypYoI08Cz/KU5qAgO+O4hwgfiaZD7+vT81HiLRNxsSMYayjJ0r4XqeFzkCJSMLM8TuDDIk4j7/3dEXS9Fzc3Jp9AXb47nUuv8N/pF604XJEZ2LLNfw5hteWa4YJVd3fB/PABWE7p0uhVRvaXUzs9tVeaMTv5L6MjMvGUnAvjIPcuya1dBfez4AouXyVLkCj/3jWO6Gz5lUI1D1uJKEvuIF9agaSmTSn77rpezTgueTr+ZyyRaHokTLJ64WjEw660lR+kHjeD2uLultxmXP4CDuoMPYf+LmCGaFBTsZMyBvAJTGmLODhtyYCHKyOSLLXqIA4pMZV2Hazw4gABjIoWd+twj/zKLurnch90bO0x8zVodiZHXQS1FGK3gIUfL+PankafB4+jL0J0zkn5zHTv9EywyCSkrwdC7/NNmLWnwOJjBhD5o4qNbOlSyYZpfjRGv08o1uSmp8l3UNQ4X3DuT0CirE7diW5BMCNs2tnhhHMW7vKjXodADQVUaw8AKFoFUOhnEDBFK1QbqcT8mAzSZ7q3Mhdo6XrZVLpZL7mHYnX6cyQ1fsw1dKKUfLbVFRULK0hefIUXZ8rNDUNUgMB1BAzfkNH04lk/DlNS3wnsXdVHbCO3pp35VujQQxmMPBG2tOYhOxedIekYUhumvUmnx/NCotVTfuSSuEx8dOEU69DhnV28FIfYGlaxbWTcDqhs+4xl0P4hzbsMShpfLo7zjoGQ8qG2k4Qc4KZjVMrlyQei5uQ0mfU/620cG0pplTE7v058sLqPV6E9+4KELuNOwDoUVeiEyWx1lV79LVoBNPAdYxWNNDhpz1IaWVuj+NoCoBzQ5M8WytPzv1ZFBsYBO7cy+1qmQ3RiHqHcl+nhlYVFhRLjhy3+kLOcQLXFUTgvC3rp0Py2laSze4LtApnAWYDkb6VAbUOQACp6OFQi3bo3dC7OrbG4T/Ail+anBfLzG0qCkEZlZv0aqnCnUIq0gQGly0/q81X/F8WB6WfFZGjXTHDnMNttmm6io3Y7fRl0SN2oeHMWfdMdLGlAypJ80p+pRZFCnuahoPFlHAGZus7QMYLvTcbVvJW/027Sp+kbEfqsPwDzA0C1U9MvxjMQwDOjPH6UNo3+NuY9W8dglBg2/nhdDNtYtw9hf3/8jvxTDxrDUC4hgKelgAADiRWzgVeB1jSmmHUY/F8G9flNZE+d05AWflWKbuw3Qa8hJAAAAAAAA" alt="" loading="lazy">
           <span class="dcard__trend" data-f="trending">Trending</span>
           <span class="dcard__veg" aria-hidden="true"><i></i></span>
         </div>
         <div class="dcard__b">
-          <h4>Wagyu Gyoza</h4>
+          <h4>Truffle Shio Ramen</h4>
           <p class="dcard__meta">
-            <span class="dcard__kcal" data-f="calories"><b>310</b> kcal</span>
-            <span class="dcard__price" data-f="prices">&#8377;480</span>
+            <span class="dcard__kcal" data-f="calories"><b>480</b> kcal</span>
+            <span class="dcard__price" data-f="prices">&#8377;620</span>
           </p>
           <p class="dcard__rate" data-f="ratings"><span>&#9733;&#9733;&#9733;&#9733;</span> 4.4 &middot; 212 reviews</p>
-          <p class="dcard__desc">A5 wagyu and roasted leek dumplings with a crisp lace skirt.</p>
-          <p class="dcard__all" data-f="allergens"><i>gluten</i><i>soy</i></p>
+          <p class="dcard__desc">Clear sea-salt broth, white truffle oil, a soft egg and bamboo.</p>
+          <p class="dcard__all" data-f="allergens"><i>egg</i><i>gluten</i><i>soy</i></p>
           <span class="dcard__cta">Add to plate</span>
         </div>
       </div>
@@ -1241,7 +1293,7 @@ section h2 span{color:var(--dim)}
   var rot=document.querySelector('[data-rot]');
   if(rot){
     var keys=[].map.call(rot.querySelectorAll('.rt__t'),function(t){return t.dataset.rt});
-    var i=0, timer=null, DUR=6000, paused=false;
+    var i=0, timer=null, DUR=3000, paused=false;
     function go(k){
       i=keys.indexOf(k);
       rot.querySelectorAll('.rt__t').forEach(function(t){
@@ -1266,6 +1318,69 @@ section h2 span{color:var(--dim)}
     }else start();
     rot.style.setProperty('--rtd',(DUR/1000)+'s');
   }
+
+  /* ---- live-typed terminal ----
+     Types the request, prints the response, flips show_calories off and
+     reprints without the field. Demonstrating the claim beats asserting it.
+     Runs only while on screen, and reduced-motion gets the end state at once. */
+  (function(){
+    var t=document.querySelector('[data-term]');if(!t)return;
+    var box=t.querySelector('[data-term-b]');
+    var SEQ=[
+      {c:'cmd', s:'curl ediblefactor.com/api/menu | jq .items[0]'},
+      {c:'', s:'{'},
+      {c:'key', s:'  "item_name": "Wagyu Gyoza",'},
+      {c:'key', s:'  "price_inr": 480,'},
+      {c:'hit', s:'  "calories": 310,'},
+      {c:'key', s:'  "is_vegetarian": true'},
+      {c:'', s:'}'},
+      {c:'note', s:''},
+      {c:'cmd', s:'plate settings > show calories > OFF'},
+      {c:'note', s:'saved. re-fetching...'},
+      {c:'', s:'{'},
+      {c:'key', s:'  "item_name": "Wagyu Gyoza",'},
+      {c:'key', s:'  "price_inr": 480,'},
+      {c:'gone', s:'  // calories: absent from the response'},
+      {c:'key', s:'  "is_vegetarian": true'},
+      {c:'', s:'}'},
+      {c:'note', s:'not hidden in the page. never sent.'}
+    ];
+    var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+    function paint(all){
+      box.innerHTML='';
+      SEQ.forEach(function(l){var p=document.createElement('p');
+        p.className='term__l '+l.c;p.textContent=l.s;box.appendChild(p)});
+    }
+    if(reduce){paint(true);return}
+
+    var li=0, ci=0, node=null, cur=null, running=false;
+    function reset(){box.innerHTML='';li=0;ci=0;node=null;
+      cur=document.createElement('span');cur.className='term__cur';}
+    function step(){
+      if(!running)return;
+      if(li>=SEQ.length){
+        setTimeout(function(){if(running){reset();step()}},4200);return;
+      }
+      var l=SEQ[li];
+      if(!node){node=document.createElement('p');node.className='term__l '+l.c;box.appendChild(node);
+        node.appendChild(cur);ci=0}
+      if(ci<l.s.length){
+        ci++;node.textContent=l.s.slice(0,ci);node.appendChild(cur);
+        /* commands type at a human rate, output lands fast - which is how a
+           terminal actually behaves and keeps the loop watchable. */
+        setTimeout(step, l.c==='cmd'?34:5);
+      }else{
+        node.textContent=l.s;node=null;li++;
+        setTimeout(step, l.c==='cmd'?520:(l.c==='note'?700:70));
+      }
+    }
+    if('IntersectionObserver' in window){
+      new IntersectionObserver(function(es){es.forEach(function(e){
+        if(e.isIntersecting){if(!running){running=true;reset();step()}}
+        else{running=false}
+      })},{threshold:.3}).observe(t);
+    }else{running=true;reset();step()}
+  })();
 
   /* ---- the switch demo ---- */
   function wire(root){
