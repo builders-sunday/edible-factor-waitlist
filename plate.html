@@ -927,7 +927,16 @@ section h2 span{color:var(--dim)}
 .cmp__b{color:var(--wine)}
 .cmp__stage{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--line);
   background:var(--sf);height:430px;cursor:ew-resize;touch-action:none;
+  /* Belt and braces alongside the preventDefault in JS. This is a control, not
+     prose - the same copy is argued in the sections below - so nothing here is
+     worth selecting, and a stray selection during a sweep looks like a fault.
+     touch-callout stops iOS offering "Copy / Save Image" on a long press. */
+  user-select:none;-webkit-user-select:none;
+  -webkit-touch-callout:none;
   box-shadow:0 1px 2px rgba(0,0,0,.6),0 40px 80px -30px rgba(0,0,0,.85)}
+/* An <img> is natively draggable, so a sweep beginning on a photo would tear
+   off a ghost image instead of moving the handle. */
+.cmp__stage img{-webkit-user-drag:none;user-select:none;pointer-events:none}
 .cmp__pane{position:absolute;inset:0;padding:22px}
 .cmp__pane--a{background:#0e0b0d}
 /* The B pane is clipped, not the A pane, so the "after" is what the handle
@@ -1691,13 +1700,24 @@ section h2 span{color:var(--dim)}
   }
   var down=false;
   stage.addEventListener('pointerdown',function(e){
+    // THE FIX. Without this the browser starts a text selection on the same
+    // press that starts the drag, and sweeping the handle paints a selection
+    // across both panes. setPointerCapture keeps EVENTS flowing to us but does
+    // nothing about selection - only preventing the default does.
+    e.preventDefault();
     down=true;
     // Record before capture: setPointerCapture throws on some pointer ids.
     try{stage.setPointerCapture(e.pointerId)}catch(err){}
     fromX(e.clientX);
   });
+  // A drag that began outside and crossed into the stage can still leave a
+  // selection behind it. Clearing on release costs nothing and covers the case.
+  stage.addEventListener('dragstart',function(e){e.preventDefault()});
   stage.addEventListener('pointermove',function(e){if(down)fromX(e.clientX)});
-  addEventListener('pointerup',function(){down=false});
+  addEventListener('pointerup',function(){
+    if(down && window.getSelection) { try{window.getSelection().removeAllRanges()}catch(err){} }
+    down=false;
+  });
   h.addEventListener('keydown',function(e){
     if(e.key==='ArrowLeft'){set(pct-4);e.preventDefault()}
     if(e.key==='ArrowRight'){set(pct+4);e.preventDefault()}
