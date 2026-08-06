@@ -898,16 +898,32 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
   .hero__title.in-view .word:nth-child(4) { transition-delay: .50s; }
 
   /* === Friction row (problem section) === */
+  /* Borderless. With the hairline gone the surface carries the card on its
+     own: the wash steps up and takes a shadow pair - a tight contact layer
+     that draws the edge the border used to draw, under a wide soft one for
+     height. This page is cream and single-theme, so the shadow is warm-neutral
+     rather than black, which would read as soot on paper.
+     Hover lifts and brightens the surface rather than tinting a border that no
+     longer exists. */
   .friction {
     container-type: inline-size;
-    border: 1px solid rgba(217,95,82,0.12);
-    background: linear-gradient(180deg, rgba(217,95,82,0.03), rgba(217,95,82,0.00));
+    background: linear-gradient(180deg, rgba(217,95,82,0.07), rgba(217,95,82,0.015));
     border-radius: 18px;
     padding: 28px 26px;
-    transition: border-color .25s ease, transform .25s ease;
+    box-shadow:
+      0 1px 2px rgba(90,52,30,0.13),
+      0 14px 34px -18px rgba(90,52,30,0.26),
+      inset 0 1px 0 rgba(255,255,255,0.55);
+    transition: background .25s ease, transform .25s ease, box-shadow .25s ease;
   }
-  .friction:hover { border-color: rgba(217,95,82,0.32); transform: translateY(-2px); }
-  .friction__index { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.16em; color: var(--ink-low); text-transform: uppercase; }
+  .friction:hover {
+    background: linear-gradient(180deg, rgba(217,95,82,0.11), rgba(217,95,82,0.03));
+    transform: translateY(-2px);
+    box-shadow:
+      0 1px 2px rgba(90,52,30,0.15),
+      0 22px 46px -18px rgba(90,52,30,0.32),
+      inset 0 1px 0 rgba(255,255,255,0.7);
+  }
   .friction strike { color: var(--ink-low); text-decoration-color: var(--ink-low); }
   .friction em { font-weight: 700; color: var(--periwinkle); font-family: 'Space Grotesk', sans-serif; font-size: 1.04em; }
   /* The card copy sizes off the CARD. At a 1024px viewport the three cards
@@ -2354,19 +2370,16 @@ html.theme-light .bp-knob { left: 3px; }
       <!-- Right: 3 friction cards in a tight row -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="friction reveal">
-          <div class="friction__index mb-4">Reason · 01</div>
           <p class="display text-2xl leading-tight">
             Calorie apps don't know <s>what you ordered</s>. <em>What it cost you.</em>
           </p>
         </div>
         <div class="friction reveal">
-          <div class="friction__index mb-4">Reason · 02</div>
           <p class="display text-2xl leading-tight">
             Budget apps don't know <s>the receipt total</s>. <em>What it fed you.</em>
           </p>
         </div>
         <div class="friction reveal">
-          <div class="friction__index mb-4">Reason · 03</div>
           <p class="display text-2xl leading-tight">
             Menus don't tell you whether you can <em>afford the pasta</em>. Calorically, or otherwise.
           </p>
