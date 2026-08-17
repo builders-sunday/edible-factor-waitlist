@@ -186,7 +186,9 @@
       <li><strong>Account data.</strong> Email address, name (if provided), magic-link tokens.</li>
       <li><strong>Usage data.</strong> Dishes added to your plate, daily targets, dietary preferences, and visit timestamps.</li>
       <li><strong>Device data.</strong> Browser type, screen size, network speed (used to enable Lite mode).</li>
-      <li><strong>Location data.</strong> Approximate area only (Indiranagar, HSR Layout, etc.) for restaurant filtering. We do not store precise GPS coordinates.</li>
+      <li><strong>Location data.</strong> Approximate area only (Indiranagar, HSR Layout, etc.) for restaurant filtering. We do not store precise GPS coordinates. When you load this site we look up an approximate location from your IP address using a third-party service (see <em>Who else processes your data</em>).</li>
+      <li><strong>Job applicant data.</strong> If you apply through our careers page we collect your name, phone number, email, gender, age and any details you submit, and we share them with the hiring restaurant. Do not send us information you do not want shared with a prospective employer.</li>
+      <li><strong>Photos you submit.</strong> If you scan a menu or a dish, the photo is sent to a third-party AI provider to read it (see <em>Who else processes your data</em>).</li>
     </ul>
 
     <h3>What we do not collect</h3>
@@ -203,11 +205,33 @@
       <li>To improve the product through aggregated, anonymized usage analytics.</li>
     </ul>
 
+    <h3>Who else processes your data</h3>
+    <p>We use the following third parties to run the service. Each receives only what its function needs, and none of them buys your data from us.</p>
+    <ul>
+      <li><strong>Cloudflare</strong> - hosting, CDN and bot protection for every page. Receives your IP address and request metadata on every visit.</li>
+      <li><strong>MongoDB Atlas</strong> - our database. Stores your account and usage data.</li>
+      <li><strong>Google (Gemini)</strong> - powers the AI chat and menu or dish scanning. Receives the text of your questions, the dietary targets relevant to an answer, and any photo you submit for scanning.</li>
+      <li><strong>Google Fonts</strong> - serves typefaces on our marketing pages. Receives your IP address and browser user-agent when a font loads.</li>
+      <li><strong>PostHog</strong> - product analytics on the app. Receives usage events and device metadata.</li>
+      <li><strong>Loops</strong> - email delivery and our waitlist and contact list. Receives your email address and signup source.</li>
+      <li><strong>ipwho.is</strong> - approximate IP-based geolocation. Receives your IP address.</li>
+      <li><strong>Discord</strong> - internal team notifications for signups and applications. Receives the notification contents, which can include your email address.</li>
+      <li><strong>Razorpay</strong> - payment processing, once paid plans are live. Receives your payment details directly; we never see or store your card number.</li>
+    </ul>
+
+    <h3>How long we keep it</h3>
+    <ul>
+      <li><strong>Account and usage data</strong> - for as long as your account exists. Delete your account and we delete it.</li>
+      <li><strong>Waitlist and contact records</strong> - until you unsubscribe or ask us to remove you.</li>
+      <li><strong>Job applications</strong> - retained while the role is open and for a reasonable period afterwards so we can consider you for similar roles. Ask us and we will delete yours sooner.</li>
+      <li><strong>Raw IP addresses</strong> collected for abuse prevention are kept for a limited period and then expire automatically.</li>
+    </ul>
+
     <h3>Your rights</h3>
     <ul>
       <li>Request access to all data we hold about you.</li>
       <li>Request correction or deletion of your account at any time.</li>
-      <li>Withdraw consent for analytics by toggling cookies in <a href="#cookies">Cookies</a>.</li>
+      <li>Ask us to stop processing your data for analytics. Email us and we will action it manually. We are honest that there is no self-serve toggle yet, so we will not pretend otherwise - see <a href="#cookies">Cookies</a>.</li>
       <li>Lodge a complaint with the relevant data protection authority.</li>
     </ul>
 
@@ -255,13 +279,13 @@
     <ul>
       <li><strong>Essential.</strong> Session token after sign-in. Cannot be disabled if you want to stay signed in.</li>
       <li><strong>Functional.</strong> Your plate, daily targets, and Lite-mode preference, all in <code>localStorage</code>. Cleared when you sign out or clear browser data.</li>
-      <li><strong>Analytics.</strong> Aggregated usage events via Plausible (no cross-site tracking, no fingerprinting). Opt out below.</li>
+      <li><strong>Analytics.</strong> This marketing site sets no analytics or tracking cookies at all. The signed-in app records product-usage events through PostHog; those are tied to your account rather than to a tracking cookie on this site.</li>
     </ul>
 
     <h3>Manage your choices</h3>
     <p>You can clear cookies and <code>localStorage</code> at any time via your browser&apos;s settings. To opt out of analytics specifically, set the <em>Analytics</em> toggle in your account settings (post sign-in) or decline at the cookie banner.</p>
 
-    <p><span class="review-flag">REVIEW</span> embed actual Plausible opt-out instructions and DPDP-compliant consent UI.</p>
+    <p><span class="review-flag">REVIEW</span> a DPDP-compliant consent surface for the app's PostHog analytics is not built yet. Today analytics initialise for every signed-in visitor with no consent gate and no opt-out, which this policy should not imply otherwise about.</p>
   </section>
 
   <!-- ========================================================== -->
