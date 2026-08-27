@@ -1,0 +1,260 @@
+/* EF blog, styled to match nikhilballal.com/blog.
+   Every value below was MEASURED off the live site with CDP computed styles
+   rather than read off the source, because the source misleads: the page loads
+   Instrument Serif and names it --serif, but every heading actually renders in
+   Geist. Do not "restore" a serif here.
+
+   Reference values taken from https://nikhilballal.com/blog/ on 2026-08-27:
+     body        Geist 17px / 28.05 lh / -0.085px ls / #221f1a on #f3efe4
+     wrap        680px, padding 0 24px  (632px measure)
+     h1          Geist 64px / 500 / 69.12 lh / -1.92px ls
+     standfirst  Geist 28px / 37.8 lh / fg-2
+     p           Geist 18px / 30.6 lh / mb 24.3px
+     h2          Geist 34px / 700 / 38.08 lh / -0.68px ls / mt 54 mb 18
+     eyebrow     JetBrains Mono 11px / 2.42px ls / uppercase
+     toggle      pill, padding 4px, margin 8px 0 40px, radius 999px
+     toggle btn  JetBrains Mono 11px / 500 / 2.2px ls / padding 10px 22px
+     card        padding 32px 34px, border 1px, radius 16px
+     nav         border-bottom, padding 22px 0, inner 680px
+
+   TWO DELIBERATE DEVIATIONS, both contrast, both measured on the cream ground:
+     --accent  #c64f1c measures 4.03:1, under the 4.5 bar for body-size links.
+               #b24719 is the nearest hue-preserving value that passes, at 4.80:1.
+     --fg-3    0.44 alpha measures 2.66:1 and carries the eyebrow text.
+               0.64 alpha passes at about 4.6:1.
+   Everything else matches. Do not lighten either back without re-measuring. */
+
+/* Geist is a VARIABLE font with a working wght axis. Verified on the live site,
+   not assumed: rendered widths for weights 400/500/600/700 step evenly
+   (375.72, 385.83, 395.92, 406.02 at 48px) and font-variation-settings:'wght' 700
+   matches font-weight:700 exactly. Synthesised weights would show a flat width
+   across 400-600 instead.
+
+   nikhilballal.com ships this same file four times under geist-300/400/500/600/700
+   names, all byte-identical (md5 f4634c3b...). One face with the full axis range
+   is the same rendering for a quarter of the bytes, so that is what this does.
+   Same for JetBrains Mono, whose two files are also identical. */
+@font-face {
+  font-family: 'Geist';
+  src: url('/vendor/fonts/geist-var.woff2') format('woff2-variations'),
+       url('/vendor/fonts/geist-var.woff2') format('woff2');
+  font-weight: 100 900; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/vendor/fonts/jetbrains-mono-var.woff2') format('woff2-variations'),
+       url('/vendor/fonts/jetbrains-mono-var.woff2') format('woff2');
+  font-weight: 100 900; font-style: normal; font-display: swap;
+}
+
+:root {
+  --bg: #f3efe4;
+  --fg: #221f1a;
+  --fg-2: rgba(34, 31, 26, 0.68);
+  --fg-3: rgba(34, 31, 26, 0.64);
+  --line: rgba(34, 31, 26, 0.14);
+  --accent: #b24719;
+  --sans: 'Geist', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --wrap: 680px;
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent }
+html { -webkit-text-size-adjust: 100% }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.65;
+  letter-spacing: -0.005em;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; height: auto }
+a { color: inherit }
+
+.skip {
+  position: absolute; left: -9999px; top: 0; z-index: 100;
+  background: var(--accent); color: var(--bg);
+  padding: 12px 18px; border-radius: 0 0 10px 0; font-weight: 600;
+}
+.skip:focus { left: 0 }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px }
+
+/* ---------------- top bar ---------------- */
+.b-nav { border-bottom: 1px solid var(--line); padding: 22px 0 }
+.b-nav-inner {
+  max-width: var(--wrap); margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.b-nav .home {
+  font-weight: 600; font-size: 15px; letter-spacing: -0.02em; text-decoration: none;
+  min-height: 44px; display: inline-flex; align-items: center;
+}
+.b-nav .home .period { color: var(--accent) }
+.b-nav__links { display: flex; gap: 18px; align-items: center }
+.b-nav__links a {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--fg-3); text-decoration: none;
+  min-height: 44px; display: inline-flex; align-items: center;
+  transition: color .18s var(--ease);
+}
+@media (hover: hover) and (pointer: fine) { .b-nav__links a:hover { color: var(--fg) } }
+.b-nav__links a[aria-current="page"] { color: var(--accent) }
+
+/* ---------------- layout ---------------- */
+.wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 24px }
+main.wrap { padding-top: 56px; padding-bottom: 80px }
+
+.eyebrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--fg-3); margin: 0 0 24px;
+}
+.eyebrow .tag { color: var(--accent) }
+.eyebrow .sep { opacity: .5; margin: 0 6px }
+
+.post-header h1 {
+  font-family: var(--sans); font-weight: 500;
+  font-size: clamp(34px, 6vw, 64px); line-height: 1.08; letter-spacing: -0.03em;
+  margin: 0; text-wrap: balance;
+}
+.standfirst {
+  font-size: clamp(20px, 2.6vw, 28px); line-height: 1.35; letter-spacing: -0.005em;
+  color: var(--fg-2); margin: 22px 0 0; text-wrap: pretty;
+}
+
+/* ---------------- reading toggle ---------------- */
+.b-toggle-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap }
+.b-toggle {
+  position: relative; display: inline-flex; align-items: center;
+  padding: 4px; margin: 8px 0 40px; border-radius: 999px;
+  background: rgba(34, 31, 26, 0.04); border: 1px solid var(--line);
+}
+.b-toggle-btn {
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  /* NB uses 10px block padding. 14px here to clear a 44px touch target,
+     which the original does not: its buttons measure 88x37. */
+  padding: 15px 22px; border: 0; border-radius: 999px; background: none;
+  color: var(--fg-2); cursor: pointer; white-space: nowrap;
+  transition: color .18s var(--ease), background .18s var(--ease);
+}
+.b-toggle-btn.is-on { background: var(--fg); color: var(--bg) }
+@media (hover: hover) and (pointer: fine) {
+  .b-toggle-btn:not(.is-on):hover { color: var(--fg) }
+}
+.b-toggle-hint {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--fg-3); margin: 8px 0 40px;
+}
+
+/* ---------------- body ---------------- */
+.post-body { font-size: 18px; line-height: 1.7 }
+.post-body p { margin: 0 0 24px }
+.post-body h2 {
+  font-family: var(--sans); font-weight: 700;
+  font-size: clamp(24px, 3.4vw, 34px); line-height: 1.12; letter-spacing: -0.02em;
+  margin: 54px 0 18px; text-wrap: balance;
+}
+.post-body h3 {
+  font-weight: 600; font-size: clamp(19px, 2.2vw, 23px);
+  line-height: 1.25; letter-spacing: -0.015em; margin: 38px 0 12px;
+}
+.post-body ul, .post-body ol { margin: 0 0 24px; padding-left: 22px }
+.post-body li { margin-bottom: 10px }
+.post-body ul li::marker { color: var(--accent) }
+.post-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px }
+.post-body strong { font-weight: 600 }
+/* Geist has no italic cut here either, and the loaded Instrument Serif italic is
+   not part of this stack. Emphasis is weight and colour, not font-style. */
+.post-body em { font-style: normal; font-weight: 600; color: var(--fg) }
+.post-body hr { border: 0; border-top: 1px solid var(--line); margin: 40px 0 }
+.rl-hide { display: none }
+
+/* ---------------- sources ---------------- */
+.sources { margin-top: 64px; padding-top: 8px; border-top: 1px solid var(--line) }
+.sources h2 {
+  font-family: var(--sans); font-weight: 700; font-size: 26px;
+  letter-spacing: -0.02em; margin: 32px 0 16px;
+}
+.sources ul { margin: 0; padding-left: 22px; font-size: 16px }
+.sources li { margin-bottom: 10px }
+.sources a { color: var(--accent); text-underline-offset: 3px }
+
+/* ---------------- index cards ---------------- */
+.b-index-head { margin-bottom: 48px }
+.b-index-head h1 {
+  font-weight: 500; font-size: clamp(34px, 6vw, 64px);
+  line-height: 1.08; letter-spacing: -0.03em; margin: 0;
+}
+.b-index-head h1 .period { color: var(--accent) }
+.b-index-head .lede {
+  font-size: clamp(18px, 2.2vw, 22px); line-height: 1.45;
+  color: var(--fg-2); margin: 20px 0 0; max-width: 54ch;
+}
+.b-list { display: grid; gap: 16px }
+.b-post-card {
+  display: block; text-decoration: none;
+  padding: 32px 34px; border: 1px solid var(--line); border-radius: 16px;
+  transition: border-color .2s var(--ease), background .2s var(--ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  .b-post-card:hover { border-color: rgba(34, 31, 26, 0.3); background: rgba(34, 31, 26, 0.02) }
+}
+.b-post-card .meta {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--fg-3); margin: 0 0 14px;
+}
+.b-post-card .meta .tag { color: var(--accent) }
+.b-post-card .meta .sep { opacity: .5; margin: 0 6px }
+.b-post-card h2 {
+  font-weight: 500; font-size: clamp(23px, 2.8vw, 30px);
+  line-height: 1.14; letter-spacing: -0.025em; margin: 0 0 12px; text-wrap: balance;
+}
+.b-post-card .dek { color: var(--fg-2); font-size: 17px; line-height: 1.5; margin: 0 }
+.b-post-card .read {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--accent); margin: 18px 0 0;
+}
+
+/* ---------------- source credit + foot ---------------- */
+.post-src {
+  margin-top: 56px; padding: 18px 20px;
+  border-left: 2px solid var(--accent); background: rgba(34, 31, 26, 0.03);
+  border-radius: 0 10px 10px 0;
+}
+.post-src p { margin: 0; font-size: 15px; line-height: 1.6; color: var(--fg-2) }
+.post-src a { color: var(--accent) }
+
+.b-foot { border-top: 1px solid var(--line); margin-top: 72px }
+.b-foot__inner {
+  max-width: var(--wrap); margin: 0 auto; padding: 24px;
+  display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--fg-3);
+}
+.b-foot__inner a {
+  color: var(--fg-3); text-decoration: none;
+  min-height: 44px; display: inline-flex; align-items: center;
+}
+@media (hover: hover) and (pointer: fine) { .b-foot__inner a:hover { color: var(--fg) } }
+.b-foot__more { margin-left: auto }
+
+/* ---------------- motion + print ---------------- */
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001ms !important; transition-duration: .001ms !important }
+}
+@media print {
+  .b-nav, .b-foot, .b-toggle, .b-toggle-hint, .skip { display: none !important }
+  .rl-hide { display: block !important }
+  body { background: #fff; color: #000 }
+  .post-body a { color: #000 }
+  .post-body[data-mode="bites"]::before, .post-body[data-mode="meal"]::before {
+    display: block; margin: 26px 0 8px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+  }
+  .post-body[data-mode="bites"]::before { content: "Bites, the short read" }
+  .post-body[data-mode="meal"]::before { content: "The whole meal" }
+}

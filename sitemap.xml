@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Hand-maintained. why-not-petpooja is deliberately absent: robots.txt
+     disallows it, so listing it here would contradict that. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://ediblefactor.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://ediblefactor.com/blog</loc><lastmod>2026-08-27</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ediblefactor.com/blog/ferrero-rocher-30-percent-chocolate-what-menus-can-learn</loc><lastmod>2026-08-27</lastmod><priority>0.7</priority></url>
+  <url><loc>https://ediblefactor.com/plate</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ediblefactor.com/careers</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ediblefactor.com/legal</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+</urlset>
