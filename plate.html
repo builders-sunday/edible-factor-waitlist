@@ -1011,6 +1011,100 @@ section h2 span{color:var(--dim)}
   .cmp__pane{padding:16px}
   .own__card{max-width:none}
 }
+
+/* ============================================================================
+   WIDE-SCREEN PASS (2026-08-27)
+   The page was authored against fixed 1140/900/760px wraps with only max-width
+   media queries, so 1440px and 3440px rendered byte-identically: measured
+   docH 7010 at both, with content columns of 516-1084px stranded in the middle
+   of a 3440px viewport. This block makes the wrap scale upward, tightens the
+   flat 96px vertical rhythm, and lets the hard-wrapped headings run on one line
+   once there is room. Nothing here fires below 900px: mobile is unchanged.
+   ========================================================================== */
+
+:root{
+  /* Stage width: figures and grids, the things that genuinely want the pixels */
+  --wrap:1140px;
+  /* Prose keeps a readable measure no matter how wide the display gets */
+  --wrap-prose:900px;
+  --wrap-tight:760px;
+  --pad-x:28px;
+  /* Vertical rhythm, fluid. Was a flat 96px at every width */
+  --sec-y:clamp(56px,5.2vw,84px);
+}
+@media (min-width:1600px){ :root{ --wrap:1360px; --wrap-prose:980px;  --pad-x:40px } }
+@media (min-width:2000px){ :root{ --wrap:1560px; --wrap-prose:1040px; --pad-x:56px } }
+@media (min-width:2600px){ :root{ --wrap:1760px; --wrap-prose:1100px } }
+
+.why,.prs,.rooms,.ft,.ch__grid,.cmp{ max-width:var(--wrap) }
+.truth{ max-width:var(--wrap-prose) }
+.claim{ max-width:var(--wrap-tight) }
+
+.why,.prs,.rooms,.truth,.claim{ padding:var(--sec-y) var(--pad-x) 0 }
+.ch{ padding:var(--sec-y) 0 }
+.ch__grid,.cmp{ padding-left:var(--pad-x); padding-right:var(--pad-x) }
+.ft{ margin-top:var(--sec-y); padding:30px var(--pad-x) calc(var(--sec-y) * .8) }
+.cmp{ margin-top:clamp(28px,3vw,44px) }
+.why__grid{ margin-top:clamp(28px,3vw,40px) }
+
+/* Headings: balance kills the orphaned last word ("...when it is / true"), and
+   `br.brk` marks an authored line break that is only wanted while narrow. */
+.why__hd h2,.prs h2,.rooms h2,.truth h2,.claim h2{ text-wrap:balance }
+@media (min-width:900px){
+  br.brk{ display:none }
+  /* The <br> was the ONLY whitespace between the two halves in the source, so
+     hiding it alone welds them together ("...on Fridayis the menu..."). */
+  br.brk + span::before{ content:' ' }
+}
+
+/* The hero reads as one sentence on a wide screen instead of a stacked pair */
+@media (min-width:1100px){
+  .ch h1 b,.ch h1 span{ display:inline }
+  .ch h1 b::after{ content:' ' }
+  .ch__l{ width:min(100%,900px) }
+}
+@media (min-width:1600px){ .ch__l{ width:min(100%,1120px) } }
+/* Enough measure for the whole sentence on one line at the 66px the clamp tops
+   out at. Below this width the two-line stack is the correct result. */
+@media (min-width:2000px){ .ch__l{ width:min(100%,1340px) } }
+
+/* Four short cards abreast once there is room: same content, far less vertical
+   run, which is most of the wasted space on desktop */
+@media (min-width:1500px){ .why__grid{ grid-template-columns:repeat(4,1fr) } }
+
+/* This eyebrow carries the pitch, so it gets to be a line of type rather than a
+   10px mono whisper, and the old headline steps back to be its supporting line */
+.why__hd .sec__eye{
+  font-family:inherit; font-size:clamp(26px,3.2vw,44px); line-height:1.1;
+  letter-spacing:-.03em; text-transform:none; color:var(--ink);
+  font-weight:600; margin-bottom:12px; text-wrap:balance;
+}
+.why__hd h2{ font-size:clamp(16px,1.6vw,21px); font-weight:400; color:var(--mute); letter-spacing:-.01em; line-height:1.5 }
+.why__hd h2 span{ display:inline; color:var(--mute) }
+
+/* The caption is the whole argument of the comparison figure, so it reads as a
+   pair of labels rather than two footnotes under it */
+.cmp__cap{ font-family:inherit; font-size:clamp(13px,1.2vw,17px); letter-spacing:-.01em; font-weight:600 }
+.cmp__a{ color:var(--dim) }
+.cmp__b{ color:var(--wine) }
+
+/* The three remaining fixed blocks. These were the last sections still pinned
+   to a ~1024-1080px column while the rest of the page had started to scale. */
+.csc__hd,.csc__card{ max-width:var(--wrap) }
+.csc__hd p{ max-width:72ch }
+.vt__panes{ max-width:var(--wrap); padding-left:var(--pad-x); padding-right:var(--pad-x) }
+.term{ max-width:min(var(--wrap-prose), 980px) }
+
+/* `.csc` reserved 80rem (1280px) of min-height plus 320px of inner padding to
+   give its scroll-driven tilt somewhere to run. The handler normalises over
+   `r.height + innerHeight`, so a shorter section completes the same rotation
+   over less scroll - it costs nothing but reclaims most of the dead band that
+   sat above and below the tablet. */
+@media (min-width:768px){
+  .csc{ min-height:clamp(40rem,44vw,58rem); padding:clamp(24px,3vw,56px) }
+  .csc__inner{ padding:clamp(40px,5vw,96px) 0 }
+  .csc__scr{ height:clamp(24rem,26vw,38rem) }
+}
 </style>
 
 
@@ -1284,8 +1378,8 @@ section h2 span{color:var(--dim)}
 </div>
 <section class="why" id="control">
   <div class="why__hd">
-    <p class="sec__eye">The distinction</p>
-    <h2>Everyone says &ldquo;you control your listing&rdquo;<br><span>Here is what that means when it is true</span></h2>
+    <p class="sec__eye">Why you should give us a shot</p>
+    <h2>Everyone says &ldquo;you control your listing&rdquo;.<br class="brk"><span>Here is what that means when it is true</span></h2>
   </div>
 
   <div class="term" data-term aria-label="A demonstration of the public menu API with calories switched off">
@@ -1383,7 +1477,7 @@ section h2 span{color:var(--dim)}
 <section class="prs" id="print">
   <div class="prs__l">
     <p class="sec__eye">Print studio</p>
-    <h2>The menu you print on Friday<br><span>is the menu you changed on Thursday</span></h2>
+    <h2>The menu you print on Friday<br class="brk"><span>is the menu you changed on Thursday</span></h2>
     <p class="lede">Seven formats, from an A3 entryway poster to a pocket passport card, all pulling live from your published menu. Change a price and every format is correct before you reach the printer</p>
     <ul class="prs__list">
       <li><b>A3 poster</b><span>297 x 420 mm</span></li>
@@ -1394,7 +1488,6 @@ section h2 span{color:var(--dim)}
       <li><b>Promo flyer (DL)</b><span>99 x 210 mm</span></li>
       <li><b>QR card</b><span>100 x 100 mm</span></li>
     </ul>
-    <p class="micro">Light or dark stock &middot; mm or inches &middot; FSSAI licence line &middot; your own watermark</p>
   </div>
   <div class="prs__r">
     <div class="sheet">
@@ -1412,7 +1505,7 @@ section h2 span{color:var(--dim)}
 </section>
 <section class="rooms" id="rooms">
   <p class="sec__eye">Same console, different room</p>
-  <h2>A tasting menu and a flat white<br><span>do not want the same defaults</span></h2>
+  <h2>A tasting menu and a flat white<br class="brk"><span>do not want the same defaults</span></h2>
   <div class="vt__tabs" role="tablist"><button class="vt__t on" data-vt="fine">Fine dining</button><button class="vt__t" data-vt="cafe">Neighbourhood cafe</button><button class="vt__t" data-vt="coffee">Coffee shop</button></div>
   <div class="vt__panes"><div class="vt__p on" data-vtp="fine">
   <p class="vt__sub">A room that plates 40 covers a night</p><h3>Your tasting menu changes weekly<br><span>Your listing should too</span></h3><p class="lede">Chefs change a course on Tuesday and the printed menu is wrong by Wednesday. One record per dish, updated once, and the QR on the table is correct before service</p>
@@ -1427,7 +1520,7 @@ section h2 span{color:var(--dim)}
 </section>
 <section class="truth" id="truth">
   <p class="sec__eye">Straight answers</p>
-  <h2>The questions you were<br><span>going to ask anyway</span></h2>
+  <h2>The questions you were<br class="brk"><span>going to ask anyway</span></h2>
   <div class="truth__l">
     <details class="fq"><summary>What does it cost?</summary><p>One monthly subscription, and that is the whole bill. No setup fee, no per-outlet charge, no commission on covers, and nothing that appears on month three. Add a second location and the price does not move</p></details><details class="fq"><summary>So where is the catch?</summary><p>There is not one, and that is the point of charging you directly. We are paid by the restaurants who use the console, not by taking a slice of your covers or by selling your placement, which is why nobody can buy their way above you</p></details><details class="fq"><summary>Do you reorder my menu?</summary><p>No. There is no promoted placement and no sponsored slot. Nobody can pay to appear above you, and dish order is the one you set</p></details><details class="fq"><summary>Who owns the listing and the data?</summary><p>You do. Take it down whenever you want, and your menu leaves with you in a file you can read</p></details><details class="fq"><summary>Is the analytics real yet?</summary><p>Not yet, and we would rather you read that here than find out in month two. The dashboard ships today and the screens are real software, but the numbers on Today and Trends are sample values until the telemetry endpoints land. Everything else on this page - the menu, the switches, the listing, Print Studio - is live now</p></details><details class="fq"><summary>I already have a menu somewhere. Do I retype it?</summary><p>No. Send a CSV, a PDF, or clear photographs of the printed menu. We load it, you check it, and it goes live once you are happy</p></details><details class="fq"><summary>What if I have twenty locations?</summary><p>The subscription does not change. Outlets are unlimited on every plan, each with its own hours, covers and switches, all reading one menu underneath</p></details>
   </div>
