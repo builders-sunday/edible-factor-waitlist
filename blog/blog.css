@@ -1,0 +1,252 @@
+/* Content hub styles: /blog, /news, /guides, /tools.
+   Dark only, matching every other sub-page on this site (careers, legal,
+   why-not-petpooja). index.html is the only page with a light theme.
+
+   Token note: --ink-low is #7d799a here, NOT the #6b6885 that careers.html and
+   why-not-petpooja.html still carry. index.html:135 records #6b6885 as measured
+   at 3.85:1 on #040407, under the 4.5:1 bar. Do not copy it back in. */
+
+:root {
+  --bg: #040407;
+  --bg-2: #0a0a11;
+  --bg-3: #101019;
+  --ink: #eceaf3;
+  --ink-dim: #9693ac;
+  --ink-low: #7d799a;
+  --wine: #d95f52;
+  --wine-bright: #e8796b;
+  --calorie: #6eddf0;
+  --line: rgba(217, 95, 82, 0.14);
+  --line-soft: rgba(236, 234, 243, 0.08);
+  --wrap: 1140px;
+  --prose: 68ch;
+  --pad-x: 24px;
+  --sec-y: clamp(40px, 5vw, 72px);
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+}
+@media (min-width: 1600px) { :root { --wrap: 1320px; --pad-x: 40px } }
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent }
+html { -webkit-text-size-adjust: 100% }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit }
+img { max-width: 100%; height: auto }
+
+.skip {
+  position: absolute; left: -9999px; top: 0; z-index: 100;
+  background: var(--wine); color: var(--bg);
+  padding: 12px 18px; border-radius: 0 0 10px 0; font-weight: 600;
+}
+.skip:focus { left: 0 }
+:focus-visible { outline: 2px solid var(--calorie); outline-offset: 3px; border-radius: 4px }
+
+/* ---------------- app bar ---------------- */
+.appbar {
+  position: sticky; top: 0; z-index: 50;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line-soft);
+}
+.appbar__inner {
+  max-width: var(--wrap); margin: 0 auto;
+  padding: 0 var(--pad-x); min-height: 64px;
+  display: flex; align-items: center; gap: 16px;
+}
+.ef-logo-link {
+  display: inline-grid; place-content: center; flex: none;
+  /* the 36px mark needs a 44px hit area around it */
+  width: 44px; height: 44px; margin-left: -4px; border-radius: 10px;
+}
+.appbar__links { display: none; flex: 1; gap: 4px }
+.appbar__links a {
+  text-decoration: none; color: var(--ink-dim);
+  font-size: 14px; padding: 10px 12px; border-radius: 8px;
+  transition: color .18s var(--ease), background .18s var(--ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  .appbar__links a:hover { color: var(--ink); background: var(--bg-3) }
+}
+.appbar__links a[aria-current="page"] { color: var(--wine) }
+.appbar__right { margin-left: auto; display: flex; align-items: center; gap: 10px }
+
+.pill-cta {
+  display: inline-flex; align-items: center; min-height: 44px;
+  padding: 0 18px; border-radius: 9999px;
+  background: var(--wine);
+  /* white on this wine measures 3.68:1 and fails AA. The ground colour does not. */
+  color: var(--bg);
+  font-size: 14px; font-weight: 600; text-decoration: none; white-space: nowrap;
+  transition: transform .16s var(--ease), background .18s var(--ease);
+}
+@media (hover: hover) and (pointer: fine) { .pill-cta:hover { background: var(--wine-bright) } }
+.pill-cta:active { transform: scale(0.97) }
+
+.appbar__burger {
+  width: 44px; height: 44px; flex: none;
+  display: inline-grid; place-content: center; gap: 5px;
+  background: none; border: 1px solid var(--line); border-radius: 10px;
+  cursor: pointer;
+}
+.appbar__burger span {
+  display: block; width: 17px; height: 1.5px; background: var(--ink);
+  transition: transform .22s var(--ease), opacity .22s var(--ease);
+}
+.appbar__burger[aria-expanded="true"] span:first-child { transform: translateY(3.25px) rotate(45deg) }
+.appbar__burger[aria-expanded="true"] span:last-child { transform: translateY(-3.25px) rotate(-45deg) }
+
+.appbar__sheet {
+  border-top: 1px solid var(--line-soft);
+  padding: 8px var(--pad-x) 14px;
+  display: grid;
+}
+.appbar__sheet a {
+  text-decoration: none; color: var(--ink-dim);
+  padding: 13px 4px; min-height: 44px; display: flex; align-items: center;
+  border-bottom: 1px solid var(--line-soft); font-size: 15px;
+}
+.appbar__sheet a:last-child { border-bottom: 0 }
+.appbar__sheet a[aria-current="page"] { color: var(--wine) }
+.appbar__sheet[hidden] { display: none }
+
+@media (min-width: 900px) {
+  .appbar__links { display: flex }
+  .appbar__burger { display: none }
+  .appbar__sheet { display: none !important }
+}
+
+/* ---------------- layout ---------------- */
+.wrap { max-width: var(--wrap); margin: 0 auto; padding: var(--sec-y) var(--pad-x) }
+.display, h1, h2, h3 { font-family: 'Space Grotesk', system-ui, sans-serif; letter-spacing: -0.03em; line-height: 1.12 }
+/* Space Grotesk ships no italic cut. Accent with weight and colour, never
+   font-style, or the browser synthesises an oblique. */
+h1, h2, h3 { font-style: normal }
+
+.lead { max-width: var(--prose); margin-bottom: clamp(28px, 4vw, 44px) }
+.lead__eyebrow, .post__eyebrow, .card__meta {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-low); margin: 0 0 12px;
+}
+.lead h1 { font-size: clamp(30px, 5vw, 50px); margin: 0 0 14px; text-wrap: balance }
+.lead__sub { color: var(--ink-dim); font-size: 16px; margin: 0; max-width: 60ch }
+
+/* ---------------- index cards ---------------- */
+.cards { display: grid; gap: 14px }
+@media (min-width: 780px) { .cards { grid-template-columns: repeat(2, 1fr) } }
+@media (min-width: 1400px) { .cards { grid-template-columns: repeat(3, 1fr) } }
+.card {
+  display: block; text-decoration: none;
+  background: var(--bg-2); border: 1px solid var(--line-soft);
+  border-radius: 16px; padding: 22px;
+  transition: border-color .2s var(--ease), transform .2s var(--ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  .card:hover { border-color: var(--line); transform: translateY(-2px) }
+}
+.card:active { transform: scale(0.995) }
+.card h2 { font-size: 21px; margin: 0 0 10px; text-wrap: balance }
+.card__hook { color: var(--ink-dim); font-size: 14.5px; margin: 0; line-height: 1.55 }
+.card__meta span { opacity: .5 }
+
+/* ---------------- post ---------------- */
+.post { max-width: var(--prose); margin: 0 auto }
+.post__hd { margin-bottom: 26px }
+.post__eyebrow a {
+  color: var(--ink-low); text-decoration: none;
+  padding: 12px 0; margin: -12px 0; display: inline-block;
+}
+.post__eyebrow a:hover { color: var(--ink-dim) }
+.post h1 { font-size: clamp(28px, 4.4vw, 44px); margin: 0 0 16px; text-wrap: balance }
+.post__hook { color: var(--ink-dim); font-size: 17px; margin: 0; line-height: 1.5 }
+
+.post__body { margin-top: 26px }
+.post__body h2 {
+  font-size: clamp(21px, 2.6vw, 27px); margin: 38px 0 12px;
+  text-wrap: balance; color: var(--ink);
+}
+.post__body h3 { font-size: 18px; margin: 28px 0 8px }
+.post__body p { margin: 0 0 18px; color: #d8d5e4 }
+.post__body ul, .post__body ol { margin: 0 0 18px; padding-left: 22px; color: #d8d5e4 }
+.post__body li { margin-bottom: 8px }
+.post__body a { color: var(--calorie); text-underline-offset: 3px }
+.post__body strong { color: var(--ink); font-weight: 600 }
+.post__body hr { border: 0; border-top: 1px solid var(--line-soft); margin: 32px 0 }
+.rt-off { display: none }
+
+.post__src {
+  margin-top: 40px; padding: 16px 18px;
+  border-left: 2px solid var(--line);
+  background: var(--bg-2); border-radius: 0 12px 12px 0;
+}
+.post__src p { margin: 0; font-size: 13.5px; color: var(--ink-dim); line-height: 1.6 }
+.post__src a { color: var(--calorie) }
+
+/* ---------------- reading toggle ---------------- */
+.rt {
+  display: inline-flex; gap: 4px; padding: 4px;
+  background: var(--bg-2); border: 1px solid var(--line-soft); border-radius: 9999px;
+}
+.rt button {
+  font: inherit; font-size: 13px; font-weight: 500;
+  /* 15px block padding keeps the control at a 44px target */
+  padding: 12px 20px; min-height: 44px; border: 0; border-radius: 9999px;
+  background: none; color: var(--ink-dim); cursor: pointer;
+  transition: color .18s var(--ease), background .18s var(--ease);
+}
+.rt button.is-on { background: var(--wine); color: var(--bg) }
+@media (hover: hover) and (pointer: fine) {
+  .rt button:not(.is-on):hover { color: var(--ink) }
+}
+.rt__status {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-low); margin: 12px 0 0;
+}
+
+/* ---------------- footer ---------------- */
+.ft { border-top: 1px solid var(--line-soft); margin-top: var(--sec-y) }
+.ft__row {
+  max-width: var(--wrap); margin: 0 auto;
+  padding: 26px var(--pad-x) 40px;
+  display: flex; flex-wrap: wrap; gap: 14px 26px; align-items: center;
+  font-size: 13px; color: var(--ink-low);
+}
+.ft__brand { font-family: 'Space Grotesk', system-ui, sans-serif }
+.ft__accent { color: var(--wine) }
+.ft__links { margin-left: auto; display: flex; flex-wrap: wrap; gap: 18px }
+.ft__links a {
+  color: var(--ink-low); text-decoration: none;
+  min-height: 44px; display: inline-flex; align-items: center;
+}
+@media (hover: hover) and (pointer: fine) { .ft__links a:hover { color: var(--ink-dim) } }
+
+/* ---------------- motion + print ---------------- */
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001ms !important; transition-duration: .001ms !important }
+}
+
+/* Without this, printing in one mode silently drops the other half of the
+   article and the reader gets no hint that anything is missing. */
+@media print {
+  .appbar, .ft, .rt, .rt__status, .skip { display: none !important }
+  .rt-off { display: block !important }
+  body { background: #fff; color: #000 }
+  .post__body p, .post__body ul, .post__body ol { color: #000 }
+  .post__body a { color: #000 }
+  .post__body[data-mode="bites"]::before,
+  .post__body[data-mode="meal"]::before {
+    display: block; margin: 26px 0 8px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: .14em; text-transform: uppercase;
+  }
+  .post__body[data-mode="bites"]::before { content: "Bites, the short read" }
+  .post__body[data-mode="meal"]::before { content: "The whole meal" }
+}

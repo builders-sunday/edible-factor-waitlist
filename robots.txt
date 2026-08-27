@@ -6,3 +6,5 @@ User-agent: *
 Allow: /
 Disallow: /why-not-petpooja
 Disallow: /why-not-petpooja.html
+
+Sitemap: https://ediblefactor.com/sitemap.xml

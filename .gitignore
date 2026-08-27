@@ -36,3 +36,17 @@ pnpm-debug.log*
 
 # One-off capture scripts (not part of the committed tools project)
 tools/capture-mockups/capture-*-fix.mjs
+
+# Agent research notes and fact-check reports behind the content hub.
+# Kept on disk as provenance for how claims are worded, deliberately not
+# committed: they are working notes, not shipped content, and they carry
+# em dashes that would trip the fleet dash gate on every future commit.
+.drafts/*.factcheck.md
+.drafts/page-pattern.md
+.drafts/calculators.md
+.drafts/news-facts.md
+# Drafts still carrying unresolved fact-check corrections. Each is added here
+# only once its required edits are applied and it builds.
+.drafts/camera-in-your-dining-room.md
+.drafts/india-sugar-price-rise-restaurants-2026.md
+.drafts/lindt-two-lawsuits-what-your-menu-promises.md
