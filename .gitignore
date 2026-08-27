@@ -45,8 +45,3 @@ tools/capture-mockups/capture-*-fix.mjs
 .drafts/page-pattern.md
 .drafts/calculators.md
 .drafts/news-facts.md
-# Drafts still carrying unresolved fact-check corrections. Each is added here
-# only once its required edits are applied and it builds.
-.drafts/camera-in-your-dining-room.md
-.drafts/india-sugar-price-rise-restaurants-2026.md
-.drafts/lindt-two-lawsuits-what-your-menu-promises.md
