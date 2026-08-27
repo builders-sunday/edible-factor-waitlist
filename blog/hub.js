@@ -1,48 +1,36 @@
-/* Content-hub behaviour: the mobile nav sheet and the Bites / Whole Meal toggle.
-   External file rather than inline so it works under any script-src policy.
-   No dependencies, no build. */
+/* Bites / Whole Meal reading toggle.
+   External file, not inline, so it works under any script-src policy.
+   No dependencies, no build.
+
+   Differences from the nikhilballal.com original, all deliberate:
+   - Whole Meal is the default. The long version carries the keyword depth and
+     hidden text gets down-weighted, so the version we want indexed is the one
+     rendered on a cold load.
+   - Mode rides on ?read=, not a #hash. The original matches the hash as a
+     SUBSTRING, so any heading anchor containing "meal" silently flips the mode,
+     and this content has an h2 with that word in it.
+   - Real tablist semantics: aria-controls, roving tabindex, arrow keys, and a
+     role=status line that announces the change.
+   - setMode runs unconditionally at startup so the read-time label can never
+     describe the panel that is not showing. */
 (function () {
   'use strict';
 
-  /* ---------------- mobile nav sheet ---------------- */
-  var burger = document.getElementById('navBurger');
-  var sheet = document.getElementById('navSheet');
-  if (burger && sheet) {
-    var setOpen = function (open) {
-      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-      burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-      sheet.hidden = !open;
-    };
-    burger.addEventListener('click', function () {
-      setOpen(burger.getAttribute('aria-expanded') !== 'true');
-    });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && burger.getAttribute('aria-expanded') === 'true') {
-        setOpen(false);
-        burger.focus();
-      }
-    });
-    // A resize past the desktop breakpoint leaves the sheet open but visually
-    // hidden by CSS, so aria-expanded would lie. Reset it.
-    var mq = window.matchMedia('(min-width: 900px)');
-    var sync = function () { if (mq.matches) setOpen(false); };
-    mq.addEventListener ? mq.addEventListener('change', sync) : mq.addListener(sync);
-  }
-
-  /* ---------------- Bites / Whole Meal ---------------- */
-  var tablist = document.querySelector('.rt');
+  var tablist = document.querySelector('.b-toggle');
   if (!tablist) return;
+
   var tabs = Array.prototype.slice.call(tablist.querySelectorAll('[role="tab"]'));
   var status = document.getElementById('rtStatus');
+  var eyebrowRead = document.getElementById('rtRead');
   var panels = {};
   tabs.forEach(function (t) {
     panels[t.dataset.mode] = document.getElementById(t.getAttribute('aria-controls'));
   });
 
-  var readTime = function (panel) {
+  function minutes(panel) {
     var w = (panel.innerText || '').trim().split(/\s+/).length;
     return Math.max(1, Math.round(w / 220));
-  };
+  }
 
   function setMode(mode, focusTab) {
     if (!panels[mode]) return;
@@ -53,17 +41,16 @@
       t.tabIndex = on ? 0 : -1;
       if (on && focusTab) t.focus();
       var p = panels[t.dataset.mode];
-      if (p) p.classList.toggle('rt-off', !on);
+      if (p) p.classList.toggle('rl-hide', !on);
     });
-    if (status) {
-      status.textContent = mode === 'bites'
-        ? 'Bites, about ' + readTime(panels.bites) + ' minutes'
-        : 'The whole meal, about ' + readTime(panels.meal) + ' minutes';
-    }
+
+    var mins = minutes(panels[mode]);
+    if (status) status.textContent = 'The ' + mins + ' minute version';
+    // The eyebrow advertises a read time too. Left alone it would keep quoting
+    // the Whole Meal length while the reader is looking at Bites.
+    if (eyebrowRead) eyebrowRead.textContent = mins + ' MIN READ';
+
     try { localStorage.setItem('ef-read', mode); } catch (e) {}
-    // Reflect in the URL so a reader can share the version they are looking at.
-    // A query param, not a #hash: a hash substring match would fire on any
-    // heading anchor containing the word "meal", and this content has one.
     try {
       var u = new URL(window.location.href);
       if (mode === 'meal') u.searchParams.delete('read');
@@ -76,7 +63,6 @@
     t.addEventListener('click', function () { setMode(t.dataset.mode, false); });
   });
 
-  // Real tablist keyboard support: arrows move and activate, Home/End jump.
   tablist.addEventListener('keydown', function (e) {
     var i = tabs.indexOf(document.activeElement);
     if (i === -1) return;
@@ -90,9 +76,6 @@
     setMode(tabs[next].dataset.mode, true);
   });
 
-  // Startup: an explicit ?read= wins over a saved preference. Called
-  // unconditionally so the read-time label is never left describing the
-  // wrong panel.
   var forced = null;
   try { forced = new URLSearchParams(window.location.search).get('read'); } catch (e) {}
   var saved = null;

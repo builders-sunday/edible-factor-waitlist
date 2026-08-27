@@ -17,6 +17,28 @@
     "#CalorieLabelling",
     "#RestaurantOwners",
     "#EatOutInformed"
+  ],
+  "sources": [
+    {
+      "label": "Ferrero Rocher UK product label and nutrition panel",
+      "url": "https://www.ferrerorocher.com/uk/en/our-products/ferrero-rocher-pralines/pack-with-3-pieces"
+    },
+    {
+      "label": "Ferrero Rocher US three piece pack and nutrition panel",
+      "url": "https://www.ferrerorocher.com/us/en/our-products/ferrero-rocher/3-piece-pack"
+    },
+    {
+      "label": "Codex Standard for Chocolate and Chocolate Products (CXS 87-1981)",
+      "url": "https://www.fao.org/fao-who-codexalimentarius/codex-texts/list-standards/en/"
+    },
+    {
+      "label": "Ferrero palm oil sourcing disclosure",
+      "url": "https://www.ferrerosustainability.com/int/en/sourcing-ingredients/palm-oil"
+    },
+    {
+      "label": "World Health Organization guidance on healthy diet and saturated fat",
+      "url": "https://www.who.int/news-room/fact-sheets/detail/healthy-diet"
+    }
   ]
 }
 ---

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#040407">
+<meta name="theme-color" content="#f3efe4">
 <title>Ferrero Rocher Is 30% Chocolate. The Label Saved It. &amp;middot; edible&amp;middot;factor</title>
 <meta name="description" content="Ferrero Rocher is 30% milk chocolate and 28.5% hazelnuts, all printed on the box. What that label means for Indian restaurants writing their own menus.">
 <meta name="robots" content="index, follow">
@@ -17,57 +17,43 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Ferrero Rocher Is 30% Chocolate. The Label Saved It. &amp;middot; edible&amp;middot;factor">
 <meta name="twitter:description" content="Ferrero Rocher is 30% milk chocolate and 28.5% hazelnuts, all printed on the box. What that label means for Indian restaurants writing their own menus.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="/vendor/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/blog/blog.css?v=20260827">
 <link rel="icon" type="image/svg+xml" href="/ef-favicon.svg">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/ef-mark-180.png">
 <link rel="manifest" href="/manifest.webmanifest">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self'; base-uri 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'self';">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
-<nav class="appbar" aria-label="Primary">
-  <div class="appbar__inner">
-    <a href="/" class="ef-logo-link" aria-label="edible&middot;factor home">
-      <img src="/ef-mark.svg" alt="edible&middot;factor" width="36" height="36" loading="eager">
-    </a>
-    <div class="appbar__links">
+<nav class="b-nav" aria-label="Primary">
+  <div class="b-nav-inner">
+    <a href="/" class="home">edible<span class="period">factor.</span></a>
+    <div class="b-nav__links">
       <a href="/blog" aria-current="page">Blog</a>
       <a href="/careers">Careers</a>
+      <a href="/#waitlist-hero">Join Waitlist</a>
     </div>
-    <div class="appbar__right">
-      <a href="/#waitlist-hero" class="pill-cta">Join Waitlist</a>
-      <button type="button" class="appbar__burger" id="navBurger"
-              aria-expanded="false" aria-controls="navSheet" aria-label="Open menu">
-        <span></span><span></span>
-      </button>
-    </div>
-  </div>
-  <div class="appbar__sheet" id="navSheet" hidden>
-    <a href="/blog" aria-current="page">Blog</a>
-      <a href="/careers">Careers</a>
   </div>
 </nav>
 <main id="main" class="wrap">
-  <article class="post">
-    <header class="post__hd">
-      <p class="post__eyebrow"><a href="/blog">Blog</a> <span>&middot;</span> Ingredients <span>&middot;</span> <time datetime="2026-08-27">27 August 2026</time></p>
-      <h1>The Ferrero Rocher Label Did Its Job. Most Menus Do Not Have One.</h1>
-      <p class="post__hook">Ferrero Rocher is 30% chocolate, and it printed that on the box. The printed number is why it survived.</p>
-    </header>
-
-    <div class="rt" role="tablist" aria-label="Reading length">
-      <button type="button" role="tab" id="tab-meal" aria-controls="panel-meal" aria-selected="true" tabindex="0" data-mode="meal" class="is-on">Whole Meal</button>
-      <button type="button" role="tab" id="tab-bites" aria-controls="panel-bites" aria-selected="false" tabindex="-1" data-mode="bites">Bites</button>
+  <header class="post-header">
+    <p class="eyebrow"><span class="tag">Ingredients</span><span class="sep">&middot;</span><time datetime="2026-08-27">27 AUG 2026</time><span class="sep">&middot;</span><span id="rtRead">5 MIN READ</span></p>
+    <h1>The Ferrero Rocher Label Did Its Job. Most Menus Do Not Have One.</h1>
+    <p class="standfirst">Ferrero Rocher is 30% chocolate, and it printed that on the box. The printed number is why it survived.</p>
+    <div class="b-toggle-row">
+      <div class="b-toggle" role="tablist" aria-label="Reading length">
+        <button type="button" class="b-toggle-btn is-on" role="tab" id="tab-meal" aria-controls="panel-meal" aria-selected="true" tabindex="0" data-mode="meal">Whole Meal</button>
+        <button type="button" class="b-toggle-btn" role="tab" id="tab-bites" aria-controls="panel-bites" aria-selected="false" tabindex="-1" data-mode="bites">Bites</button>
+      </div>
+      <p class="b-toggle-hint" role="status" aria-live="polite" id="rtStatus">The 5 minute version</p>
     </div>
-    <p class="rt__status" role="status" aria-live="polite" id="rtStatus">The whole meal, about 5 minutes</p>
+  </header>
 
-    <div class="post__body" id="panel-meal" role="tabpanel" aria-labelledby="tab-meal" data-mode="meal">
+  <article class="post-body" id="panel-meal" role="tabpanel" aria-labelledby="tab-meal" data-mode="meal">
 <p>Every so often somebody turns a box of Ferrero Rocher around, reads the back of it, and posts a photo. The comments treat it as an exposé.</p>
 <p>Here is what is actually on the back. According to Ferrero's own UK ingredient list, each praline contains 30% milk chocolate and 28.5% hazelnuts. The rest of the list is sugar, palm oil, wheat flour, whey powder, fat-reduced cocoa, lecithin, sodium bicarbonate, salt and vanillin. The UK nutrition panel reports 39.9 grams of sugar and 42.7 grams of fat per 100 grams. Ferrero's American three-piece pack contains 15 grams of sugar and 230 calories, which works out to roughly 5 grams of sugar and 77 calories per golden ball.</p>
 <p>Nothing there was leaked. Every number came off the packaging, where it had been sitting in plain sight in every shop that stocked the box.</p>
@@ -97,8 +83,8 @@
 <p>We should be precise about how far along that is, because the honest number is small. Across both live menus, price is published on every dish. Allergens are published on one menu and not the other. Calories exist on a handful of dishes and nowhere else. Not one dish on the platform today carries both a calorie figure and an allergen line. That is the real state of it, and quoting it as anything better would be the same trick as the gold wrapper.</p>
 <p>So this is a modest claim and we will keep it modest. We are not fixing chocolate. We are building the back of the box, and we are not finished.</p>
 <p>Ferrero's real advantage was never the foil. It was that when somebody finally turned the box around, the box had an answer.</p>
-    </div>
-    <div class="post__body rt-off" id="panel-bites" role="tabpanel" aria-labelledby="tab-bites" data-mode="bites">
+  </article>
+  <article class="post-body rl-hide" id="panel-bites" role="tabpanel" aria-labelledby="tab-bites" data-mode="bites">
 <p>Every so often somebody turns a box of Ferrero Rocher around, reads the back, and posts a photo. The comments call it an exposé.</p>
 <p>The label says each praline is 30% milk chocolate and 28.5% hazelnuts. The rest is sugar, palm oil, wheat flour, whey powder, fat-reduced cocoa, lecithin, sodium bicarbonate, salt and vanillin. Per 100 grams: 39.9 grams of sugar, 42.7 grams of fat.</p>
 <p>None of that was hidden. It was printed on the box, in every shop that sold it.</p>
@@ -110,26 +96,31 @@
 <p>Disclosure is not a confession. It is the sentence you get to say when somebody asks.</p>
 <p>There is a commercial edge too. Guests who avoid dairy or gluten or nuts do not negotiate at the table. They quietly pick somewhere else, and you never find out.</p>
 <p>Ferrero's real advantage was never the foil. It was that when somebody finally turned the box around, the box had an answer.</p>
-    </div>
-
-    <aside class="post__src">
-      <p>Source: this piece reworks reporting first published by Nikhil Ballal on nikhilballal.com, in <a href="https://nikhilballal.com/blog/ferrero-rocher-ingredients-scandal/" rel="noopener">Ferrero Rocher Is Only 30% Chocolate. Sort Of.</a></p>
-    </aside>
   </article>
+
+
+  <section class="sources">
+    <h2>Sources</h2>
+    <ul>
+      <li><a href="https://www.ferrerorocher.com/uk/en/our-products/ferrero-rocher-pralines/pack-with-3-pieces" rel="noopener">Ferrero Rocher UK product label and nutrition panel</a></li>
+      <li><a href="https://www.ferrerorocher.com/us/en/our-products/ferrero-rocher/3-piece-pack" rel="noopener">Ferrero Rocher US three piece pack and nutrition panel</a></li>
+      <li><a href="https://www.fao.org/fao-who-codexalimentarius/codex-texts/list-standards/en/" rel="noopener">Codex Standard for Chocolate and Chocolate Products (CXS 87-1981)</a></li>
+      <li><a href="https://www.ferrerosustainability.com/int/en/sourcing-ingredients/palm-oil" rel="noopener">Ferrero palm oil sourcing disclosure</a></li>
+      <li><a href="https://www.who.int/news-room/fact-sheets/detail/healthy-diet" rel="noopener">World Health Organization guidance on healthy diet and saturated fat</a></li>
+    </ul>
+  </section>
+
+  <aside class="post-src">
+    <p>Source: this piece reworks reporting first published by Nikhil Ballal on nikhilballal.com, in <a href="https://nikhilballal.com/blog/ferrero-rocher-ingredients-scandal/" rel="noopener">Ferrero Rocher Is Only 30% Chocolate. Sort Of.</a></p>
+  </aside>
 </main>
-<noscript><style>.rt-off{display:block !important}.rt,.rt__status{display:none}</style></noscript>
+<noscript><style>.rl-hide{display:block !important}.b-toggle,.b-toggle-hint{display:none}</style></noscript>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"The Ferrero Rocher Label Did Its Job. Most Menus Do Not Have One.","description":"Ferrero Rocher is 30% milk chocolate and 28.5% hazelnuts, all printed on the box. What that label means for Indian restaurants writing their own menus.","datePublished":"2026-08-27","author":{"@type":"Organization","name":"Edible Factor"},"publisher":{"@type":"Organization","name":"Edible Factor"},"mainEntityOfPage":"https://ediblefactor.com/blog/ferrero-rocher-30-percent-chocolate-what-menus-can-learn"}</script>
 
-<footer class="ft">
-  <div class="ft__row">
-    <span class="ft__brand">edible<span class="ft__accent">factor</span> &middot; &copy; 2026 &middot; Made in Bengaluru</span>
-    <nav class="ft__links" aria-label="Footer">
-      <a href="/">Home</a>
-      <a href="/blog">Blog</a>
-      <a href="/legal#privacy">Privacy</a>
-      <a href="/legal#terms">Terms</a>
-      <a href="/#waitlist-hero">Join Waitlist</a>
-    </nav>
+<footer class="b-foot">
+  <div class="b-foot__inner">
+    <span>edible&middot;factor &middot; &copy; 2026 &middot; Bengaluru</span>
+    <a class="b-foot__more" href="/blog">All writing</a>
   </div>
 </footer>
 <script src="/blog/hub.js?v=20260827"></script>

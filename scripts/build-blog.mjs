@@ -111,7 +111,7 @@ function head({ title, desc, url, extraCss = '' }) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#040407">
+<meta name="theme-color" content="#f3efe4">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
 <meta name="robots" content="index, follow">
@@ -125,23 +125,19 @@ function head({ title, desc, url, extraCss = '' }) {
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(desc)}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="/vendor/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/blog/blog.css?v=${ASSET_V}">
 ${extraCss}<link rel="icon" type="image/svg+xml" href="/ef-favicon.svg">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/ef-mark-180.png">
 <link rel="manifest" href="/manifest.webmanifest">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self'; base-uri 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'self';">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>`;
 }
 
-/** Nav shared by every content-hub page. Mobile collapses to a real menu button:
- *  at 375 the existing appbar already overflows (355px of children in a 375px row). */
 /* Only sections that actually exist get a nav entry. Shipping a header for a
    page that 404s is worse than shipping no header. Add /news, /guides and
    /tools here as each one lands. */
@@ -150,44 +146,30 @@ const SECTIONS = [
   { href: '/careers', label: 'Careers', key: 'careers' },
 ];
 
+/* Slim top bar, matching nikhilballal.com/blog: wordmark left, mono links
+   right, 1px rule under, 680px inner. No burger: at 375 this is a wordmark
+   plus two 10px mono links, which fits with room to spare. */
 function nav(current) {
   const links = SECTIONS.map(
-    (s) => `<a href="${s.href}"${current === s.key ? ' aria-current="page"' : ''}>${s.label}</a>`
+    (x) => `<a href="${x.href}"${current === x.key ? ' aria-current="page"' : ''}>${x.label}</a>`
   ).join('\n      ');
   return `
-<nav class="appbar" aria-label="Primary">
-  <div class="appbar__inner">
-    <a href="/" class="ef-logo-link" aria-label="edible&middot;factor home">
-      <img src="/ef-mark.svg" alt="edible&middot;factor" width="36" height="36" loading="eager">
-    </a>
-    <div class="appbar__links">
+<nav class="b-nav" aria-label="Primary">
+  <div class="b-nav-inner">
+    <a href="/" class="home">edible<span class="period">factor.</span></a>
+    <div class="b-nav__links">
       ${links}
+      <a href="/#waitlist-hero">Join Waitlist</a>
     </div>
-    <div class="appbar__right">
-      <a href="/#waitlist-hero" class="pill-cta">Join Waitlist</a>
-      <button type="button" class="appbar__burger" id="navBurger"
-              aria-expanded="false" aria-controls="navSheet" aria-label="Open menu">
-        <span></span><span></span>
-      </button>
-    </div>
-  </div>
-  <div class="appbar__sheet" id="navSheet" hidden>
-    ${links}
   </div>
 </nav>`;
 }
 
 const FOOTER = `
-<footer class="ft">
-  <div class="ft__row">
-    <span class="ft__brand">edible<span class="ft__accent">factor</span> &middot; &copy; 2026 &middot; Made in Bengaluru</span>
-    <nav class="ft__links" aria-label="Footer">
-      <a href="/">Home</a>
-      <a href="/blog">Blog</a>
-      <a href="/legal#privacy">Privacy</a>
-      <a href="/legal#terms">Terms</a>
-      <a href="/#waitlist-hero">Join Waitlist</a>
-    </nav>
+<footer class="b-foot">
+  <div class="b-foot__inner">
+    <span>edible&middot;factor &middot; &copy; 2026 &middot; Bengaluru</span>
+    <a class="b-foot__more" href="/blog">All writing</a>
   </div>
 </footer>
 <script src="/blog/hub.js?v=${ASSET_V}"></script>
@@ -198,6 +180,7 @@ function buildPost(p) {
   const { meta, bites, meal } = parseDraft(p.slug);
   const url = `${SITE}/blog/${p.slug}`;
   const bw = words(bites), mw = words(meal);
+  const dateLong = new Date(p.date + 'T00:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).toUpperCase();
   const ld = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -212,32 +195,39 @@ function buildPost(p) {
   const html = `${head({ title: `${meta.seoTitle} &middot; edible&middot;factor`, desc: meta.metaDescription, url })}
 ${nav('blog')}
 <main id="main" class="wrap">
-  <article class="post">
-    <header class="post__hd">
-      <p class="post__eyebrow"><a href="/blog">Blog</a> <span>&middot;</span> ${esc(p.tag)} <span>&middot;</span> <time datetime="${p.date}">${new Date(p.date + 'T00:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}</time></p>
-      <h1>${esc(meta.efTitle)}</h1>
-      <p class="post__hook">${esc(meta.hook)}</p>
-    </header>
-
-    <div class="rt" role="tablist" aria-label="Reading length">
-      <button type="button" role="tab" id="tab-meal" aria-controls="panel-meal" aria-selected="true" tabindex="0" data-mode="meal" class="is-on">Whole Meal</button>
-      <button type="button" role="tab" id="tab-bites" aria-controls="panel-bites" aria-selected="false" tabindex="-1" data-mode="bites">Bites</button>
+  <header class="post-header">
+    <p class="eyebrow"><span class="tag">${esc(p.tag)}</span><span class="sep">&middot;</span><time datetime="${p.date}">${dateLong}</time><span class="sep">&middot;</span><span id="rtRead">${readMin(mw)} MIN READ</span></p>
+    <h1>${esc(meta.efTitle)}</h1>
+    <p class="standfirst">${esc(meta.hook)}</p>
+    <div class="b-toggle-row">
+      <div class="b-toggle" role="tablist" aria-label="Reading length">
+        <button type="button" class="b-toggle-btn is-on" role="tab" id="tab-meal" aria-controls="panel-meal" aria-selected="true" tabindex="0" data-mode="meal">Whole Meal</button>
+        <button type="button" class="b-toggle-btn" role="tab" id="tab-bites" aria-controls="panel-bites" aria-selected="false" tabindex="-1" data-mode="bites">Bites</button>
+      </div>
+      <p class="b-toggle-hint" role="status" aria-live="polite" id="rtStatus">The ${readMin(mw)} minute version</p>
     </div>
-    <p class="rt__status" role="status" aria-live="polite" id="rtStatus">The whole meal, about ${readMin(mw)} minutes</p>
+  </header>
 
-    <div class="post__body" id="panel-meal" role="tabpanel" aria-labelledby="tab-meal" data-mode="meal">
+  <article class="post-body" id="panel-meal" role="tabpanel" aria-labelledby="tab-meal" data-mode="meal">
 ${md(meal)}
-    </div>
-    <div class="post__body rt-off" id="panel-bites" role="tabpanel" aria-labelledby="tab-bites" data-mode="bites">
-${md(bites)}
-    </div>
-
-    <aside class="post__src">
-      <p>${md(meta.citation).replace(/^<p>|<\/p>$/g, '')}</p>
-    </aside>
   </article>
+  <article class="post-body rl-hide" id="panel-bites" role="tabpanel" aria-labelledby="tab-bites" data-mode="bites">
+${md(bites)}
+  </article>
+
+${(meta.sources && meta.sources.length) ? `
+  <section class="sources">
+    <h2>Sources</h2>
+    <ul>
+${meta.sources.map((x) => `      <li><a href="${x.url}" rel="noopener">${esc(x.label)}</a></li>`).join('\n')}
+    </ul>
+  </section>` : ''}
+
+  <aside class="post-src">
+    <p>${md(meta.citation).replace(/^<p>|<\/p>$/g, '')}</p>
+  </aside>
 </main>
-<noscript><style>.rt-off{display:block !important}.rt,.rt__status{display:none}</style></noscript>
+<noscript><style>.rl-hide{display:block !important}.b-toggle,.b-toggle-hint{display:none}</style></noscript>
 <script type="application/ld+json">${JSON.stringify(ld)}</script>
 ${FOOTER}`;
 
@@ -248,28 +238,30 @@ ${FOOTER}`;
 
 function buildIndex(posts) {
   const cards = posts
-    .map(
-      (p) => `      <a class="card" href="/blog/${p.slug}">
-        <p class="card__meta">${esc(p.tag)} <span>&middot;</span> <time datetime="${p.date}">${new Date(p.date + 'T00:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })}</time> <span>&middot;</span> ${readMin(p.mw)} min</p>
+    .map((p) => {
+      const d = new Date(p.date + 'T00:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).toUpperCase();
+      return `      <a class="b-post-card" href="/blog/${p.slug}">
+        <p class="meta"><span class="tag">${esc(p.tag)}</span><span class="sep">&middot;</span>${d}<span class="sep">&middot;</span>${readMin(p.mw)} MIN READ</p>
         <h2>${esc(p.meta.efTitle)}</h2>
-        <p class="card__hook">${esc(p.meta.hook)}</p>
-      </a>`
-    )
+        <p class="dek">${esc(p.meta.hook)}</p>
+        <p class="read">Read &rarr;</p>
+      </a>`;
+    })
     .join('\n');
 
   const html = `${head({
-    title: 'Blog &middot; edible&middot;factor',
+    title: 'Writing &middot; edible&middot;factor',
     desc: 'What is actually on the plate, and what it costs the kitchen. Writing on ingredients, menu transparency and the economics of eating out in India.',
     url: `${SITE}/blog`,
   })}
 ${nav('blog')}
 <main id="main" class="wrap">
-  <header class="lead">
-    <p class="lead__eyebrow">Blog</p>
-    <h1>What is actually on the plate</h1>
-    <p class="lead__sub">Ingredients, menu transparency and the economics of eating out in India. Every piece reads two ways: Bites if you have a minute, the Whole Meal if you have longer.</p>
+  <header class="b-index-head">
+    <p class="eyebrow">Writing</p>
+    <h1>What is actually on the plate<span class="period">.</span></h1>
+    <p class="lede">Ingredients, menu transparency and the economics of eating out in India. Every piece reads two ways: the Whole Meal, or Bites if you have a minute.</p>
   </header>
-  <div class="cards">
+  <div class="b-list">
 ${cards}
   </div>
 </main>
