@@ -1770,7 +1770,7 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/ef-mark-180.png">
 <link rel="manifest" href="manifest.webmanifest">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://challenges.cloudflare.com https://api.ediblefactor.com https://api-dev.ediblefactor.com http://localhost:9090 https://ipwho.is; frame-src https://challenges.cloudflare.com; frame-ancestors 'none'; base-uri 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://challenges.cloudflare.com https://api.ediblefactor.com https://api-dev.ediblefactor.com http://localhost:9090 https://ipwho.is; frame-src https://challenges.cloudflare.com; base-uri 'self';">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <style id="efmod-styles">
 /* ============================================================================
@@ -1808,7 +1808,7 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
 .efmod .plate .heading h2{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;letter-spacing:-.03em;line-height:.98;font-size:clamp(32px,5.2vw,66px);color:var(--ink);}
 .efmod .plate .heading h2 .cal{color:var(--calorie);}.efmod .plate .heading h2 .bud{color:var(--budget);}
 .efmod .courses{position:absolute;left:0;bottom:13vh;display:flex;flex-direction:column;gap:2px;}
-.efmod .courses .c{display:grid;grid-template-columns:20px 1fr;gap:13px;align-items:center;width:210px;padding:12px 0;opacity:.3;transition:opacity .5s var(--ease);}
+.efmod .courses .c{display:grid;grid-template-columns:1fr;gap:13px;align-items:center;width:210px;padding:12px 0;opacity:.3;transition:opacity .5s var(--ease);}
 .efmod .courses .c.on{opacity:1;}
 .efmod .courses .c .n{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--peri);}
 .efmod .courses .c .t{font-family:'Space Grotesk';font-weight:600;font-size:15px;letter-spacing:-.01em;color:var(--ink);}
@@ -1852,7 +1852,7 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
   .efmod .budgets .b .of{font-size:9px;margin-top:3px;}
   .efmod .budgets .b:nth-child(3){display:none;}
   .efmod .courses{position:static;order:4;transform:none;flex-direction:column;gap:0;}
-  .efmod .courses .c{width:100%;grid-template-columns:20px 1fr;gap:12px;padding:6px 0;border-top:1px solid var(--line);opacity:.4;}
+  .efmod .courses .c{width:100%;grid-template-columns:1fr;gap:12px;padding:6px 0;border-top:1px solid var(--line);opacity:.4;}
   .efmod .courses .c.on{opacity:1;}
   .efmod .courses .c .n{font-size:10px;}
   .efmod .courses .c .t{font-size:13px;}
@@ -2328,7 +2328,7 @@ html.theme-light .bp-knob { left: 3px; }
     <!-- Hero meta stats -->
     <div class="hero-stats reveal mt-8 md:mt-10 flex flex-wrap gap-8 md:gap-14 pt-6 border-t border-white/5">
       <div>
-        <div class="display text-3xl md:text-4xl text-ink">02</div>
+        <div class="display text-3xl md:text-4xl text-ink">2</div>
         <div class="mono text-[11px] tracking-[0.16em] uppercase text-inkdim mt-1">Budgets, one app</div>
       </div>
       <div>
@@ -2432,11 +2432,11 @@ html.theme-light .bp-knob { left: 3px; }
             <h2>Two budgets,<br>one <span class="cal">plate</span><span class="bud"></span></h2>
           </div>
           <div class="courses" aria-hidden="true">
-            <div class="c on"><span class="n">01</span><span class="t">Amuse<b>Sparkling kombucha</b></span></div>
-            <div class="c"><span class="n">02</span><span class="t">Starter<b>Burrata, tomato</b></span></div>
-            <div class="c"><span class="n">03</span><span class="t">Main<b>Grilled seabass</b></span></div>
-            <div class="c"><span class="n">04</span><span class="t">Dessert<b>Chocolate tart</b></span></div>
-            <div class="c"><span class="n">05</span><span class="t">The bill<b>Both budgets</b></span></div>
+            <div class="c on"><span class="t">Amuse<b>Sparkling kombucha</b></span></div>
+            <div class="c"><span class="t">Starter<b>Burrata, tomato</b></span></div>
+            <div class="c"><span class="t">Main<b>Grilled seabass</b></span></div>
+            <div class="c"><span class="t">Dessert<b>Chocolate tart</b></span></div>
+            <div class="c"><span class="t">The bill<b>Both budgets</b></span></div>
           </div>
           <div class="budgets">
             <div class="b calv"><div class="lbl">Calories left</div><div class="v" data-cal>2,000</div><div class="of">of 2,000 kcal today</div></div>
