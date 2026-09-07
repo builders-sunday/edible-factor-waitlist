@@ -280,13 +280,6 @@
     .prob-grid { grid-template-columns: clamp(380px, 25%, 500px) minmax(0, 1fr); }
 
 
-    /* The footer wordmark is meant to bleed off both edges; that is why it is
-       absolutely positioned inside an overflow-hidden footer. Its 360px clamp
-       ceiling landed at a 1636px viewport, so on anything wider it stopped
-       short of the right edge and the deliberate bleed turned into a word
-       stranded in the middle of the footer. 680px is what it takes for the
-       glyphs to run past 3440px. */
-    .footer-wordmark { font-size: min(22vw, 680px); }
   }
 
   /* Display type · Space Grotesk with bold periwinkle accent. Italic
@@ -436,6 +429,184 @@
      between rows and start handing taps to the link above. Real height makes
      the rows lay out honestly around each other. */
   .footer-links a { min-height: 44px; display: inline-flex; align-items: center; }
+
+  /* === Footer - the payoff slab =======================================
+   * Ported from the footer.design "Make Believe" grammar: the primary call
+   * to action stops being a pill and becomes the largest thing on the page,
+   * half submerged in a moving field of wine.
+   *
+   * Four things here are load bearing and must not be tidied away:
+   *  1. The root stays a literal <footer>. The sticky CTA's dismount is
+   *     document.querySelector('footer') and nothing else.
+   *  2. The wrap keeps `max-w-[1400px] mx-auto px-6 md:px-10` VERBATIM. The
+   *     ultrawide rule at :238 grows that exact escaped class to 2040px via
+   *     --band-grow; a bespoke max-width silently opts the footer out.
+   *  3. The wrap owns container-type, so the payoff sizes in cqi off the
+   *     CONTENT width (which already tracks --band-grow) rather than the
+   *     viewport. One ratio then fits every width from 320 to 2040.
+   *  4. Every anchor sets text-decoration explicitly. There is no preflight
+   *     in this file and no .no-underline utility in the subset, so an
+   *     unstyled footer link ships underlined.
+   * ------------------------------------------------------------------ */
+  .ef-foot {
+    --ef-slab: #08080c;                 /* one step off --bg so the slab reads as its own plate */
+    --ef-rule: rgba(255,255,255,.09);
+    --ef-micro: var(--ink-low);         /* 4.83:1 on the dark slab */
+    --ef-bloom: 1;
+    /* Held just off full wine on purpose. At #d95f52 the ground under the
+       payoff measures 3.09:1 against --ink: over the 3:1 large-text bar but
+       with no margin. At .9 the ground is #c4564b and it measures 3.69:1,
+       which is visually the same field. */
+    --ef-core: rgba(217,95,82,.9);
+    background: var(--ef-slab);
+    padding-top: clamp(30px, 5vw, 64px);
+    padding-bottom: max(18px, calc(env(safe-area-inset-bottom, 0px) + 14px));
+  }
+  html.theme-light .ef-foot {
+    /* --bg-3 (the wells token), not --bg: on paper the footer has to read as
+       a recessed plate, and at --bg it would be the same eggshell as the page
+       above it with no edge at all. */
+    --ef-slab: var(--bg-3);
+    --ef-rule: rgba(35,32,29,.14);
+    /* --ink-low is tuned against --bg #f5f2ed (4.81:1). On the darker well
+       #efeae1 it drops to 4.49:1, under the bar, so the 11px row steps up to
+       --ink-dim (6.07:1) in this theme only. */
+    --ef-micro: var(--ink-dim);
+    --ef-bloom: .72;
+    --ef-core: var(--periwinkle);
+  }
+  .ef-foot__wrap { position: relative; z-index: 1; container-type: inline-size; container-name: effoot; }
+
+  /* The bloom. Three radial gradients rather than WebGL: no GPU dependency,
+     it survives headless capture, and reduced motion just freezes it.
+     ANCHORED TO THE PAYOFF, not to the footer. An earlier cut positioned it
+     against the footer box and masked it at fixed percentages of footer
+     HEIGHT: that held at 1440 and broke at 375, where the footer is taller
+     than it is wide and the same percentages put wine behind the disclaimer
+     and the 11px baseline instead of behind the type. Measured, --ink-dim on
+     wine is 1.24:1 and --ink-low on wine is 1.13:1, so that was a real
+     legibility failure, not a cosmetic one. Sizing the band off .ef-fpay
+     (whose height is the payoff's own font-size, already fluid in cqi) keeps
+     the wine centred on the line at every width by construction. */
+  .ef-fpay { position: relative; }
+  .ef-fpay > .ef-fshout { position: relative; z-index: 1; }
+  .ef-foot__bloom {
+    position: absolute; left: -14%; right: -14%; top: -85%; bottom: -45%;
+    z-index: 0; pointer-events: none;
+    opacity: var(--ef-bloom);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,.42) 24%, #000 44%, #000 74%, rgba(0,0,0,.24) 93%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,.42) 24%, #000 44%, #000 74%, rgba(0,0,0,.24) 93%, transparent 100%);
+  }
+  /* Each blob is an ELLIPSE sized as a percentage of BOTH axes, never a
+     circle and never vw. A circle sized off width alone collapses on a
+     phone: there the footer is taller than it is wide, so a width-derived
+     blob sits entirely below the payoff and the wine disappears at exactly
+     the width that matters most. Percentages of width AND height track the
+     footer's aspect ratio at every size, and closest-side fits the gradient
+     to that ellipse. */
+  .ef-foot__bloom i {
+    position: absolute; display: block; border-radius: 50%;
+    background: radial-gradient(closest-side, var(--ef-core) 0%, var(--ef-core) 38%, rgba(217,95,82,.58) 58%, rgba(217,95,82,0) 76%);
+  }
+  /* Asymmetric on purpose: the reference keeps its left third dark and lets
+     the mass build to the right, so the payoff crosses an EDGE rather than
+     floating on an even wash. Evenly spaced blobs read as a flat band. */
+  /* One wide base ellipse carries the mass so it reads continuous, with two
+     smaller accents for variation. Three similar blobs side by side left a
+     visible trough mid-line and the field read as two spotlights instead of
+     one field. The base is centred right of middle, so the left fades the
+     way the reference's does. */
+  .ef-foot__bloom i:nth-child(1) { right: -14%; top: 4%;  width: 112%; height: 94%; opacity: .92; animation: efBloomA 19s ease-in-out infinite alternate; }
+  .ef-foot__bloom i:nth-child(2) { right: 2%;   top: 16%; width: 46%;  height: 82%; opacity: .7;  animation: efBloomB 15s ease-in-out infinite alternate; }
+  .ef-foot__bloom i:nth-child(3) { right: 48%;  top: 12%; width: 40%;  height: 74%; opacity: .45; animation: efBloomA 24s ease-in-out infinite alternate-reverse; }
+  @keyframes efBloomA { from { transform: translate3d(0,0,0) scale(1); }    to { transform: translate3d(-7%,-6%,0) scale(1.14); } }
+  @keyframes efBloomB { from { transform: translate3d(0,0,0) scale(1.05); } to { transform: translate3d(9%,-9%,0) scale(.92); } }
+
+  /* Row 1 - the rail. Carries .footer-links so the 44px rule above applies. */
+  .ef-frail { display: flex; flex-wrap: wrap; align-items: center; gap: 0 26px; padding-bottom: clamp(8px, 1.4vw, 16px); }
+  .ef-frail a {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-weight: 600; font-size: 14px; letter-spacing: -0.005em;
+    color: var(--ink-dim); text-decoration: none;
+  }
+  .ef-frail a:hover { color: var(--ink); }
+  .ef-frail__mail { font-family: 'Inter', system-ui, sans-serif; font-weight: 400; }
+
+  .ef-fhair { height: 1px; background: var(--ef-rule); }
+
+  /* Row 2 - mark / sections / disclaimer. One column on a phone, two at the
+     page's 768 step, all three on ONE line at 1024. */
+  .ef-fgrid {
+    display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(24px, 3.2vw, 38px);
+    padding: clamp(26px, 4vw, 50px) 0 clamp(28px, 4.4vw, 56px);
+  }
+  .ef-fmark { font-size: clamp(26px, 3.2vw, 34px); line-height: 1; color: var(--ink); }
+  .ef-fstack { display: flex; flex-direction: column; }
+  .ef-fstack a {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-weight: 400; font-size: clamp(23px, 2.7vw, 32px);
+    letter-spacing: -0.018em; line-height: 1.3;
+    color: var(--ink-dim); text-decoration: none;
+    width: max-content; max-width: 100%;
+    min-height: 44px; display: flex; align-items: center;
+    transition: color .18s ease;
+  }
+  .ef-fstack a:hover { color: var(--ink); }
+  /* Deliberately NOT .text-budget: that utility is overridden twice under
+     html.theme-light (:1927 then :1931) and the later one wins, so peach
+     emphasis renders at 3.25:1 on paper. --ink carries the emphasis instead. */
+  .ef-fnote { margin: 0; color: var(--ink-dim); font-size: clamp(14px, 1.3vw, 16.5px); line-height: 1.5; max-width: 42ch; }
+  .ef-fnote em { font-style: normal; color: var(--ink); }
+
+  /* Row 3 - the payoff. cqi against the wrap's content box, so one ratio
+     holds from a 320px phone to the 2040px ultrawide band. */
+  .ef-fshout {
+    display: block; text-decoration: none; color: var(--ink);
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    /* 13.1 not 13.3: at 13.3 the line landed 1px inside its box at 375, and
+       .ef-foot is overflow:hidden, so any font fallback variance would clip
+       the last glyph silently. 13.1 keeps ~1.5% slack and still reads flush. */
+    font-weight: 500; font-size: 13.1cqi; letter-spacing: -0.035em;
+    line-height: 0.92; white-space: nowrap;
+    padding-bottom: clamp(20px, 3vw, 40px);
+    transition: opacity .2s ease;
+  }
+  .ef-fshout:hover { opacity: .86; }
+
+  /* Row 4 - baseline. Stacks on a phone, becomes one line as the band grows. */
+  .ef-fbase {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 0 24px; padding-top: clamp(8px, 1.2vw, 14px);
+    border-top: 1px solid var(--ef-rule);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.13em; text-transform: uppercase;
+    color: var(--ef-micro);
+  }
+  .ef-flegal { display: flex; flex-wrap: wrap; align-items: center; gap: 0 18px; }
+  .ef-fbase a { color: var(--ef-micro); text-decoration: none; }
+  .ef-fbase a:hover { color: var(--ink); }
+  .ef-fclock { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; letter-spacing: 0.08em; }
+
+  .ef-foot a:focus-visible { outline: 2px solid var(--periwinkle); outline-offset: 3px; }
+
+  @media (min-width: 768px) {
+    .ef-frail__mail { margin-left: auto; }
+    .ef-fgrid { grid-template-columns: auto minmax(0, 1fr); column-gap: clamp(40px, 7vw, 90px); align-items: start; }
+    .ef-fnote { grid-column: 1 / -1; }
+  }
+  @media (min-width: 1024px) {
+    .ef-fgrid { grid-template-columns: minmax(0,1fr) minmax(0,1fr) minmax(0,1fr); }
+    .ef-fnote { grid-column: auto; justify-self: end; text-align: right; }
+    .ef-fstack { justify-self: center; }
+  }
+  @media (max-width: 767px) {
+    .ef-fbase { flex-direction: column; align-items: center; text-align: center; }
+    .ef-flegal { justify-content: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ef-foot__bloom i { animation: none; }
+    .ef-fstack a, .ef-fshout { transition: none; }
+  }
 
   .pill-cta, .pill-glass, .bp-switch { position: relative; }
   .pill-cta::after, .pill-glass::after, .bp-switch::after {
@@ -1929,7 +2100,6 @@ html.theme-light .text-budget { color: var(--budget-ink); }
    nav CTA already solved the same problem the same way. */
 html.theme-light .skip-link { color: #16130f; }
 html.theme-light .text-budget { color: var(--budget); }
-html.theme-light .text-white\/\[0\.025\] { color: rgba(0,0,0,0.045); }
 html.theme-light .bg-periwinkle { background-color: var(--periwinkle); }
 /* The accent (#d95f52) is a mid-light red, so accent-filled buttons need dark
    labels on paper - same as they get on the dark theme (var(--bg) is dark
@@ -2624,34 +2794,52 @@ html.theme-light .bp-knob { left: 3px; }
 <!-- ============================================================
      FOOTER  ·  compact, single line
      ============================================================ -->
-<footer class="border-t border-white/5 py-10 overflow-hidden relative">
-  <!-- Big italic wordmark, partially clipped -->
-  <div class="footer-wordmark display absolute -bottom-6 -left-2 text-[clamp(140px,22vw,360px)] leading-none text-white/[0.025] pointer-events-none select-none whitespace-nowrap">
-    edible<span style="font-style:italic">factor</span>
-  </div>
-  <div class="relative max-w-[1400px] mx-auto px-6 md:px-10 flex flex-col gap-4">
-    <!-- FE-09 · Health disclaimer line -->
-    <p class="text-center display italic text-sm md:text-base leading-snug text-inkdim max-w-[640px] mx-auto">
-      Calorie and macro estimates are <em class="not-italic text-budget italic">informational only</em> and not medical advice.
-      Consult a healthcare professional for dietary guidance
-    </p>
-    <div class="flex flex-col md:flex-row items-center justify-between gap-4 pt-4 border-t border-white/5">
-      <div class="flex items-center gap-3 text-[11px] tracking-[0.16em] uppercase text-inkdim" style="font-family: 'Space Grotesk', system-ui, sans-serif;">
-        <span class="display text-lg text-ink">edible<span class="accent">factor</span></span>
-        <span>·</span>
-        <span>© 2026 · Made in Bengaluru</span>
-      </div>
-      <div class="footer-links flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] tracking-[0.16em] uppercase text-ink" style="font-family: 'Space Grotesk', system-ui, sans-serif;">
-        <a href="legal.html#privacy" class="text-ink hover:text-periwinkle transition-colors">Privacy</a>
-        <a href="legal.html#terms" class="text-ink hover:text-periwinkle transition-colors">Terms</a>
-        <a href="legal.html#cookies" class="text-ink hover:text-periwinkle transition-colors">Cookies</a>
-        <a href="legal.html#disclaimer" class="text-ink hover:text-periwinkle transition-colors">Disclaimer</a>
-        <a href="legal.html#contact" class="text-ink hover:text-periwinkle transition-colors">Contact</a>
-        <a href="/blog" class="text-ink hover:text-periwinkle transition-colors">Blog</a>
-        <a href="/careers" class="text-ink hover:text-periwinkle transition-colors">Careers</a>
-        <a href="#waitlist-hero" class="text-ink hover:text-periwinkle transition-colors">Join Waitlist</a>
-      </div>
+<footer class="ef-foot relative overflow-hidden">
+  <div class="ef-foot__wrap max-w-[1400px] mx-auto px-6 md:px-10">
+
+    <nav class="ef-frail footer-links" aria-label="Elsewhere on Edible Factor">
+      <a href="careers.html">Careers</a>
+      <a href="why-not-petpooja.html">Why not Petpooja</a>
+      <a class="ef-frail__mail" href="mailto:hello@ediblefactor.com">hello@ediblefactor.com</a>
+    </nav>
+
+    <div class="ef-fhair"></div>
+
+    <div class="ef-fgrid">
+      <div class="ef-fmark display">edible<span class="accent">factor</span></div>
+
+      <nav class="ef-fstack" aria-label="Main">
+        <a href="#showcase">How it works</a>
+        <a href="plate.html">For restaurants</a>
+        <a href="/blog">Read the blog</a>
+        <a href="#waitlist-hero">Join the waitlist</a>
+      </nav>
+
+      <!-- FE-09 health disclaimer. Compliance copy: keep this sentence and
+           its emphasis verbatim through any redesign. -->
+      <p class="ef-fnote">
+        Calorie and macro estimates are <em>informational only</em> and not medical advice.
+        Consult a healthcare professional for dietary guidance
+      </p>
     </div>
+
+    <div class="ef-fpay">
+      <div class="ef-foot__bloom" aria-hidden="true"><i></i><i></i><i></i></div>
+      <a href="#waitlist-hero" class="ef-fshout">Reserve My Seat</a>
+    </div>
+
+    <div class="ef-fbase">
+      <span>Edible Factor &copy; 2026 &middot; Made in Bengaluru</span>
+      <nav class="ef-flegal footer-links" aria-label="Legal">
+        <a href="legal.html#privacy">Privacy</a>
+        <a href="legal.html#terms">Terms</a>
+        <a href="legal.html#cookies">Cookies</a>
+        <a href="legal.html#disclaimer">Disclaimer</a>
+        <a href="legal.html#contact">Contact</a>
+      </nav>
+      <span>Bengaluru <b class="ef-fclock" id="efClock">--:--:--</b></span>
+    </div>
+
   </div>
 </footer>
 
@@ -3066,6 +3254,23 @@ html.theme-light .bp-knob { left: 3px; }
   // Attaches universally (no viewport gating). The CSS .hide-for-footer
   // rule is also declared outside any media query, so it applies at all
   // widths.
+  // Live Bengaluru clock on the footer baseline. Fixed IANA zone rather than
+  // the visitor's, because the line is labelled "Bengaluru" - it states where
+  // the company is, not where the reader is. Tabular numerals so the seconds
+  // do not shift the row as they tick.
+  const efClockEl = document.getElementById('efClock');
+  if (efClockEl && window.Intl && Intl.DateTimeFormat) {
+    try {
+      const efFmt = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit',
+        second: '2-digit', hour12: false
+      });
+      const efTick = function () { efClockEl.textContent = efFmt.format(new Date()); };
+      efTick();
+      setInterval(efTick, 1000);
+    } catch (e) { /* zone unsupported: the placeholder stays, nothing breaks */ }
+  }
+
   const footerEl = document.querySelector('footer');
   if (stickyCta && footerEl && 'IntersectionObserver' in window) {
     const footerObserver = new IntersectionObserver((entries) => {
