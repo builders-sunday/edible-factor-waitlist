@@ -2076,10 +2076,15 @@ html.theme-light .text-inkdim { color: var(--ink-dim); }
 html.theme-light .text-inklow { color: var(--ink-low); }
 html.theme-light .text-periwinkle,
 html.theme-light .hover\:text-periwinkle:hover { color: var(--periwinkle); }
-html.theme-light .text-calorie { color: var(--calorie); }
 /* Small text carrying a data hue uses the text-safe cut. The meter fills,
    arcs and rings keep var(--calorie)/var(--budget) - they are marks, not
-   words, and the brighter hue is what makes them read. */
+   words, and the brighter hue is what makes them read.
+   Each utility is declared here exactly ONCE on purpose. Both used to be
+   declared twice at equal specificity (0,2,1), so source order decided the
+   winner: .text-calorie happened to land on the safe cut, .text-budget
+   happened to land on the fill and shipped the waitlist form's error message
+   at 3.25:1 against the 4.5 bar. Do not re-add a second declaration for
+   either, and do not reach for !important if one reappears - delete it. */
 html.theme-light .hbz__l { color: var(--calorie-ink); }
 html.theme-light .hbz__m--r .hbz__l { color: var(--budget-ink); }
 html.theme-light .both-rotor { color: var(--calorie-ink); }
@@ -2089,7 +2094,6 @@ html.theme-light .text-budget { color: var(--budget-ink); }
 /* The skip link is eggshell-on-wine in light, which measures 3.29:1. The
    nav CTA already solved the same problem the same way. */
 html.theme-light .skip-link { color: #16130f; }
-html.theme-light .text-budget { color: var(--budget); }
 html.theme-light .bg-periwinkle { background-color: var(--periwinkle); }
 /* The accent (#d95f52) is a mid-light red, so accent-filled buttons need dark
    labels on paper - same as they get on the dark theme (var(--bg) is dark
