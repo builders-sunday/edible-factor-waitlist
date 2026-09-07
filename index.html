@@ -388,14 +388,6 @@
   /* Mono micro-labels · eyebrow, section labels, kicker pills */
   .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
 
-  /* Section label "01 · The real problem" */
-  .section-label {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--periwinkle);
-    display: inline-flex; align-items: center; gap: 14px;
-  }
-
   /* Pill button (CTA) */
   .pill-cta {
     background: var(--periwinkle);
@@ -633,6 +625,15 @@
 
   /* Glass bubble button (nav Careers): a frosted liquid-glass pill matching the
      email input + theme toggle. Theme-aware; never underlined. */
+  /* Nav capacity. Measured at 375: logo 48 + Blog 67 + Careers 93 + toggle 62
+     + Join Waitlist 128 = 398px of children in 327px of usable row, so the
+     primary CTA was clipped at every width up to 430. Blog and Careers also
+     live in the footer, so they yield below 640 and the CTA always fits.
+     Plain CSS on purpose: sm:/md: variants are absent from this page's
+     precompiled Tailwind subset and would silently no-op. */
+  .pill-glass.nav-secondary { display: none; }
+  @media (min-width: 640px) { .pill-glass.nav-secondary { display: inline-flex; } }
+
   .pill-glass {
     font-family: 'JetBrains Mono', ui-monospace, monospace;
     font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
@@ -1557,17 +1558,6 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
     .deck-mobile-ctrls { display: none; }
   }
 
-  /* === Floating arrow indicator (between sections) === */
-  .float-arrow {
-    display: flex; flex-direction: column; align-items: center; gap: 6px;
-    color: var(--periwinkle);
-    animation: floatBounce 2s ease-in-out infinite;
-  }
-  .float-arrow svg { display: block; }
-  @keyframes floatBounce {
-    0%, 100% { transform: translateY(0); opacity: 0.55; }
-    50%      { transform: translateY(8px); opacity: 1; }
-  }
 
   /* ============================================================
      ENGAGEMENT FUNNEL (.eff-*)  ·  additive, sits alongside the
@@ -2199,8 +2189,8 @@ html.theme-light .bp-knob { left: 3px; }
         <span class="w-1.5 h-1.5 rounded-full bg-periwinkle"></span>
         Private Beta · Bengaluru → Global
       </span>
-      <a href="/blog" class="pill-glass">Blog</a>
-      <a href="/careers" class="pill-glass">Careers</a>
+      <a href="/blog" class="pill-glass nav-secondary">Blog</a>
+      <a href="/careers" class="pill-glass nav-secondary">Careers</a>
       <button id="themeToggle" type="button" class="bp-switch" role="switch" aria-label="Switch between light and dark theme">
         <svg class="bp-ic bp-ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
         <svg class="bp-ic bp-ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
@@ -2546,7 +2536,6 @@ html.theme-light .bp-knob { left: 3px; }
     <div class="prob-grid grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-8 lg:gap-14 items-start">
       <!-- Left: section header -->
       <div class="reveal lg:sticky lg:top-28">
-        <div class="section-label mb-6"><span class="ml-3">The real problem</span></div>
         <h2 class="display text-5xl md:text-6xl leading-[0.98]">
           You've always<br>had to <span class="accent">choose</span>
         </h2>
@@ -2576,15 +2565,6 @@ html.theme-light .bp-knob { left: 3px; }
       </div>
     </div>
 
-    <!-- Floating arrow indicator (01 → 02) -->
-    <div class="flex justify-center mt-10 mb-2" aria-hidden="true">
-      <div class="float-arrow">
-        <span class="mono text-[10px] tracking-[0.22em] uppercase">Walk Through</span>
-        <svg width="22" height="34" viewBox="0 0 22 34" fill="none">
-          <path d="M11 2v28m0 0L2 21m9 9 9-9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -2630,26 +2610,25 @@ html.theme-light .bp-knob { left: 3px; }
 
       <!-- LEFT: section label + chapter text + controls + pips -->
       <div class="relative">
-        <div class="section-label mb-5"><span class="ml-3">The walkthrough</span></div>
 
         <div id="deckText" class="deck-text-stage">
           <div class="deck-chapter active" data-chapter="0">
-            <span class="mono text-[11px] tracking-[0.18em] uppercase text-periwinkle">Ch 01 · Your Home</span>
+            <span class="mono text-[11px] tracking-[0.18em] uppercase text-periwinkle">Your Home</span>
             <h3 class="display text-5xl md:text-6xl leading-[0.98] mt-3">Dine-in mode,<br><span class="accent">on the table</span></h3>
             <p class="mt-4 text-inkdim leading-relaxed max-w-[480px]">Calories and budget for the session you're sitting in. Set a target, customize a meal, or ask the AI Chat. The home screen tracks your decision in real time, before the bill arrives</p>
           </div>
           <div class="deck-chapter" data-chapter="1">
-            <span class="mono text-[11px] tracking-[0.18em] uppercase text-periwinkle">Ch 02 · Find The Table</span>
+            <span class="mono text-[11px] tracking-[0.18em] uppercase text-periwinkle">Find The Table</span>
             <h3 class="display text-5xl md:text-6xl leading-[0.98] mt-3">A menu that<br><span class="accent">reads you back</span></h3>
             <p class="mt-4 text-inkdim leading-relaxed max-w-[480px]">The restaurant's full menu, with veg, non-veg, bestseller filters, calorie tags, and allergen badges baked into every dish. Lite mode keeps it fast even on a hotspot</p>
           </div>
           <div class="deck-chapter" data-chapter="2">
-            <span class="mono text-[11px] tracking-[0.18em] uppercase text-periwinkle">Ch 03 · AI Sommelier</span>
+            <span class="mono text-[11px] tracking-[0.18em] uppercase text-periwinkle">AI Sommelier</span>
             <h3 class="display text-5xl md:text-6xl leading-[0.98] mt-3">Pairings with<br><span class="accent">a reason attached</span></h3>
             <p class="mt-4 text-inkdim leading-relaxed max-w-[480px]">Tonight's Reasoning explains why the signature cut went first, and offers alternates priced and portioned so the table balances. Tap WHY THIS on any dish for the math</p>
           </div>
           <div class="deck-chapter" data-chapter="3">
-            <span class="mono text-[11px] tracking-[0.18em] uppercase text-periwinkle">Ch 04 · Insights</span>
+            <span class="mono text-[11px] tracking-[0.18em] uppercase text-periwinkle">Insights</span>
             <h3 class="display text-5xl md:text-6xl leading-[0.98] mt-3">The patterns<br><span class="accent">behind your plate</span></h3>
             <p class="mt-4 text-inkdim leading-relaxed max-w-[480px]">Calories across the week, spend held within intention, energy in motion. A quiet rhythm read back to you, not a spreadsheet to wrestle</p>
           </div>
@@ -2760,7 +2739,6 @@ html.theme-light .bp-knob { left: 3px; }
   <div class="max-w-[1400px] mx-auto px-6 md:px-10">
 
     <div class="reveal max-w-[720px] mb-8 md:mb-10">
-      <div class="section-label mb-6"><span class="ml-3">Instruments of a new discipline</span></div>
       <h2 class="display text-5xl md:text-7xl leading-[0.98]">
         Numbers that<br><span class="accent">mean something</span>
       </h2>
