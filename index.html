@@ -1206,10 +1206,15 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
       background-size: cover; background-position: center;
       border-radius: inherit;
     }
-    .deck__card[data-card="0"] .deck__screen::before {
+    /* Gated on .is-near, which the deck observer adds when the card comes
+       within 400px of the viewport. Ungated, these two backgrounds are
+       fetched as soon as the rule matches, which put 165 KB of below-the-fold
+       imagery on the critical path for reduced-motion visitors - the same
+       cost the poster attributes imposed on everyone else. */
+    .deck__card.is-near[data-card="0"] .deck__screen::before {
       background-image: url('/mockups/home-dashboard.webp');
     }
-    .deck__card[data-card="3"] .deck__screen::before {
+    .deck__card.is-near[data-card="3"] .deck__screen::before {
       background-image: url('/mockups/calorie-trend.webp');
     }
   }
@@ -2741,7 +2746,7 @@ html.theme-light .bp-knob { left: 3px; }
                 class="deck__media"
                 width="392" height="852"
                 src="/mockups/home-dashboard.webm"
-                poster="/mockups/home-dashboard.webp"
+                data-poster="/mockups/home-dashboard.webp"
                 loop muted playsinline preload="none" data-lazyvideo
                 role="img"
                 aria-label="EdibleFactor Dine-in Mode home: calorie target, customize meal, and Try Pro card"></video>
@@ -2767,7 +2772,7 @@ html.theme-light .bp-knob { left: 3px; }
                 class="deck__media"
                 width="392" height="852"
                 src="/mockups/calorie-trend.webm"
-                poster="/mockups/calorie-trend.webp"
+                data-poster="/mockups/calorie-trend.webp"
                 loop muted playsinline preload="none" data-lazyvideo
                 role="img"
                 aria-label="EdibleFactor weekly insights: 9,273 kcal across the week, INR 2,800 of intention, energy in motion"></video>
@@ -2906,7 +2911,45 @@ html.theme-light .bp-knob { left: 3px; }
   (function () {
     var vids = document.querySelectorAll('video[data-lazyvideo]');
     if (!vids.length) return;
+
+    // Posters are assigned here rather than in the markup. A <video poster>
+    // is fetched by the PARSER, regardless of preload="none" - confirmed by
+    // CDP initiator, both stills came back as init=parser in both motion
+    // modes. That put 165 KB of below-the-fold imagery on the critical path
+    // for every visitor, competing with the three above-fold dish images
+    // that already carry fetchpriority="high", and LCP measured 3488ms at
+    // 390px / 4x CPU / 1.6 Mbps against a 2500ms bar.
+    // rootMargin buys the fetch a head start so the still is there by the
+    // time the card is actually reached.
+    // The CARD is observed, not the video: under reduced motion the video is
+    // display:none and would never intersect, and that is exactly the path
+    // whose still comes from the CSS ::before instead. Observing the card
+    // covers both mechanisms with one hook.
+    var arm = function (card) {
+      card.classList.add('is-near');
+      var v = card.querySelector('video[data-poster]');
+      if (v && !v.getAttribute('poster')) v.setAttribute('poster', v.getAttribute('data-poster'));
+    };
+    var cards = document.querySelectorAll('.deck__card');
+    if ('IntersectionObserver' in window && cards.length) {
+      var pio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          arm(e.target);
+          pio.unobserve(e.target);
+        });
+      }, { rootMargin: '400px 0px' });
+      cards.forEach(function (c) { pio.observe(c); });
+    } else {
+      // No IntersectionObserver: arm immediately rather than ship a deck with
+      // no stills at all. Costs the old eager behaviour on old browsers only.
+      cards.forEach(arm);
+    }
+
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Under reduced motion the video is display:none and a CSS ::before
+    // supplies the same still, so no poster is needed and the observer above
+    // never fires for a display:none element. That path is unchanged.
     if (reduce || !('IntersectionObserver' in window)) return;
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
