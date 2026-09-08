@@ -2132,6 +2132,11 @@ html.theme-light {
      words, so the marks keep their brightness and the labels clear 4.5:1. */
   --calorie-ink: #0d6d7d;
   --budget-ink:  #a04f13;
+  /* The wine had no text-safe cut at all, which is why every 11px accent
+     label measured 3.29:1 on paper while the two data hues had been fixed.
+     #b04434 measures 5.05:1. The bright --periwinkle stays the accent for
+     MARKS and for display type, per the note above. */
+  --periwinkle-ink: #b04434;
 }
 
 /* Base surfaces + the hardcoded utility colours actually used in markup */
@@ -2145,6 +2150,12 @@ html.theme-light .text-inkdim { color: var(--ink-dim); }
 html.theme-light .text-inklow { color: var(--ink-low); }
 html.theme-light .text-periwinkle,
 html.theme-light .hover\:text-periwinkle:hover { color: var(--periwinkle); }
+/* Small text only. Keyed on the size class rather than on .text-periwinkle
+   wholesale, because the one large usage - the 30-36px "+" in the stats row -
+   clears the 3:1 large-text bar at 3.29:1 and should keep the brand accent.
+   Measured: the five 11px labels were all 3.29:1 against a 4.5 bar. */
+html.theme-light .text-\[11px\].text-periwinkle { color: var(--periwinkle-ink); }
+html.theme-light .eff-eyebrow { color: var(--periwinkle-ink); }
 /* Small text carrying a data hue uses the text-safe cut. The meter fills,
    arcs and rings keep var(--calorie)/var(--budget) - they are marks, not
    words, and the brighter hue is what makes them read.
@@ -2160,6 +2171,10 @@ html.theme-light .both-rotor { color: var(--calorie-ink); }
 html.theme-light .both-rotor.is-bud { color: var(--budget-ink); }
 html.theme-light .text-calorie { color: var(--calorie-ink); }
 html.theme-light .text-budget { color: var(--budget-ink); }
+/* .hbz__tag .k/.r are 10px figures on the dish cards. They predate the -ink
+   cuts and still referenced the raw fill hues, measuring 3.30 and 3.46. */
+html.theme-light .hbz__tag .k { color: var(--calorie-ink); }
+html.theme-light .hbz__tag .r { color: var(--budget-ink); }
 /* The skip link is eggshell-on-wine in light, which measures 3.29:1. The
    nav CTA already solved the same problem the same way. */
 html.theme-light .skip-link { color: #16130f; }
