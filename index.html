@@ -1925,6 +1925,70 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
     bottom: max(24px, calc(env(safe-area-inset-bottom, 0px) + 16px));
     right: max(24px, env(safe-area-inset-right, 24px));
   }
+
+  /* === Bottom-right band: one occupant at a time ======================
+   * Three things wanted the same corner: the sticky CTA (z 80), the
+   * feedback popup (z 90), and whatever body copy happens to be scrolling
+   * past. Measured on live with CDP device emulation before this fix:
+   *
+   *   375   popup 343x104 over CTA 159x62  ->  overlap 159x62, the WHOLE CTA
+   *   1440  popup 396x87  over CTA 203x68  ->  overlap 203x68, the WHOLE CTA
+   *
+   * The popup wins on z-index, so the primary conversion control was
+   * invisible and unclickable for as long as the popup was open, at every
+   * width. These rules sit at the very end of the sheet on purpose: every
+   * selector here is (0,1,0) and ties with the base rules above, so source
+   * order is what makes them win. Do not hoist them.
+   * ------------------------------------------------------------------- */
+
+  /* --ef-cta-band is the FULL height the CTA occupies at the bottom edge,
+     safe-area excluded (that is added separately by each consumer). Desktop:
+     a 68px pill sitting 24px up. Mobile: the docked bar's own height. Both
+     the bar and the popup derive from this one number so they cannot drift
+     apart again.
+     The popup stacks ABOVE that band rather than sharing it. Only `bottom`
+     is overridden, so the >=1024 rule's left/right/max-width still apply. */
+  :root { --ef-cta-band: 92px; }
+  @media (max-width: 639px) { :root { --ef-cta-band: 60px; } }
+
+  .eff-pop { bottom: calc(var(--ef-cta-band) + 12px + env(safe-area-inset-bottom, 0px)); }
+
+  @media (max-width: 639px) {
+    /* Dock the CTA to the edge. A pill hovering over the middle of a
+       paragraph reads as a rendering bug - measured at 375, it sat on top of
+       the "mean something" heading and its paragraph. An opaque bar pinned
+       to the bottom edge reads as chrome instead, and it is a wider tap
+       target. The footer observer still hides it, so the footer is never
+       covered and no content is permanently unreachable. */
+    .sticky-cta {
+      left: 0; right: 0; bottom: 0;
+      border-radius: 0;
+      justify-content: center; align-items: center;
+      /* An explicit height, not min-height plus padding. The first cut used
+         min-height:58px + 17px padding and rendered 92px, which is not a
+         number anyone predicted and which the popup offset then got wrong.
+         A stated height is one that --ef-cta-band can be derived from. */
+      min-height: 0;
+      /* box-sizing is declared HERE and not assumed. This file has no global
+         `* { box-sizing: border-box }` - there is exactly one scoped instance
+         in the whole sheet - so on content-box the height below and the
+         padding-bottom below SUM, and the bar rendered 128px against a real
+         34px inset instead of 94px. That is a safe-area double count, and it
+         is invisible unless the probe overrides the inset for real:
+         setDeviceMetricsOverride alone reports an inset of 0. */
+      box-sizing: border-box;
+      height: calc(var(--ef-cta-band) + env(safe-area-inset-bottom, 0px));
+      padding: 0 20px env(safe-area-inset-bottom, 0px);
+      /* Slide, do not fade: an opaque bar fading in over text looks like a
+         paint bug, while a bar sliding up from the edge reads as chrome
+         arriving. */
+      transform: translateY(100%);
+      opacity: 1;
+      box-shadow: 0 -12px 32px -14px rgba(0,0,0,0.65);
+    }
+    .sticky-cta.show { transform: translateY(0); opacity: 1; }
+    .sticky-cta.hide-for-footer { transform: translateY(100%); opacity: 1; }
+  }
 </style>
 <!-- FE-launch · favicon + PWA basics -->
 <link rel="icon" type="image/svg+xml" href="/ef-favicon.svg">
