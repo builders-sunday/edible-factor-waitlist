@@ -73,6 +73,7 @@ flowchart TD
 | `/why-not-petpooja(.html)` | `why-not-petpooja.html` | Private sales document. `noindex` via page `<meta>`, `_headers` `X-Robots-Tag`, and `robots.txt` Disallow. | No (blocked) |
 | `/design` | `design/index.html` | Brand kit / design language page with SVG + PNG emblem downloads (`design/assets/`). | Yes |
 | `/v2` | `v2/index.html` | Redesign preview ("not the live homepage" ribbon). Loads external `assets/styles.css`, `app.js`, `lenis.min.js`. `noindex`. | No |
+| any unknown path | `404.html` | Branded not-found page, served with a real `404` status. Its presence at the root is also what turns off Pages' single-page-app fallback (before it, every unknown URL returned the homepage with `200`). Also the body of the `404` that `functions/_middleware.js` returns for repo-internal files. Every URL inside it is absolute, because it renders at any depth. | No (`noindex`) |
 
 Static assets at the root: `ef-mark.svg`, `ef-mark-180.png`, `favicon.ico`, `og-image.png`, `manifest.webmanifest`, `robots.txt`, and `mockups/*.webp` (deck screenshots: `home-dashboard`, `restaurants-browse`, `ai-sommelier`, `calorie-trend`).
 
@@ -186,6 +187,8 @@ flowchart TD
 | `functions/api/jobs.js` | Cached GET proxy for public job listings. |
 | `functions/api/apply.js` | Validated POST proxy for job applications (SSRF-guarded resume URL). |
 | `functions/api/notify.js` | POST proxy for generic "get notified" signups. |
+| `functions/_middleware.js` | Returns a real `404` (with the `404.html` body) for repo-internal files that Pages would otherwise publish: `.claude/`, `.drafts/`, `docs/`, `scripts/`, `tools/`, root `*.md`, `write-version.mjs`, `.gitignore` and local secret files. Passes `/api/*` through untouched. |
+| `_routes.json` | Scopes Function invocations to `/api/*` plus the internal paths above, so pages and assets never run a Function. Its `include` list and the `INTERNAL` pattern in `_middleware.js` must name the same paths. |
 | `_headers` | Cloudflare Pages per-path HTTP headers: security headers, cache policy, `X-Robots-Tag` on the private doc. |
 | `mockups/` | `.webp` phone screenshots referenced by the `index.html` card deck. Immutable-cached per filename. |
 | `tools/capture-mockups/` | Separate Playwright Node project that regenerates `mockups/`. Not part of the deployed site. |
@@ -326,6 +329,7 @@ Do NOT add a GitHub Actions deploy workflow - it would race the dashboard Git in
 | Careers list/apply/notify | `careers.html` + `functions/api/{jobs,apply,notify}.js` | `careers.html` CSP is `connect-src 'self'` - all backend calls MUST go through a Pages Function, never a direct cross-origin fetch. Functions must whitelist forwarded fields (never proxy arbitrary keys) and keep the honeypot check first. |
 | A new Pages Function | `functions/api/<name>.js` | Workers runtime only: Web `Request`/`Response`, read `env` (not `process.env`), no `Buffer`/`fs`/Node APIs. Read client IP via `cf-connecting-ip`. Add honeypot + validation; forward `X-Platform` + `X-Request-Time` if proxying the backend. |
 | New env var / secret | Cloudflare Pages dashboard + the Function that reads it | Confirm the graceful-degradation path (unset -> log-only / no-op / open) so an unbound secret never breaks the form. Document it here and in `README.md`. |
+| New non-site file or folder at the repo root (docs, scripts, drafts, tooling) | `_routes.json` `include` + `INTERNAL` in `functions/_middleware.js` | Pages publishes the repo root, so anything new there is public unless it is added to BOTH lists. Prove it under `wrangler pages dev .`: the new path returns `404`, real pages still return `200`. |
 | Cache / security header | `_headers` | Per-path ordering matters; `immutable` only for versioned assets; keep the private-doc `X-Robots-Tag` triple-guard (page meta + header + `robots.txt`). |
 | No en/em dashes | any file | Fleet forbids U+2013 / U+2014; use `-` or ` - `. |
 | Process | GitHub project board first | Fleet ticket-first workflow: create the board item, then branch off `main` (`feature/`, `bug/`, `enhancement/`, `chore/`), PR back, no self-merge. |

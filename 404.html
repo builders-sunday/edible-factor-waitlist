@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#040407">
+<script>
+  /* Pre-paint theme init, same contract as index.html: a saved choice wins,
+     else the OS preference. Keeps the 404 in the theme the visitor picked. */
+  (function () {
+    try {
+      var t = localStorage.getItem('ef-theme');
+      if (t !== 'light' && t !== 'dark') {
+        t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      if (t === 'light') {
+        document.documentElement.classList.add('theme-light');
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f5f2ed');
+      }
+    } catch (e) {}
+  })();
+</script>
+<title>Page not found · edible·factor</title>
+<meta name="description" content="This page does not exist on ediblefactor.com.">
+<meta name="robots" content="noindex">
+
+<!--
+  Cloudflare Pages serves this file, with a real 404 status, for every path
+  that matches no file. Its presence is also what switches Pages OFF its
+  single-page-app fallback (without a root 404.html every unknown URL
+  returned the homepage with 200). functions/_middleware.js serves this
+  same body for the blocked internal paths. It renders at ANY depth
+  (/blog/x/y), so every URL in this file must stay absolute.
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+
+<style>
+  /* Tokens copied from index.html :root and html.theme-light, not renamed.
+     --periwinkle is the wine (#d95f52) after the wine sweep. Tone: the
+     landing page's own voice, one display face (Space Grotesk), one body
+     face (Inter), mono for labels and the button. */
+  :root {
+    --bg: #040407;
+    --ink: #eceaf3;
+    --ink-dim: #9693ac;
+    --periwinkle: #d95f52;
+    --periwinkle-bright: #e8796b;
+    --label: var(--periwinkle);   /* small wine text: 5.6:1 on --bg */
+    --on-cta: var(--bg);          /* text on the wine pill: 5.6:1 */
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  html.theme-light {
+    color-scheme: light;
+    --bg: #f5f2ed;
+    --ink: #23201d;
+    --ink-dim: #5b564f;
+    --label: #b04434;             /* --periwinkle-ink: 5.05:1 on paper */
+    --on-cta: #16130f;            /* matches index.html's light .pill-cta */
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: clip;
+  }
+  ::selection { background: var(--periwinkle); color: var(--bg); }
+  :focus-visible { outline: 2px solid var(--periwinkle); outline-offset: 3px; border-radius: 6px; }
+
+  .nf-top {
+    padding: max(12px, env(safe-area-inset-top)) 24px 12px;
+  }
+  .nf-home {
+    display: inline-flex;
+    width: 44px; height: 44px;
+    border-radius: 12px;
+  }
+  .nf-home img { display: block; width: 44px; height: 44px; border-radius: 12px; }
+  .nf-home .nf-mark--light,
+  html.theme-light .nf-home .nf-mark--dark { display: none; }
+  html.theme-light .nf-home .nf-mark--light { display: block; }
+
+  main {
+    flex: 1;
+    width: 100%;
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: 2rem 24px 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .nf-label {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-weight: 500;
+    font-size: 0.75rem; line-height: 1.35;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--label);
+    margin: 0 0 1.25rem;
+  }
+  h1 {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.5rem, 9vw, 4.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    font-kerning: normal;
+    text-rendering: optimizeLegibility;
+    text-wrap: balance;
+    margin: 0;
+  }
+  /* Space Grotesk has no italic cut: the accent is colour, never a slant. */
+  h1 .accent { color: var(--periwinkle); }
+  .nf-copy {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--ink-dim);
+    max-width: 34rem;
+    margin: 1.5rem 0 2.25rem;
+    text-wrap: pretty;
+  }
+  .nf-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1.5rem; }
+
+  /* Same pill as index.html .pill-cta, sized to a 48px touch target. */
+  .nf-cta {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 48px;
+    padding: 0 1.5rem;
+    border-radius: 9999px;
+    background: var(--periwinkle);
+    color: var(--on-cta);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-weight: 500;
+    font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase;
+    text-decoration: none; white-space: nowrap;
+    transition: transform 160ms var(--ease-out), background-color 160ms ease;
+  }
+  .nf-cta:active { transform: scale(0.97); }
+  .nf-link {
+    display: inline-flex; align-items: center;
+    min-height: 44px;
+    color: var(--ink);
+    font-size: 0.9375rem;
+    text-decoration: underline;
+    text-decoration-color: var(--periwinkle);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+    transition: color 160ms ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .nf-cta:hover { background: var(--periwinkle-bright); }
+    .nf-link:hover { color: var(--label); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nf-cta, .nf-link { transition: none; }
+    .nf-cta:active { transform: none; }
+  }
+</style>
+
+<link rel="icon" type="image/svg+xml" href="/ef-favicon.svg">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/ef-mark-180.png">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; base-uri 'self';">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+</head>
+<body>
+
+<header class="nf-top">
+  <a href="/" class="nf-home" aria-label="edible factor home">
+    <img src="/ef-mark.svg" alt="" width="44" height="44" class="nf-mark--dark">
+    <img src="/ef-mark-animated-on-light.svg" alt="" width="44" height="44" class="nf-mark--light">
+  </a>
+</header>
+
+<main>
+  <p class="nf-label">404 · Page not found</p>
+  <h1>This page is not on the <span class="accent">menu.</span></h1>
+  <p class="nf-copy">The link may be old, or the address has a typo. Everything we publish is one tap from the home page.</p>
+  <div class="nf-actions">
+    <a href="/" class="nf-cta">Back to home</a>
+    <a href="/blog" class="nf-link">Read the blog</a>
+  </div>
+</main>
+
+</body>
+</html>
