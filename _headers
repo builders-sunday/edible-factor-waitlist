@@ -34,6 +34,15 @@
 /careers.html
   Cache-Control: public, max-age=0, must-revalidate
 
+/plate
+  Cache-Control: public, max-age=0, must-revalidate
+
+/plate.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/plate-assets/*
+  Cache-Control: public, max-age=3600
+
 # Private sales document. Belt + braces: HTML <meta robots> on the page
 # itself, this server-side header, and a robots.txt Disallow rule.
 /why-not-petpooja

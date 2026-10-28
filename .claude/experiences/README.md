@@ -56,6 +56,8 @@ these sections:
 
 ## Index
 
+- [2026-10-28 - Plate: current-app design and clearer operator intent](2026-10-28-plate-connected-redesign.md) - replaces the inert listing-claim flow and simulated API narrative with product captures, an explicit local demo and an email introduction.
+
 - [2026-07-10 - Experiences decision log added](2026-07-10-experiences-rollout.md) - the convention itself: why this folder exists and the standing rules around it.
 - [2026-07-29 - Hero: phone rotator removed, tagline on one line, colour rotors synced](2026-07-29-hero-one-line-tagline.md) - why the decorative screenshot carousel lost its place in the hero's motion budget, how the one-line headline is sized (container query units, measured not guessed), and the pre-existing stray `</div>` that leaves the hero's second column empty.
 - [2026-07-29 - Hero arcs v2: the budgets braid around the plate line](2026-07-29-hero-braid.md) - variant B chosen from a two-cut preview; wine spine keeps its choreography, baked braid polylines, whole-svg lightning field gated to desktop + motion-allowed, ghost arc deleted.
