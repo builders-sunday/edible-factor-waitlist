@@ -92,4 +92,57 @@
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   function setMotion() { document.querySelectorAll('svg').forEach(svg => { if (motion.matches && svg.pauseAnimations) svg.pauseAnimations(); else if (svg.unpauseAnimations) svg.unpauseAnimations(); }); }
   motion.addEventListener('change', setMotion); setMotion();
+
+  // The poster is always available. Fetch video only when playback is wanted.
+  const film = document.getElementById('hero-film');
+  const filmButton = document.querySelector('.hero-play');
+  const media = document.querySelector('.hero-media');
+  const connection = navigator.connection;
+  let inView = false;
+  let userPaused = false;
+  let optedIn = false;
+  let failed = false;
+  let pendingPlay = false;
+  const mayPlay = () => inView && !document.hidden && !userPaused && !failed &&
+    (optedIn || (!motion.matches && !connection?.saveData));
+  function updateFilmButton() {
+    filmButton.textContent = failed ? 'Retry product loop' : (!film.paused ? 'Pause product loop' : 'Play product loop');
+  }
+  function syncFilm() {
+    if (!mayPlay()) { film.pause(); updateFilmButton(); return; }
+    if (pendingPlay || !film.paused) return;
+    if (!film.getAttribute('src')) { film.src = film.dataset.src; film.load(); }
+    pendingPlay = true;
+    film.play().then(() => {
+      pendingPlay = false;
+      if (!mayPlay()) film.pause();
+      updateFilmButton();
+    }).catch(() => { pendingPlay = false; media.dataset.playing = 'false'; updateFilmButton(); });
+  }
+  film.addEventListener('playing', () => {
+    if (!mayPlay()) { film.pause(); return; }
+    media.dataset.playing = 'true'; updateFilmButton();
+  });
+  film.addEventListener('pause', updateFilmButton);
+  film.addEventListener('error', () => { failed = true; media.dataset.playing = 'false'; updateFilmButton(); });
+  filmButton.hidden = false;
+  filmButton.addEventListener('click', () => {
+    if (!film.paused) { userPaused = true; film.pause(); }
+    else {
+      userPaused = false; optedIn = true;
+      if (failed) { failed = false; film.removeAttribute('src'); }
+      syncFilm();
+    }
+  });
+  new IntersectionObserver(entries => {
+    inView = entries[0].isIntersecting; syncFilm();
+  }, { threshold: 0.15 }).observe(media);
+  document.addEventListener('visibilitychange', syncFilm);
+  function preferenceChanged() {
+    optedIn = false;
+    media.dataset.playing = 'false';
+    syncFilm();
+  }
+  motion.addEventListener('change', preferenceChanged);
+  connection?.addEventListener('change', preferenceChanged);
 })();
