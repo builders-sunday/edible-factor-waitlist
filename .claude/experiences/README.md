@@ -56,6 +56,8 @@ these sections:
 
 ## Index
 
+- [2026-10-29 - Plate hero motion](2026-10-29-plate-hero-motion.md) - a small product-capture loop, quieter plate mark and Ninan's directional navigation underline, with preference-aware playback.
+
 - [2026-10-28 - Plate: current-app design and clearer operator intent](2026-10-28-plate-connected-redesign.md) - replaces the inert listing-claim flow and simulated API narrative with product captures, an explicit local demo and an email introduction.
 
 - [2026-07-10 - Experiences decision log added](2026-07-10-experiences-rollout.md) - the convention itself: why this folder exists and the standing rules around it.
