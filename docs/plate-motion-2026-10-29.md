@@ -24,3 +24,9 @@ The user clarified “motion log” means the animated Plate logo. Preserve the 
 - First/last encoded frames: mean per-channel absolute difference below 0.66/255 (minor compression variation).
 
 Production verification belongs in the release handoff after Cloudflare deploys the merged change. Local results alone do not establish a live release.
+
+## EF coaster follow-up — issue #128
+
+The user requested the EF coaster instead of the rectangular QR card in the hero film. Version 2 replaces only the Print scene with the existing dark/light EF coaster artwork from `https://plate.ediblefactor.com/print-collateral/02-periwinkle-drenched.png`. A resized WebP source is retained as `ef-coaster-v1.webp`.
+
+The new `plate-hero-loop-v2.mp4` remains 12 seconds, 960×720, 24fps, silent H.264 with fast-start; 378,168 bytes. Menu and Team scenes, crossfade timings, static poster, seamless return, controls and preference handling are unchanged. The page uses a fresh filename and release marker `coaster-20261029b` so existing cached video does not conceal the update.
