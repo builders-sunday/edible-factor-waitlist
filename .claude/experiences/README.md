@@ -56,6 +56,8 @@ these sections:
 
 ## Index
 
+- [2026-11-03 - Blog hub split into six sections, eight posts added](2026-11-03-blog-sections.md) - why static sections with an anchor jump row beat a flat list or filter chips, the post to section mapping, what was and was not re-checked, and the pre-existing `/blog` to `/blog/` 308.
+
 - [2026-10-29 - Plate hero motion](2026-10-29-plate-hero-motion.md) - a small product-capture loop, quieter plate mark and Ninan's directional navigation underline, with preference-aware playback.
 
 - [2026-10-28 - Plate: current-app design and clearer operator intent](2026-10-28-plate-connected-redesign.md) - replaces the inert listing-claim flow and simulated API narrative with product captures, an explicit local demo and an email introduction.

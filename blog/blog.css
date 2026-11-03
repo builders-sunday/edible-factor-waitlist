@@ -98,8 +98,14 @@ a { color: inherit }
 .b-nav__links a {
   font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em;
   text-transform: uppercase; color: var(--fg-3); text-decoration: none;
-  min-height: 44px; display: inline-flex; align-items: center;
+  min-height: 44px; min-width: 44px; display: inline-flex; align-items: center;
+  justify-content: center; white-space: nowrap;
   transition: color .18s var(--ease);
+}
+/* One row at 375: home mark + three links. Measured, see fix shots. */
+@media (max-width: 400px) {
+  .b-nav__links { gap: 12px }
+  .b-nav__links a { letter-spacing: 0.14em }
 }
 @media (hover: hover) and (pointer: fine) { .b-nav__links a:hover { color: var(--fg) } }
 .b-nav__links a[aria-current="page"] { color: var(--accent) }
@@ -114,6 +120,7 @@ main.wrap { padding-top: 56px; padding-bottom: 80px }
 }
 .eyebrow .tag { color: var(--accent) }
 .eyebrow .sep { opacity: .5; margin: 0 6px }
+.eyebrow time { white-space: nowrap }
 
 .post-header h1 {
   font-family: var(--sans); font-weight: 500;
@@ -148,6 +155,13 @@ main.wrap { padding-top: 56px; padding-bottom: 80px }
 .b-toggle-hint {
   font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em;
   text-transform: uppercase; color: var(--fg-3); margin: 8px 0 40px;
+}
+/* At phone width the hint wraps under the tablist; pull it up so it reads as
+   the toggle's caption and the 40px of air sits below it instead. */
+@media (max-width: 480px) {
+  .b-toggle-row { row-gap: 0 }
+  .b-toggle { margin-bottom: 12px }
+  .b-toggle-hint { margin-top: 0 }
 }
 
 /* ---------------- body ---------------- */
@@ -209,7 +223,7 @@ main.wrap { padding-top: 56px; padding-bottom: 80px }
 }
 .b-post-card .meta .tag { color: var(--accent) }
 .b-post-card .meta .sep { opacity: .5; margin: 0 6px }
-.b-post-card h2 {
+.b-post-card h2, .b-post-card h3 {
   font-weight: 500; font-size: clamp(23px, 2.8vw, 30px);
   line-height: 1.14; letter-spacing: -0.025em; margin: 0 0 12px; text-wrap: balance;
 }
@@ -242,6 +256,106 @@ main.wrap { padding-top: 56px; padding-bottom: 80px }
 @media (hover: hover) and (pointer: fine) { .b-foot__inner a:hover { color: var(--fg) } }
 .b-foot__more { margin-left: auto }
 
+/* ---------------- index sections (added 2026-11-03) ----------------
+   Not measured off nikhilballal.com: its hub has no sections. Built from the
+   values above so it reads as the same system: mono pills reuse the toggle's
+   11px / 0.2em label, the section h2 sits between the card h2 (30px) and the
+   post h2 (34px), and every pill clears 44px. fg-2 (0.68 alpha) is used for
+   pill text because it sits above the measured 4.6:1 of fg-3. */
+.b-jump {
+  /* Bleeds to the screen edge inside the 24px gutter so a half-cut pill
+     signals "scroll me"; the padding puts the first pill back on the grid. */
+  display: flex; gap: 8px; overflow-x: auto; overscroll-behavior-x: contain;
+  margin: 32px -24px 0; padding: 4px 24px 8px;
+  list-style: none; scrollbar-width: none;
+}
+.b-jump::-webkit-scrollbar { display: none }
+.b-jump li { flex: none }
+.b-jump a {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px;
+  border: 1px solid var(--line); border-radius: 999px; white-space: nowrap;
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--fg-2); text-decoration: none;
+  transition: color .18s var(--ease), border-color .18s var(--ease), transform .16s var(--ease);
+}
+.b-jump a:active { transform: scale(0.97) }
+.b-jump a:focus-visible { outline-offset: 2px; border-radius: 999px }
+@media (hover: hover) and (pointer: fine) {
+  .b-jump a:hover { color: var(--fg); border-color: rgba(34, 31, 26, 0.3) }
+}
+@media (min-width: 720px) {
+  .b-jump { flex-wrap: wrap; overflow: visible; margin: 32px 0 0; padding: 4px 0 0 }
+}
+
+/* Card date never splits across lines ("3 NOV / 2026"), and below 480px the
+   measured 32px 34px card padding gives back 24px of measure: at 375 the long
+   section tags otherwise wrap the meta line on every card. */
+.b-post-card .meta time { white-space: nowrap }
+@media (max-width: 480px) { .b-post-card { padding: 26px 22px } }
+
+.b-section { scroll-margin-top: 24px }
+.b-section + .b-section { margin-top: 64px }
+.b-section-head { margin: 0 0 20px }
+.b-section-head h2 {
+  font-weight: 600; font-size: clamp(26px, 3.2vw, 32px);
+  line-height: 1.12; letter-spacing: -0.025em; margin: 0; text-wrap: balance;
+}
+.b-section-head p { color: var(--fg-2); font-size: 17px; line-height: 1.5; margin: 8px 0 0 }
+
+/* ---------------- byline, checked, read next (added 2026-11-03) ---------------- */
+.byline { font-size: 15px; line-height: 1.5; color: var(--fg-2); margin: 18px 0 16px }
+.byline a { color: var(--accent); text-underline-offset: 3px }
+.checked {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--fg-3); margin: 20px 0 0;
+}
+.read-next { margin-top: 48px; padding-top: 8px; border-top: 1px solid var(--line) }
+.read-next h2 {
+  font-family: var(--sans); font-weight: 700; font-size: 26px;
+  letter-spacing: -0.02em; margin: 32px 0 8px;
+}
+.read-next ul { list-style: none; margin: 0; padding: 0 }
+.read-next li { border-bottom: 1px solid var(--line) }
+.read-next a {
+  display: flex; align-items: center; min-height: 44px; padding: 14px 0;
+  font-size: 18px; line-height: 1.35; font-weight: 500; letter-spacing: -0.01em;
+  color: var(--fg); text-decoration: none; transition: color .18s var(--ease);
+}
+.read-next a::after { content: "\2192"; margin-left: auto; padding-left: 16px; color: var(--accent) }
+@media (hover: hover) and (pointer: fine) { .read-next a:hover { color: var(--accent) } }
+
+/* ---------------- tables (added 2026-11-03) ----------------
+   The wrapper scrolls, never the page: at 375 a wide table pans inside its
+   own box. The wrapper is a focusable region in the markup so keyboard users
+   can scroll it too. */
+.table-wrap {
+  overflow-x: auto; overscroll-behavior-x: contain; margin: 0 0 28px;
+  max-width: 100%;
+}
+.table-wrap table {
+  width: 100%; border-collapse: collapse;
+  font-size: 16px; line-height: 1.45; font-variant-numeric: tabular-nums;
+}
+.table-wrap caption {
+  caption-side: top; text-align: left; font-size: 14px; line-height: 1.45;
+  color: var(--fg-2); padding: 0 0 10px;
+}
+.table-wrap th, .table-wrap td {
+  text-align: left; vertical-align: top; padding: 10px 14px 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+.table-wrap th:last-child, .table-wrap td:last-child { padding-right: 0 }
+/* Sans, not the mono label style: long source headers ("US processed cheese
+   (USDA FoodData Central 170853)") broke mid-word in 10px tracked caps at 375. */
+.table-wrap thead th {
+  font-size: 14px; font-weight: 600; line-height: 1.35; color: var(--fg-2);
+  border-bottom-color: rgba(34, 31, 26, 0.3);
+}
+.table-wrap tbody th { font-weight: 600 }
+.table-wrap thead th:first-child { white-space: nowrap }
+.table-wrap tbody tr:last-child th, .table-wrap tbody tr:last-child td { border-bottom: 0 }
+
 /* ---------------- motion + print ---------------- */
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: .001ms !important; transition-duration: .001ms !important }
@@ -257,4 +371,34 @@ main.wrap { padding-top: 56px; padding-bottom: 80px }
   }
   .post-body[data-mode="bites"]::before { content: "Bites, the short read" }
   .post-body[data-mode="meal"]::before { content: "The whole meal" }
+}
+
+/* ---------------- line art (added 2026-11-03) ----------------
+   One original SVG per post, drawn for EF (Dribbble was a style reference
+   only). Every img carries width/height 1200x630, so the box is reserved
+   before the file arrives and nothing shifts. The art is transparent ink on
+   the cream ground, so the frame is a hairline border, not a fill. */
+.b-hero-art {
+  margin: 4px 0 28px; border: 1px solid var(--line); border-radius: 16px;
+  overflow: hidden;
+}
+.b-hero-art img {
+  display: block; width: 100%; height: auto;
+  /* Every drawing sits on a table line near y 520 of 630 with its tallest
+     element near y 120, so the top fifth of the canvas is empty. Crop to the
+     band that holds the ink instead of shipping a strip of blank cream. */
+  aspect-ratio: 1200 / 470; object-fit: cover; object-position: 50% 62%;
+}
+
+.b-card-art {
+  display: block; width: 100%; height: auto; margin: -6px 0 14px;
+  aspect-ratio: 1200 / 440; object-fit: cover; object-position: 50% 62%;
+}
+@media (min-width: 640px) {
+  .b-post-card {
+    display: grid; grid-template-columns: minmax(0, 1fr) 200px;
+    column-gap: 28px; align-items: start;
+  }
+  .b-post-card > * { grid-column: 1 }
+  .b-card-art { grid-column: 2; grid-row: 1 / span 4; align-self: center; margin: 0 }
 }
