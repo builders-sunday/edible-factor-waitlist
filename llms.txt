@@ -1,0 +1,16 @@
+# Edible Factor
+
+> Edible Factor is a diner app in private beta in Bengaluru that tracks your calories and your food budget at the same time. Its blog covers food price news, calorie and cost comparisons, and what labels and menus promise. Every post lists its sources.
+
+## Site
+
+- [Edible Factor](https://ediblefactor.com/): The only app that tracks your calories and your budget at the same time. Private beta in Bengaluru.
+- [Plate by Edible Factor](https://ediblefactor.com/plate): Plate brings your restaurant menu, team, diner experience and printed materials into one workspace.
+- [Blog](https://ediblefactor.com/blog/): Food price news, calorie and cost comparisons, and what labels and menus promise.
+
+## Blog
+
+- [India sugar price 2026: what 34 percent does to a menu](https://ediblefactor.com/blog/india-sugar-price-rise-restaurants-2026): India's retail sugar price hit Rs 65.05 a kg on 26 August, up 34 percent in a month. What the 2026 sugar spike actually costs an independent restaurant.
+- [Ferrero Rocher Is 30% Chocolate. The Label Saved It.](https://ediblefactor.com/blog/ferrero-rocher-30-percent-chocolate-what-menus-can-learn): Ferrero Rocher is 30% milk chocolate and 28.5% hazelnuts, all printed on the box. What that label means for Indian restaurants writing their own menus.
+- [Lindt two lawsuits, and what your menu promises](https://ediblefactor.com/blog/lindt-two-lawsuits-what-your-menu-promises): Two separate Lindt lawsuits got merged into one online story. Pulled apart, they show what a premium word on a menu actually costs.
+- [Truffles, the camera, and what restaurants get wrong](https://ediblefactor.com/blog/camera-in-your-dining-room): A staff member at Truffles told a food creator he could not film. What the reel that followed should teach restaurants about who describes their food.
