@@ -383,16 +383,14 @@ main.wrap { padding-top: 56px; padding-bottom: 80px }
   overflow: hidden;
 }
 .b-hero-art img {
-  display: block; width: 100%; height: auto;
-  /* Every drawing sits on a table line near y 520 of 630 with its tallest
-     element near y 120, so the top fifth of the canvas is empty. Crop to the
-     band that holds the ink instead of shipping a strip of blank cream. */
-  aspect-ratio: 1200 / 470; object-fit: cover; object-position: 50% 62%;
+  /* No crop here: each SVG's viewBox is already a 900 x 472.5 window around
+     its ink, so the drawing fills the frame at full aspect. */
+  display: block; width: 100%; height: auto; aspect-ratio: 1200 / 630;
 }
 
 .b-card-art {
   display: block; width: 100%; height: auto; margin: -6px 0 14px;
-  aspect-ratio: 1200 / 440; object-fit: cover; object-position: 50% 62%;
+  aspect-ratio: 1200 / 630;
 }
 @media (min-width: 640px) {
   .b-post-card {
