@@ -1,11 +1,27 @@
 /**
- * build-blog.mjs - authoring tool, NOT a deploy step.
+ * build-blog.mjs - RETIRED 2026-11-05. It exits before writing anything.
+ *
+ * blog/*.html is now hand-edited and is the source of truth. Edit those files
+ * directly and bump ?v= on any edited asset. Do not edit .drafts/ expecting it
+ * to reach the site: those four drafts are behind the published posts.
+ *
+ * Why it stays retired: it knows 4 posts and writes 20260827 asset versions,
+ * and it has no template for the hub sections, jump row, card art, hero art,
+ * og:image, byline, read next links, tables or reel clips. A run replaces
+ * blog/index.html and the four August posts with that older markup, and brings
+ * back the title and full stop bugs fixed in #131. Reasoning and measurements:
+ * .claude/experiences/2026-11-05-retire-build-blog.md
+ *
+ * To revive it, carry the current markup into the templates, write drafts for
+ * every post, confirm a run leaves blog/ byte-identical, then remove the exit.
+ *
+ * What follows is the original description, kept for that case.
+ *
+ * Authoring tool, NOT a deploy step.
  *
  * Reads .drafts/<slug>.md and writes blog/<slug>.html plus blog/index.html.
  * The generated HTML is committed and Cloudflare Pages serves it as-is, so the
  * deploy path stays exactly what it is today: static files, no build.
- *
- * Run by hand after editing a draft:  node scripts/build-blog.mjs
  *
  * Draft format:
  *   ---
@@ -30,6 +46,9 @@
 import { readFileSync, writeFileSync, readdirSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+console.error('build-blog.mjs is retired: it would overwrite the hand-edited blog/ pages. See the header.');
+process.exit(1);
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DRAFTS = join(ROOT, '.drafts');
