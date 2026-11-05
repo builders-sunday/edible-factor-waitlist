@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="121 72 900 472.5" role="img" aria-hidden="true">
+  <g fill="none" stroke="#221f1a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M180 520H1020"/>
+    <g transform="translate(470 262) rotate(24)">
+      <path d="M-140 -78C-50 -94 50 -94 140 -78C152 -26 152 26 140 40L110 78C30 92 -50 92 -140 78C-152 26 -152 -26 -140 -78Z"/>
+      <path d="M-140 -78L-160 -76V76L-140 78"/>
+      <g stroke-width="4">
+        <path d="M-150 -60V60M-122 -64V64"/>
+        <path d="M140 -78L156 -76V36"/>
+        <path d="M-40 -60C-10 -20 -14 30 -36 62"/>
+      </g>
+    </g>
+    <path d="M552 382C558 404 562 424 566 452" stroke-width="4"/>
+    <ellipse cx="574" cy="430" rx="54" ry="14"/>
+    <path d="M520 430L532 510C556 518 592 518 616 510L628 430"/>
+    <path d="M524 458C556 468 592 468 624 458" stroke-width="4"/>
+    <g transform="translate(-330 300)">
+      <path d="M1032 160L1058 128H1184V192H1058Z"/>
+      <circle cx="1060" cy="160" r="6" stroke-width="4"/>
+      <g stroke="#b24719" stroke-width="4">
+        <path d="M1090 140H1126M1090 152H1126M1098 140C1120 140 1120 168 1096 168H1090L1122 184"/>
+        <circle cx="1156" cy="148" r="10"/>
+        <circle cx="1156" cy="172" r="13"/>
+      </g>
+    </g>
+  </g>
+</svg>
