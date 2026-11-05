@@ -35,7 +35,7 @@ or carry the current markup into its templates.
 - History: one commit touches the script, 117dfb5 (#103). #105 added three
   drafts and #131 hand-edited the output, neither through a changed script.
 - Callers: `git grep build-blog` on main finds nothing outside the script. The
-  repo has no package.json, CI workflow or git hook, and Pages runs no build.
+  repo has no root package.json, CI workflow or git hook, and Pages runs no build.
   `.drafts/` and `scripts/` are only named as paths that must return 404.
 - Run on a throwaway export of main at 4938651: `blog/index.html` lost all 6
   sections, the jump row and 4 card images. All 4 posts lost hero art and
