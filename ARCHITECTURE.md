@@ -24,7 +24,6 @@ flowchart TD
     IDX["index.html<br/>waitlist landing + engagement funnel"]
     CAR["careers.html<br/>public job listings + apply + notify"]
     LEG["legal.html<br/>legal / policy"]
-    WNP["why-not-petpooja.html<br/>private sales doc (noindex)"]
     DES["design/index.html<br/>brand kit / design language"]
     V2["v2/index.html<br/>redesign preview (noindex)"]
   end
@@ -70,7 +69,6 @@ flowchart TD
 | `/` , `/index.html` | `index.html` | Waitlist landing: hero email form, card-deck walkthrough (phone mockups), animated counters, and the progressive engagement funnel. | Yes |
 | `/careers` , `/careers.html` | `careers.html` | Public job listings (filters + share codes), anonymous job application form, and a "get notified" email capture. | Yes |
 | `/legal` , `/legal.html` | `legal.html` | Legal / policy content. Static, `connect-src 'self'`, no forms. | Yes |
-| `/why-not-petpooja(.html)` | `why-not-petpooja.html` | Private sales document. `noindex` via page `<meta>`, `_headers` `X-Robots-Tag`, and `robots.txt` Disallow. | No (blocked) |
 | `/design` | `design/index.html` | Brand kit / design language page with SVG + PNG emblem downloads (`design/assets/`). | Yes |
 | `/v2` | `v2/index.html` | Redesign preview ("not the live homepage" ribbon). Loads external `assets/styles.css`, `app.js`, `lenis.min.js`. `noindex`. | No |
 | any unknown path | `404.html` | Branded not-found page, served with a real `404` status. Its presence at the root is also what turns off Pages' single-page-app fallback (before it, every unknown URL returned the homepage with `200`). Also the body of the `404` that `functions/_middleware.js` returns for repo-internal files. Every URL inside it is absolute, because it renders at any depth. | No (`noindex`) |
@@ -180,7 +178,7 @@ flowchart TD
 |---|---|
 | `index.html` | Entire waitlist landing page: markup, inlined CSS (custom + preflight reset + Tailwind subset), and JS (reveal IO, counters, hero form, engagement funnel IIFE). |
 | `careers.html` | Careers page: job-list rendering from `/api/jobs`, application form -> `/api/apply`, notify form -> `/api/notify`. |
-| `legal.html`, `why-not-petpooja.html` | Static content pages (policy; private sales doc). |
+| `legal.html` | Static content page (policy). |
 | `design/` | Brand-kit page + emblem assets (`design/assets/ef-mark*.svg`). |
 | `v2/` | Redesign preview; the only page with external `assets/` (`styles.css`, `app.js`, `lenis.min.js`). Noindex. |
 | `functions/api/waitlist.js` | Signup + funnel-fallback Function; Loops/Slack/KV/Turnstile logic. |
@@ -251,7 +249,7 @@ Key validators (defined in the Functions): `EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]
 | `index.html` | `'self'`, `https://challenges.cloudflare.com`, `https://api.ediblefactor.com`, `https://api-dev.ediblefactor.com`, `http://localhost:9090`, `https://ipwho.is` |
 | `careers.html` | `'self'` only (all backend traffic goes through Pages Functions) |
 | `design/index.html` | `'self'` only |
-| `legal.html`, `why-not-petpooja.html` | no `connect-src` directive (default-src `'self'` applies; `why-not-petpooja` also drops `'unsafe-inline'` from `script-src`) |
+| `legal.html` | no `connect-src` directive (default-src `'self'` applies) |
 
 Every page sets `frame-ancestors 'none'`, `base-uri 'self'`, `img-src 'self' data:`, and `font-src https://fonts.gstatic.com data:`. `index.html` additionally allows `script-src ... https://challenges.cloudflare.com` and `frame-src https://challenges.cloudflare.com` for Turnstile.
 
@@ -262,7 +260,6 @@ Every page sets `frame-ancestors 'none'`, `base-uri 'self'`, `img-src 'self' dat
 | `/*` | `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy: camera=(), microphone=(), geolocation=()` |
 | `/mockups/*`, `/*.webp` | `Cache-Control: public, max-age=31536000, immutable` (replace by new filename, not overwrite) |
 | `/`, `/index.html`, `/careers`, `/careers.html` | `Cache-Control: public, max-age=300, must-revalidate` |
-| `/why-not-petpooja`, `/why-not-petpooja.html` | `X-Robots-Tag: noindex, nofollow, noarchive, nosnippet` |
 
 ### CORS on `/api/waitlist`
 

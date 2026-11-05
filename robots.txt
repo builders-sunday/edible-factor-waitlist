@@ -1,10 +1,7 @@
 # robots.txt for ediblefactor.com (apex waitlist site)
 # Public pages are open to all well-behaved crawlers.
-# Private sales documents are explicitly disallowed.
 
 User-agent: *
 Allow: /
-Disallow: /why-not-petpooja
-Disallow: /why-not-petpooja.html
 
 Sitemap: https://ediblefactor.com/sitemap.xml
