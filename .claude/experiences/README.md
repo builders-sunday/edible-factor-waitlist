@@ -56,6 +56,7 @@ these sections:
 
 ## Index
 
+- [2026-11-05 - build-blog.mjs retired, blog/ is hand-edited](2026-11-05-retire-build-blog.md) - why the generator now exits instead of being brought up to date, with what a run did to main and to the reel clips branch.
 - [2026-11-03 - Blog hub split into six sections, eight posts added](2026-11-03-blog-sections.md) - why static sections with an anchor jump row beat a flat list or filter chips, the post to section mapping, what was and was not re-checked, and the pre-existing `/blog` to `/blog/` 308.
 
 - [2026-10-29 - Plate hero motion](2026-10-29-plate-hero-motion.md) - a small product-capture loop, quieter plate mark and Ninan's directional navigation underline, with preference-aware playback.
