@@ -187,6 +187,7 @@ flowchart TD
 | `functions/api/notify.js` | POST proxy for generic "get notified" signups. |
 | `functions/_middleware.js` | Returns a real `404` (with the `404.html` body) for repo-internal files that Pages would otherwise publish: `.claude/`, `.drafts/`, `docs/`, `scripts/`, `tools/`, root `*.md`, `write-version.mjs`, `.gitignore` and local secret files. Passes `/api/*` through untouched. |
 | `_routes.json` | Scopes Function invocations to `/api/*` plus the internal paths above, so pages and assets never run a Function. Its `include` list and the `INTERNAL` pattern in `_middleware.js` must name the same paths. |
+| `RETIRED` in `functions/_middleware.js` | Deleted pages that must 404 even while the asset layer still holds a stale copy: today `/why-not-petpooja` (and `.html`, trailing slash). Listed in `_routes.json` too, so the Function answers first with `Cache-Control: no-store`. |
 | `_headers` | Cloudflare Pages per-path HTTP headers: security headers, cache policy, `X-Robots-Tag` on the private doc. |
 | `mockups/` | `.webp` phone screenshots referenced by the `index.html` card deck. Immutable-cached per filename. |
 | `tools/capture-mockups/` | Separate Playwright Node project that regenerates `mockups/`. Not part of the deployed site. |

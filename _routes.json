@@ -14,7 +14,10 @@
     "/ARCHITECTURE.md",
     "/CLAUDE.md",
     "/README.md",
-    "/write-version.mjs"
+    "/write-version.mjs",
+    "/why-not-petpooja",
+    "/why-not-petpooja.html",
+    "/why-not-petpooja/"
   ],
   "exclude": []
 }
