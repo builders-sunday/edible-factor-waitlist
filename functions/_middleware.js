@@ -18,9 +18,17 @@
  * Adding a new non-site file or folder at the repo root means adding it to
  * BOTH lists.
  *
+ * RETIRED lists deleted pages that must 404 even while a stale copy
+ * survives in the asset layer. /why-not-petpooja was deleted in #138, yet
+ * the bare URL kept serving the old page with s-maxage=604800 and
+ * cf-cache-status DYNAMIC for days (#137). Routing the path through this
+ * Function answers before that copy is consulted. Same two-key rule: add a
+ * path here AND to _routes.json.
+ *
  * Workers runtime only: no Node APIs.
  */
 const INTERNAL = /^\/(?:\.(?!well-known(?:\/|$))[^/]*|docs|scripts|tools)(?:\/|$)|\.(?:md|mjs)$/i;
+const RETIRED = /^\/why-not-petpooja(?:\.html)?\/?$/i;
 
 // _headers rules are not applied to Function responses, so the /* block
 // from _headers is repeated here for the 404s this file produces.
@@ -61,7 +69,7 @@ async function notFound(request, env) {
     status: 404,
     headers: {
       'Content-Type': type,
-      'Cache-Control': 'public, max-age=0, must-revalidate',
+      'Cache-Control': 'no-store',
       'X-Robots-Tag': 'noindex',
       ...SECURITY_HEADERS,
     },
@@ -69,5 +77,6 @@ async function notFound(request, env) {
 }
 
 export async function onRequest({ request, env, next }) {
-  return INTERNAL.test(decodedPath(request.url)) ? notFound(request, env) : next();
+  const path = decodedPath(request.url);
+  return INTERNAL.test(path) || RETIRED.test(path) ? notFound(request, env) : next();
 }
