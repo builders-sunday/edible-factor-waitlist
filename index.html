@@ -275,9 +275,6 @@
        column widens. A second viewport-driven rule would only fight it. */
     .hero-stats .display { font-size: min(calc(36px + var(--band-grow) * 0.010), 46px); }
 
-    /* The problem section pins its header column at a flat 380px. On a wide
-       band that leaves a narrow sliver of text beside a very wide card row. */
-    .prob-grid { grid-template-columns: clamp(380px, 25%, 500px) minmax(0, 1fr); }
 
 
   }
@@ -2621,18 +2618,7 @@ html.theme-light .bp-knob { left: 3px; }
      ============================================================ -->
 <section id="problem" class="pt-12 pb-6 md:pt-16 md:pb-8">
   <div class="max-w-[1400px] mx-auto px-6 md:px-10">
-    <div class="prob-grid grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-8 lg:gap-14 items-start">
-      <!-- Left: section header -->
-      <div class="reveal lg:sticky lg:top-28">
-        <h2 class="display text-5xl md:text-6xl leading-[0.98]">
-          You've always<br>had to <span class="accent">choose</span>
-        </h2>
-        <p class="mt-6 text-inkdim leading-relaxed max-w-[400px]">
-          Every menu is a silent negotiation between what your body wants, what your wallet allows, and what your week has planned for you. Most apps solve one side of it
-        </p>
-        <p class="mt-4 mono text-[11px] tracking-[0.16em] uppercase text-inklow">Three reasons why</p>
-      </div>
-
+    <div class="prob-grid">
       <!-- Right: 3 friction cards in a tight row -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="friction reveal">
