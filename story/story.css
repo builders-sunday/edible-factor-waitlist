@@ -308,6 +308,9 @@
 /* Copy column speaks the apex: Plus Jakarta Sans display headings, wine accent, the site's ink and
    surfaces in both themes. The phone keeps the app's own light, black-and-white screens. */
 .efstory{position:relative;padding-block:8px 56px;color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+/* The phone is the app, not the page: it keeps the app ink in both site themes. Without this,
+   dark mode handed every uncoloured phone label the site ink (#eceaf3) on the light screens. */
+.efstory .phone{color:var(--efs-ink)}
 .efstory .story{max-width:1280px}
 .efstory h2{font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-weight:500;line-height:.98;letter-spacing:-.025em;
   font-size:clamp(2.5rem,1.6rem + 2.4vw,3.75rem);color:var(--ink);margin-bottom:18px;text-wrap:balance}
