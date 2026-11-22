@@ -54,7 +54,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DRAFTS = join(ROOT, '.drafts');
 const OUT = join(ROOT, 'blog');
 const SITE = 'https://ediblefactor.com';
-const ASSET_V = '20261122';
+const ASSET_V = '20261123';
 
 const POSTS = [
   { slug: 'ferrero-rocher-30-percent-chocolate-what-menus-can-learn', date: '2026-08-27', tag: 'Ingredients' },
