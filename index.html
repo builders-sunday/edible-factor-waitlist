@@ -1988,6 +1988,18 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
   @media (prefers-reduced-motion: reduce) {
     html.nav-veil nav.fixed.top-0 { transition: none; }
   }
+  /* Hero motion mark: the animated EF mark sits top-left of the hero in the
+     exact geometry of the (veiled) nav logo, scrolls away with the hero and
+     fades on the way out, so the brand is present before the bar arrives. */
+  .hero-section.bg-grid > .hero-mark{position:absolute;top:0;left:0;right:0;z-index:5;pointer-events:none;
+    padding-top:env(safe-area-inset-top,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+  .hero-mark__row{height:68px;display:flex;align-items:center}
+  .hero-mark .ef-logo-link{pointer-events:auto}
+  @supports (animation-timeline: scroll()){
+    .hero-mark__row{animation:hero-mark-out linear both;animation-timeline:scroll(root);animation-range:0 160px}
+    @keyframes hero-mark-out{to{opacity:0;transform:translateY(-12px) scale(.92)}}
+  }
+  @media (prefers-reduced-motion: reduce){.hero-mark__row{animation:none}}
   /* Keep skip-link clear of the notch */
   .skip-link {
     top: max(8px, env(safe-area-inset-top, 8px));
@@ -2386,6 +2398,15 @@ html.theme-light .bp-knob { left: 3px; }
      HERO  ·  split layout: title left, CTA right (with rotating dial)
      ============================================================ -->
 <section class="hero-section relative bg-grid pt-[96px] pb-6 md:pb-8 overflow-hidden">
+
+  <div class="hero-mark">
+    <div class="hero-mark__row max-w-[1400px] mx-auto px-6 md:px-10">
+      <a href="#problem" class="ef-logo-link inline-flex items-center justify-center" aria-label="Jump to the problem" data-smooth-scroll="problem">
+        <img src="/ef-mark.svg" alt="ediblefactor" width="44" height="44" class="ef-logo ef-logo--dark block rounded-xl" loading="eager">
+        <img src="/ef-mark-animated-on-light.svg" alt="ediblefactor" width="44" height="44" class="ef-logo ef-logo--light block rounded-xl" loading="eager" aria-hidden="true">
+      </a>
+    </div>
+  </div>
 
   <!-- Converging arcs · the hero's ground layer, and an argument rather than
        decoration: the calorie line and the spend line arrive from opposite
