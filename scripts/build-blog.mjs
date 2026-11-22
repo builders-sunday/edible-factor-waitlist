@@ -54,7 +54,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DRAFTS = join(ROOT, '.drafts');
 const OUT = join(ROOT, 'blog');
 const SITE = 'https://ediblefactor.com';
-const ASSET_V = '20260827';
+const ASSET_V = '20261122';
 
 const POSTS = [
   { slug: 'ferrero-rocher-30-percent-chocolate-what-menus-can-learn', date: '2026-08-27', tag: 'Ingredients' },
@@ -144,7 +144,7 @@ function head({ title, desc, url, extraCss = '' }) {
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(desc)}">
-<link rel="preload" href="/vendor/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/plus-jakarta-sans-var.woff2?v=1" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/blog/blog.css?v=${ASSET_V}">
 ${extraCss}<link rel="icon" type="image/svg+xml" href="/ef-favicon.svg">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">

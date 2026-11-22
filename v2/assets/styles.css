@@ -1,3 +1,5 @@
+@font-face{font-family:'Plus Jakarta Sans';src:url('/fonts/plus-jakarta-sans-var.woff2?v=1') format('woff2');font-weight:200 800;font-style:normal;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Plus Jakarta Sans';src:url('/fonts/plus-jakarta-sans-rupee-var.woff2?v=1') format('woff2');font-weight:200 800;font-style:normal;font-display:swap;unicode-range:U+20B9}
 /* ============================================================================
    EDIBLE FACTOR — redesign preview. "You are HOW you eat."
    Dark instrument panel. EF brand: periwinkle + calorie-cyan + budget-orange.
@@ -32,7 +34,7 @@ html.lenis,html.lenis body{height:auto;}
 .lenis.lenis-stopped{overflow:hidden;}
 .lenis.lenis-smooth iframe{pointer-events:none;}
 
-body{font-family:'Inter',system-ui,sans-serif;background:var(--void);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--void);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
 body::before{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.045;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
 img{max-width:100%;display:block;}
@@ -40,9 +42,9 @@ a{color:inherit;text-decoration:none;}
 canvas{display:block;}
 .wrap{width:min(100% - 44px,1200px);margin-inline:auto;}
 
-.disp{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;letter-spacing:-.03em;line-height:.98;}
+.disp{font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-weight:700;letter-spacing:-.03em;line-height:.98;}
 .mono{font-family:'JetBrains Mono',ui-monospace,monospace;}
-h1,h2,h3{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;letter-spacing:-.03em;line-height:.98;}
+h1,h2,h3{font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-weight:700;letter-spacing:-.03em;line-height:.98;}
 .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-low);}
 .cal{color:var(--calorie);} .bud{color:var(--budget);} .peri{color:var(--peri-bright);}
 
@@ -59,7 +61,7 @@ h1,h2,h3{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;letter
 .head .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;}
 .brand{display:flex;align-items:center;gap:11px;}
 .brand img{width:30px;height:30px;border-radius:7px;}
-.brand b{font-family:'Space Grotesk';font-weight:700;font-size:16px;letter-spacing:-.01em;}
+.brand b{font-family:'Plus Jakarta Sans';font-weight:700;font-size:16px;letter-spacing:-.01em;}
 .nav{display:flex;align-items:center;gap:28px;}
 .nav a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);transition:color .3s;}
 .nav a:hover{color:var(--ink);}
@@ -84,7 +86,7 @@ h1,h2,h3{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;letter
 .hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px;align-items:center;}
 .hero-meta{display:flex;gap:34px;margin-top:40px;flex-wrap:wrap;}
 .hero-meta div{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-low);}
-.hero-meta div b{display:block;font-family:'Space Grotesk';font-weight:700;font-size:19px;letter-spacing:-.01em;margin-bottom:5px;text-transform:none;}
+.hero-meta div b{display:block;font-family:'Plus Jakarta Sans';font-weight:700;font-size:19px;letter-spacing:-.01em;margin-bottom:5px;text-transform:none;}
 .hero-meta .c1 b{color:var(--calorie);} .hero-meta .c2 b{color:var(--budget);}
 .hero-art{position:relative;aspect-ratio:1;max-width:520px;justify-self:end;width:100%;}
 .hero-art canvas{width:100%;height:100%;}
@@ -103,12 +105,12 @@ h1,h2,h3{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;letter
 .courses .c{display:grid;grid-template-columns:20px 1fr;gap:13px;align-items:center;width:210px;padding:12px 0;opacity:.3;transition:opacity .5s var(--ease);}
 .courses .c.on{opacity:1;}
 .courses .c .n{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--peri);}
-.courses .c .t{font-family:'Space Grotesk';font-weight:600;font-size:15px;letter-spacing:-.01em;}
+.courses .c .t{font-family:'Plus Jakarta Sans';font-weight:600;font-size:15px;letter-spacing:-.01em;}
 .courses .c .t b{display:block;font-family:'JetBrains Mono';font-weight:400;font-size:9.5px;letter-spacing:.1em;color:var(--ink-low);text-transform:uppercase;margin-top:4px;}
 /* live budget readout right */
 .budgets{position:absolute;right:0;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:26px;text-align:right;}
 .budgets .b .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-low);margin-bottom:8px;}
-.budgets .b .v{font-family:'Space Grotesk';font-weight:700;font-size:clamp(26px,3.6vw,44px);letter-spacing:-.02em;line-height:1;}
+.budgets .b .v{font-family:'Plus Jakarta Sans';font-weight:700;font-size:clamp(26px,3.6vw,44px);letter-spacing:-.02em;line-height:1;}
 .budgets .b.calv .v{color:var(--calorie);} .budgets .b.budv .v{color:var(--budget);}
 .budgets .b .of{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-dim);margin-top:6px;}
 .scrub{position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--line);z-index:3;}
@@ -124,7 +126,7 @@ h1,h2,h3{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;letter
 .prob-list .p{display:grid;grid-template-columns:auto 1fr;gap:18px;padding:22px 0;border-top:1px solid var(--line);}
 .prob-list .p:first-child{border-top:none;}
 .prob-list .p .ic{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--peri);padding-top:3px;}
-.prob-list .p .t{font-family:'Space Grotesk';font-weight:600;font-size:19px;letter-spacing:-.01em;}
+.prob-list .p .t{font-family:'Plus Jakarta Sans';font-weight:600;font-size:19px;letter-spacing:-.01em;}
 .prob-list .p .d{color:var(--ink-dim);font-size:14px;margin-top:6px;line-height:1.55;}
 
 /* ---- instruments (dials + metrics) ---- */
@@ -142,7 +144,7 @@ h1,h2,h3{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;letter
   box-shadow:inset 0 2px 3px rgba(192,194,255,.16),inset 0 -12px 22px rgba(0,0,0,.7),0 16px 34px -16px #000;border:1px solid #050508;}
 .gknob:active{cursor:grabbing;}
 .gknob .gp{position:absolute;left:50%;top:8px;width:3px;height:26%;border-radius:2px;background:var(--peri);transform:translateX(-50%);box-shadow:0 0 8px var(--peri);transform-origin:50% calc(100% + 18px);}
-.gauge .rd{font-family:'Space Grotesk';font-weight:700;font-size:38px;letter-spacing:-.02em;line-height:1;min-height:1em;}
+.gauge .rd{font-family:'Plus Jakarta Sans';font-weight:700;font-size:38px;letter-spacing:-.02em;line-height:1;min-height:1em;}
 .gauge .rd small{display:block;font-family:'JetBrains Mono';font-weight:400;font-size:11px;color:var(--peri-bright);letter-spacing:.06em;margin-top:9px;text-transform:uppercase;}
 .gauge .rn{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.05em;color:var(--ink-dim);margin-top:15px;min-height:2.2em;line-height:1.6;text-transform:uppercase;}
 
@@ -151,7 +153,7 @@ h1,h2,h3{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;letter
 .wl h2{font-size:clamp(40px,7vw,104px);line-height:.9;}
 .wl p{color:var(--ink-72);max-width:44ch;margin:26px auto 0;font-size:16px;}
 .wl-form{display:flex;gap:10px;max-width:440px;margin:40px auto 0;}
-.wl-form input{flex:1;background:var(--panel);border:1px solid var(--line-2);border-radius:999px;padding:15px 22px;color:var(--ink);font-family:'Inter';font-size:15px;outline:none;transition:border-color .3s;}
+.wl-form input{flex:1;background:var(--panel);border:1px solid var(--line-2);border-radius:999px;padding:15px 22px;color:var(--ink);font-family:'Plus Jakarta Sans';font-size:15px;outline:none;transition:border-color .3s;}
 .wl-form input:focus{border-color:var(--peri);}
 .wl-note{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:var(--ink-low);margin-top:18px;text-transform:uppercase;}
 
@@ -200,7 +202,7 @@ h1,h2,h3{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;letter
   .courses .c{width:100%;grid-template-columns:20px 1fr;gap:12px;padding:6px 0;border-top:1px solid var(--line);opacity:.4;}
   .courses .c.on{opacity:1;}
   .courses .c .n{font-size:10px;}
-  .courses .c .t{font-family:'Space Grotesk';font-weight:600;font-size:13px;letter-spacing:-.01em;}
+  .courses .c .t{font-family:'Plus Jakarta Sans';font-weight:600;font-size:13px;letter-spacing:-.01em;}
   .courses .c .t b{display:block;font-family:'JetBrains Mono';font-weight:400;font-size:8.5px;letter-spacing:.06em;color:var(--ink-low);text-transform:uppercase;margin-top:1px;}
   .courses .c.on .t b{color:var(--ink-dim);}
   .scrub{z-index:5;}

@@ -19,11 +19,15 @@
 <meta property="og:locale" content="en_IN">
 
 <!-- Fonts: same stack as the rest of the site -->
+<link rel="preload" href="/fonts/plus-jakarta-sans-var.woff2?v=1" as="font" type="font/woff2" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
+@font-face{font-family:'Plus Jakarta Sans';src:url('/fonts/plus-jakarta-sans-var.woff2?v=1') format('woff2');font-weight:200 800;font-style:normal;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Plus Jakarta Sans';src:url('/fonts/plus-jakarta-sans-rupee-var.woff2?v=1') format('woff2');font-weight:200 800;font-style:normal;font-display:swap;unicode-range:U+20B9}
+
   :root {
     --bg: #040407;
     --bg-2: #0c0c12;
@@ -52,7 +56,7 @@
     margin: 0;
     background: var(--bg);
     color: var(--ink);
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
@@ -72,7 +76,7 @@
 
   /* ---- Type primitives ---- */
   .display {
-    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-weight: 500;
     line-height: 0.98;
     letter-spacing: -0.025em;
@@ -240,7 +244,7 @@
   }
   .notify-head { display: flex; flex-direction: column; gap: 6px; }
   .notify-title {
-    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-weight: 500; letter-spacing: -0.02em;
     font-size: clamp(20px, 3.2vw, 26px);
     color: var(--ink); margin: 0; line-height: 1.1;
@@ -262,7 +266,7 @@
     border: 1px solid color-mix(in srgb, var(--periwinkle) 32%, transparent);
     border-radius: 12px;
     color: var(--ink);
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 15px;
     padding: 13px 15px;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 8px 22px -16px rgba(0, 0, 0, 0.55);
@@ -298,7 +302,7 @@
     font-size: 17px;
   }
   .notify-done .notify-done-text strong {
-    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-weight: 500; color: var(--ink);
     display: block; font-size: 16px; line-height: 1.2;
   }
@@ -327,7 +331,7 @@
   }
   .context-head { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
   .context-name {
-    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-weight: 500; letter-spacing: -0.02em;
     font-size: clamp(20px, 3.4vw, 28px);
     color: var(--ink); margin: 0; line-height: 1.05;
@@ -614,7 +618,7 @@
     border: 1px solid color-mix(in srgb, var(--periwinkle) 32%, transparent);
     border-radius: 12px;
     color: var(--ink);
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 15px;
     padding: 13px 15px;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 8px 22px -16px rgba(0, 0, 0, 0.55);
@@ -777,7 +781,7 @@
     font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
     color: var(--ink-dim);
   }
-  .footer__brand .wm { font-family: 'Space Grotesk', sans-serif; font-size: 18px; letter-spacing: -0.02em; color: var(--ink); }
+  .footer__brand .wm { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; letter-spacing: -0.02em; color: var(--ink); }
   .footer__links {
     display: flex; flex-wrap: wrap; gap: 10px 22px;
     justify-content: center;
@@ -793,7 +797,7 @@
 
 <link rel="icon" type="image/svg+xml" href="/ef-favicon.svg">
 <link rel="manifest" href="manifest.webmanifest">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self'; base-uri 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self'; base-uri 'self';">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 </head>
 
