@@ -341,21 +341,23 @@ html.theme-light .hero__title .spot::after{background:radial-gradient(closest-si
 
   /* Rotor word · width-stable single slot that cycles between
      "calories" (cyan) and "budget" (peach). Matches the rotor on the
-     app login (PR #32). Italic is browser-synthesised on Plus Jakarta Sans
-     because the family has no italic cut; kept anyway for visual
-     consistency with the app side. */
+     app login (PR #32). Since 2026-11-22 it is set exactly like the rest of
+     its line: no italic, no display face, no own size or colour; only the
+     word swap remains. */
   .rotor {
     position: relative;
     display: inline-block;
     vertical-align: baseline;
-    font-style: italic;
-    font-weight: 600;
+    font: inherit;
+    color: inherit;
+    transition: width 480ms cubic-bezier(0.32, 0.72, 0, 1);
   }
   .rotor__sizer { visibility: hidden; }
   .rotor__word {
     position: absolute;
     inset: 0;
-    text-align: center;
+    text-align: left;
+    white-space: nowrap;
     opacity: 0;
     transform: translateY(-6px);
     transition: opacity 480ms cubic-bezier(0.32, 1.55, 0.36, 1),
@@ -363,10 +365,8 @@ html.theme-light .hero__title .spot::after{background:radial-gradient(closest-si
     pointer-events: none;
   }
   .rotor__word.is-active { opacity: 1; transform: translateY(0); }
-  .rotor__word--cal { color: var(--calorie); }
-  .rotor__word--bud { color: var(--budget); }
   @media (prefers-reduced-motion: reduce) {
-    .rotor__word { transition: none; }
+    .rotor, .rotor__word { transition: none; }
   }
 
   /* The three lede lines share one size at every breakpoint. Sized here in
@@ -1043,17 +1043,20 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
 
   .hero-section.bg-grid { padding-top: calc(74px + env(safe-area-inset-top)); }
 
-  /* Lede marks: a smooth BLACK pencil underline under "any menu" / "any meal"
-     (theme-aware ink so it stays visible in dark), and "both" as a calorie-blue
-     <-> budget-orange colour rotator (no underline). */
+  /* Lede marks: a white CHALK underline under "any menu" / "any meal"
+     (2026-11-22 ask). Two strokes, the second a faint lighter pass, masked
+     through fractal noise so the line breaks up like chalk on a board. Light
+     theme keeps a charcoal chalk: white would vanish on the cream ground.
+     "both" is a calorie-blue <-> budget-orange colour rotator (no underline). */
   .pencil-ul { position: relative; white-space: nowrap; }
   .pencil-ul::after {
-    content: ''; position: absolute; left: -3%; right: -3%; bottom: -0.22em;
-    height: 0.34em; pointer-events: none;
-    background: var(--ink);
-    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M3 7 C60 3 140 3 197 6' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M3 7 C60 3 140 3 197 6' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
+    content: ''; position: absolute; left: -4%; right: -4%; bottom: -0.3em;
+    height: 0.5em; pointer-events: none;
+    background: #fbfaf6;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 16' preserveAspectRatio='none'%3E%3Cfilter id='c' x='0' y='0' width='1' height='1'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55 1.4' numOctaves='2' seed='7' result='n'/%3E%3CfeColorMatrix in='n' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.2 0 0 0 2.05' result='a'/%3E%3CfeComposite in='SourceGraphic' in2='a' operator='in'/%3E%3C/filter%3E%3Cg filter='url%28%23c%29' fill='none' stroke='%23000' stroke-linecap='round'%3E%3Cpath d='M4 9.4 C58 5 138 4.6 196 7.6' stroke-width='5'/%3E%3Cpath d='M10 11.6 C70 7.6 128 7.4 189 9.8' stroke-width='2' stroke-opacity='.6'/%3E%3C/g%3E%3C/svg%3E") no-repeat center / 100% 100%;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 16' preserveAspectRatio='none'%3E%3Cfilter id='c' x='0' y='0' width='1' height='1'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55 1.4' numOctaves='2' seed='7' result='n'/%3E%3CfeColorMatrix in='n' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.2 0 0 0 2.05' result='a'/%3E%3CfeComposite in='SourceGraphic' in2='a' operator='in'/%3E%3C/filter%3E%3Cg filter='url%28%23c%29' fill='none' stroke='%23000' stroke-linecap='round'%3E%3Cpath d='M4 9.4 C58 5 138 4.6 196 7.6' stroke-width='5'/%3E%3Cpath d='M10 11.6 C70 7.6 128 7.4 189 9.8' stroke-width='2' stroke-opacity='.6'/%3E%3C/g%3E%3C/svg%3E") no-repeat center / 100% 100%;
   }
+  html.theme-light .pencil-ul::after { background: var(--ink); }
   /* "both" is driven by the lede rotor's own clock, not its own keyframe.
      It used to run a 3.4s CSS animation against the rotor's 2400ms JS
      interval, so the two colour changes drifted apart continuously and
@@ -2472,7 +2475,7 @@ html.theme-light .bp-knob { left: 3px; }
              holds the rotor, so it stays brighter. -->
         <div class="hero__lede-block reveal mt-6 max-w-[520px]">
           <p class="lede-line lede-line--lead text-ink/90 leading-relaxed">
-            The only app that tracks your <span class="rotor display text-2xl align-baseline" aria-live="polite">
+            The only app that tracks your <span class="rotor" aria-live="polite">
               <span class="rotor__sizer" aria-hidden="true">calories</span>
               <span class="rotor__word rotor__word--cal is-active" data-word="calories">calories</span>
               <span class="rotor__word rotor__word--bud" data-word="budget">budget</span>
@@ -3688,10 +3691,25 @@ html.theme-light .bp-knob { left: 3px; }
       var lead = !leadTaken;
       if (lead) leadTaken = true;
       if (lead) syncBoth(words[idx]);
+      // The rotor is set like plain text in its line, so its slot follows
+      // the showing word's width instead of reserving the widest one; the
+      // width eases on the same tick as the cross-fade.
+      // Measure the word's own text box: scrollWidth would report the slot
+      // (the word is inset:0 inside it) and so never let it shrink.
+      var range = document.createRange();
+      function fit() {
+        range.selectNodeContents(words[idx]);
+        rotor.style.width = Math.ceil(range.getBoundingClientRect().width) + 'px';
+      }
+      words.forEach(function(w, i) { w.classList.toggle('is-active', i === idx); });
+      fit();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+      window.addEventListener('resize', fit, { passive: true });
       setInterval(function() {
         words[idx].classList.remove('is-active');
         idx = (idx + 1) % words.length;
         words[idx].classList.add('is-active');
+        fit();
         if (lead) syncBoth(words[idx]);
       }, 2400);
     });
