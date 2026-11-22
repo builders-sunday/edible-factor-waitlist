@@ -88,7 +88,7 @@
      recipe in README.md when new utility classes are introduced. The
      `inklow` color also lives in the :root CSS variable; both must move
      together to keep WCAG contrast. -->
-<link rel="stylesheet" href="/story/story.css?v=6">
+<link rel="stylesheet" href="/story/story.css?v=7">
 <style id="oneline-headings">
 @font-face{font-family:'Plus Jakarta Sans';src:url('/fonts/plus-jakarta-sans-var.woff2?v=1') format('woff2');font-weight:200 800;font-style:normal;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 @font-face{font-family:'Plus Jakarta Sans';src:url('/fonts/plus-jakarta-sans-rupee-var.woff2?v=1') format('woff2');font-weight:200 800;font-style:normal;font-display:swap;unicode-range:U+20B9}
@@ -2738,6 +2738,7 @@ html.theme-light .bp-knob { left: 3px; }
     <div class="copy">
       <h2 id="h-hero" style="--k:1;--em:9.21">Your day, <span class="accent">at a glance</span></h2>
       <p class="lede" style="--k:2">Open the app and the first thing you see is what is left of today, in calories and in rupees<br>Scroll on to follow one lunch at Ninan's Steakhouse, from the menu to your day</p>
+      <p class="brief" aria-hidden="true">Calories and rupees left today<br>Then follow one lunch at Ninan's</p>
     </div>
     <div class="mini" aria-hidden="true"><div class="phone"><div class="screen">
       <div class="scr solid" data-screen="start">
@@ -2766,6 +2767,7 @@ html.theme-light .bp-knob { left: 3px; }
     <div class="copy">
       <h2 id="h-menu" style="--k:1;--em:7.04">Open the menu</h2>
       <p style="--k:2">Partner menus like Ninan's Steakhouse show every dish with the restaurant's photo, its dine-in price and an estimated calorie count, side by side</p>
+      <p class="brief" aria-hidden="true">Every dish with its photo, dine-in price and estimated calories</p>
       <ul class="facts" style="--k:3"><li>Photos from the restaurant</li><li>Calories, estimated</li><li>Dine-in prices</li></ul>
     </div>
     <div class="mini" aria-hidden="true"><div class="phone"><div class="screen">
@@ -2797,6 +2799,7 @@ html.theme-light .bp-knob { left: 3px; }
     <div class="copy">
       <h2 id="h-dish" style="--k:1;--em:11.86">Tap a dish, see <span class="accent">both prices</span></h2>
       <p style="--k:2">Cost and calories together<br>Protein, carbs and fat come with them, each marked as an estimate per serving, so you know how sure the number is</p>
+      <p class="brief" aria-hidden="true">Cost and calories together, macros marked as estimates</p>
       <ul class="facts" style="--k:3"><li>~798 kcal, estimated</li><li>₹899 dine-in</li></ul>
     </div>
     <div class="mini" aria-hidden="true"><div class="phone"><div class="screen">
@@ -2826,6 +2829,7 @@ html.theme-light .bp-knob { left: 3px; }
     <div class="copy">
       <h2 id="h-plate" style="--k:1;--em:14.36">Build the plate <span class="accent">before you order</span></h2>
       <p style="--k:2">Add a second dish and the totals update as you go<br>Show the list to your server: nothing is ordered or charged through the app</p>
+      <p class="brief" aria-hidden="true">Totals update as you add, nothing is ordered or charged</p>
       <ul class="facts" style="--k:3"><li>~1670 kcal total</li><li>₹2498 together</li></ul>
     </div>
     <div class="mini" aria-hidden="true"><div class="phone"><div class="screen">
@@ -2851,6 +2855,7 @@ html.theme-light .bp-knob { left: 3px; }
     <div class="copy">
       <h2 id="h-logged" style="--k:1;--em:9.91">Log only <span class="accent">what you ate</span></h2>
       <p style="--k:2">Sign in, confirm the dishes you actually had, and the meal prints as a receipt for your records</p>
+      <p class="brief" aria-hidden="true">Confirm what you ate and it prints as your receipt</p>
       <ul class="facts" style="--k:3"><li>Sign-in needed</li><li>Your record, not a bill</li></ul>
     </div>
     <div class="mini" aria-hidden="true"><div class="phone"><div class="screen">
@@ -2884,6 +2889,7 @@ html.theme-light .bp-knob { left: 3px; }
     <div class="copy">
       <h2 id="h-home" style="--k:1;--em:13.76">Only <span class="accent">what's confirmed</span> counts</h2>
       <p style="--k:2">The meal shows up in Today straight away<br>Until the restaurant confirms its prices and calorie counts, the menu's estimates stay off your totals and are marked as not counted</p>
+      <p class="brief" aria-hidden="true">Estimates stay off your totals until the restaurant confirms</p>
       <ul class="facts" style="--k:3"><li>2 meals logged</li><li>Estimates not counted</li></ul>
     </div>
     <div class="mini" aria-hidden="true"><div class="phone"><div class="screen">
@@ -4343,6 +4349,13 @@ html.theme-light #effPop.eff-pop{background:rgba(252,249,242,.94);border-color:r
     if (pClose) pClose.addEventListener('click', dismissPopup);
 
     // Scroll trigger for the popup: once, only when no prior choice is cached.
+    // Not while the phone story is pinned on a phone: the toast would land on the step's caption strip.
+    var storyPinned = function (){
+      var st = document.querySelector('.efstory.is-story');
+      if (!st || window.innerWidth >= 900) return false;
+      var r = st.getBoundingClientRect();
+      return r.top <= 0 && r.bottom >= window.innerHeight;
+    };
     if (!getState()) {
       var shown = false;
       var onScroll = function (){
@@ -4350,7 +4363,7 @@ html.theme-light #effPop.eff-pop{background:rgba(252,249,242,.94);border-color:r
         var h = document.documentElement;
         var scrolled = (h.scrollTop || document.body.scrollTop || 0);
         var max = (h.scrollHeight - h.clientHeight) || 1;
-        if (scrolled / max >= POPUP_SCROLL_PCT) { shown = true; window.removeEventListener('scroll', onScroll); showPopup(); }
+        if (scrolled / max >= POPUP_SCROLL_PCT && !storyPinned()) { shown = true; window.removeEventListener('scroll', onScroll); showPopup(); }
       };
       window.addEventListener('scroll', onScroll, { passive: true });
     }
