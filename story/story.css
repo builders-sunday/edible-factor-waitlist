@@ -367,3 +367,35 @@ html.theme-light .efstory .phone{box-shadow:0 60px 90px -46px rgba(35,32,29,.45)
   .efstory.is-story .step h2{--hb:1.6rem}
 }
 .efstory.is-story .step h2{white-space:nowrap;text-wrap:nowrap;font-size:min(var(--hb),calc(var(--hw) / (var(--em) * 1.03)))}
+/* Phone-led stage (phones, story mode only). The phone takes the screen and the copy docks as a slim strip:
+   step title plus the first line. Tapping the strip opens it for the full paragraph and facts. The clamp and
+   the visually hidden facts stay in the accessibility tree, so screen readers always get the whole copy.
+   story.js sizes the phone (--phone-scale, --rig-h) and lifts every phone label to 11px on screen. */
+.efstory .more{display:none}
+@media (max-width:899px) and (not ((orientation:landscape) and (min-width:560px))){
+  .efstory.is-story .stage .rig,.efstory.is-story .stage .phone{height:var(--rig-h,668px)}
+  .efstory.is-story .stage .screen{height:calc(var(--rig-h,668px) - 20px)}
+  .efstory.is-story .step{padding-bottom:calc(10px + var(--story-bottom,0px) + env(safe-area-inset-bottom,0px))}
+  .efstory.is-story .step .copy{position:relative;padding:12px 56px 13px 16px;border-radius:20px}
+  .efstory.is-story .step h2{--hb:1.3rem;margin-bottom:3px}
+  .efstory.is-story .step .copy p{font-size:.95rem;line-height:1.4;margin-top:0;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:1;line-clamp:1;overflow:hidden}
+  .efstory.is-story .step .facts{display:flex;margin-top:10px}
+  .efstory.is-story .step:not(.open) .facts{position:absolute;width:1px;height:1px;margin:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  .efstory.is-story .step.open .copy p{display:block;-webkit-line-clamp:unset;line-clamp:none}
+  .efstory.is-story .step.open .copy p,.efstory.is-story .step.open .facts{animation:efs-reveal var(--efs-reveal) var(--efs-out)}
+  .efstory.is-story .step .more{display:block;position:absolute;inset:0;z-index:1;width:100%;margin:0;padding:0;border:0;border-radius:inherit;background:transparent;color:var(--ink);cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .efstory.is-story .step .more::before{content:"";position:absolute;right:10px;top:50%;width:36px;height:36px;margin-top:-18px;border-radius:50%;background:color-mix(in srgb,var(--ink) 9%,transparent)}
+  .efstory.is-story .step .more::after{content:"";position:absolute;right:24px;top:50%;width:8px;height:8px;margin-top:-3px;border:solid currentColor;border-width:2px 2px 0 0;transform:rotate(-45deg);transition:transform var(--efs-move) var(--efs-glide)}
+  .efstory.is-story .step.open .more::before{top:24px}
+  .efstory.is-story .step.open .more::after{top:24px;margin-top:-6px;transform:rotate(135deg)}
+  .efstory.is-story .step .more:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
+}
+@media (max-width:899px) and (not ((orientation:landscape) and (min-width:560px))){
+  /* a shorter phone raises the plate sheet with it, so the totals stay on screen (the dish sheet keeps its
+     place: its header bar rides above it and would run into the status bar) */
+  .efstory.is-story .stage .csheet{top:max(50px,calc(118px - (668px - var(--rig-h,668px)) / 3))}
+  /* SE-class screens: search and filter chips give way so the menu's dish cards still show */
+  .efstory.is-story.story-short .stage .srch,.efstory.is-story.story-short .stage .chips{display:none}
+  .efstory.is-story.story-short .step:not(.open) .copy p{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  .efstory.is-story.story-short .step h2{margin-bottom:0}
+}

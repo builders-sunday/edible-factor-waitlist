@@ -5,7 +5,12 @@
   if (!new URLSearchParams(location.search).has('static') && !reduce.matches) root.classList.add('is-story');
 
   /* home: the screen scrolls to the Today list (dy) so the list is never stuck behind the dock */
-  function todayShift(inner){ var t = inner.querySelector(inner.dataset.scrollto); return Math.max(0, t.offsetTop - 250); }
+  function todayShift(inner){
+    var t = inner.querySelector(inner.dataset.scrollto), scr = inner.closest('.screen');
+    /* a shorter phone (phone-led layout) parks the list higher, so it still clears the dock */
+    var lift = scr && scr.classList.contains('screen-live') ? Math.max(0, 648 - scr.offsetHeight) : 0;
+    return Math.max(0, t.offsetTop - 250 + lift);
+  }
 
   if (!root.classList.contains('is-story')){
     /* Static sequence: give each sheet mini the menu underneath it, and park home on its Today list. */
@@ -30,6 +35,13 @@
     b.setAttribute('aria-label', 'Go to step ' + (i + 1) + ': ' + s.querySelector('h1,h2').textContent);
     b.addEventListener('click', function(){ s.scrollIntoView({ behavior: reduce.matches ? 'auto' : 'smooth', block: 'start' }); });
     rail.appendChild(b);
+    /* phone-led layout: the copy docks as a slim strip (title + first line); this opens it for the rest.
+       The full copy stays in the accessibility tree either way, so the button only matters to the eye. */
+    var copy = s.querySelector('.copy'), more = document.createElement('button');
+    more.type = 'button'; more.className = 'more'; more.setAttribute('aria-expanded', 'false');
+    more.setAttribute('aria-label', 'Show all of: ' + s.querySelector('h1,h2').textContent);
+    more.addEventListener('click', function(){ var open = s.classList.toggle('open'); more.setAttribute('aria-expanded', open ? 'true' : 'false'); });
+    copy.appendChild(more);
   });
   var dots = [].slice.call(rail.children);
   var MOVE = 450, REVEAL = 300, GLIDE = 'cubic-bezier(.32,.72,0,1)', OUT = 'cubic-bezier(.23,1,.32,1)';
@@ -45,20 +57,31 @@
   var probe = document.createElement('div');
   probe.style.cssText = 'position:fixed;left:0;top:0;width:0;height:0;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)';
   document.body.appendChild(probe);
+  var LABEL_MIN = 11.25;
   function fit(){
     var w = innerWidth, h = innerHeight, s;
     if (!w || !h) return;
     var cs = getComputedStyle(probe), insB = parseFloat(cs.paddingBottom) || 0;
-    var top = Math.round(brand.getBoundingClientRect().bottom) + 10;
+    /* layout box, not the painted one: the nav sits translated off screen above the story and slides
+       back in during it, so its painted bottom read 0 here and the phone's status bar hid under it */
+    var top = (twoCol.matches ? Math.round(brand.getBoundingClientRect().bottom) : brand.offsetTop + brand.offsetHeight) + 10;
     /* a host page's fixed bottom bar (marked data-story-bottom-bar) keeps the cards clear of it on phones */
     var bar = document.querySelector('[data-story-bottom-bar]');
     var barH = bar && !twoCol.matches ? bar.offsetHeight + 8 : 0;
     root.style.setProperty('--story-bottom', barH + 'px');
+    var ph = 668;
     if (!twoCol.matches){
-      var card = Math.max.apply(null, steps.map(function(st){ return st.querySelector('.copy').offsetHeight; }));
-      var avail = h - card - 14 - insB - barH - top - 8;
-      s = Math.max(.42, Math.min(1, avail / 668, (w - 32) / 320));
-      rig.style.setProperty('--rig-top', (top + (668 * s) / 2) + 'px');
+      /* phone-led: the strip is short, so the phone takes the screen. Width sets the scale (leaving the
+         rail its own gutter); on short screens the phone gets shorter (down to 520) before it gets smaller. */
+      /* short screens (an SE-class 568) drop the strip to its title, the first line still reaches screen readers */
+      root.classList.toggle('story-short', h - top - barH - insB < 470);
+      var card = Math.max.apply(null, steps.map(function(st){ return st.classList.contains('open') ? 0 : st.querySelector('.copy').offsetHeight; }));
+      var avail = h - card - 10 - insB - barH - top - 8, sw = (w - 56) / 320;
+      s = Math.min(1.08, sw, avail / 600);
+      /* below .8 the label floor would reflow the screens, so keep the width's scale and crop the phone instead */
+      if (s < .8) s = Math.min(sw, Math.max(avail / 400, .5));
+      ph = Math.round(Math.min(668, Math.max(400, avail / s)));
+      rig.style.setProperty('--rig-top', (top + (ph * s) / 2) + 'px');
     } else if (h < 620){
       var room = h - 64 - insB;
       s = Math.max(.35, Math.min(1, room / 668, (w / 2 - 40) / 320));
@@ -68,7 +91,20 @@
       rig.style.setProperty('--rig-top', (h / 2 - 16 - insB / 2) + 'px');
     }
     rig.style.setProperty('--phone-scale', s.toFixed(3));
+    rig.style.setProperty('--rig-h', ph + 'px');
     rig._s = s;
+    floorLabels(twoCol.matches ? 0 : LABEL_MIN / s);
+  }
+  /* label floor: on phones every phone label renders at LABEL_MIN css px or more after the phone's scale.
+     Applied to the screens the story clones from, the shared menu base and whatever is live right now. */
+  function textEls(box){ return [].slice.call(box.querySelectorAll('*')).filter(function(el){
+    return [].some.call(el.childNodes, function(n){ return n.nodeType === 3 && n.textContent.trim(); }); }); }
+  function floorLabels(min){
+    var els = [];
+    steps.forEach(function(st){ els = els.concat(textEls(st.querySelector('.mini'))); });
+    els = els.concat(textEls(screenEl));
+    els.forEach(function(el){ if (!el.dataset.fs0){ el.style.fontSize = ''; el.dataset.fs0 = parseFloat(getComputedStyle(el).fontSize); } });
+    els.forEach(function(el){ var f = +el.dataset.fs0; el.style.fontSize = min > f ? min.toFixed(2) + 'px' : ''; });
   }
   fit();
   if (document.fonts) document.fonts.ready.then(fit);
