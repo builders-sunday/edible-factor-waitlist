@@ -307,7 +307,7 @@
 /* apex adaptation */
 /* Copy column speaks the apex: Plus Jakarta Sans display headings, wine accent, the site's ink and
    surfaces in both themes. The phone keeps the app's own light, black-and-white screens. */
-.efstory{position:relative;padding-block:8px 56px;color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+.efstory{position:relative;padding-block:8px 16px;color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif}
 /* The phone is the app, not the page: it keeps the app ink in both site themes. Without this,
    dark mode handed every uncoloured phone label the site ink (#eceaf3) on the light screens. */
 .efstory .phone{color:var(--efs-ink)}
@@ -406,3 +406,5 @@ html.theme-light .efstory .phone{box-shadow:0 60px 90px -46px rgba(35,32,29,.45)
   .efstory.is-story .step:not(.open) .copy>p:not(.brief){position:absolute;width:1px;height:1px;margin:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
   .efstory.is-story.story-short .step:not(.open) .copy .brief{display:none}
 }
+/* the section after the story starts close under it (the story's own last step already carries air) */
+#showcase + #problem{padding-top:8px}
