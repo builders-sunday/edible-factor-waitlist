@@ -1111,6 +1111,15 @@ html.theme-light .hbz__dish img{filter:drop-shadow(0 16px 22px rgba(120,92,48,.3
   @media (max-width: 374px) {
     .hero-stats { gap: 18px 16px; }
   }
+  /* Below tablet the three stats sit on ONE row (2026-11-22 ask): three equal
+     columns, a smaller figure, and labels that may break onto a second line
+     inside their own column. Supersedes the wrap-tuning above on phones. */
+  @media (max-width: 767px) {
+    .hero-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 14px; }
+    .hero-stats > div { min-width: 0; }
+    .hero-stats .display { font-size: clamp(26px, 8.2vw, 32px); }
+    .hero-stats .mono { font-size: 10px; letter-spacing: .1em; line-height: 1.35; text-wrap: balance; }
+  }
   .hero__title .word {
     display: inline-block;
     opacity: 0; transform: translateY(28px);
