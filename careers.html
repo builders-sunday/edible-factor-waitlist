@@ -20,9 +20,6 @@
 
 <!-- Fonts: same stack as the rest of the site -->
 <link rel="preload" href="/fonts/plus-jakarta-sans-var.woff2?v=1" as="font" type="font/woff2" crossorigin>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
 @font-face{font-family:'Plus Jakarta Sans';src:url('/fonts/plus-jakarta-sans-var.woff2?v=1') format('woff2');font-weight:200 800;font-style:normal;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
@@ -82,10 +79,10 @@
     letter-spacing: -0.025em;
   }
   .accent { font-weight: 700; color: var(--periwinkle); }
-  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  .mono { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
 
   .section-label {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
     color: var(--periwinkle);
     display: inline-flex; align-items: center;
@@ -103,7 +100,7 @@
   .pill-cta {
     background: var(--periwinkle);
     color: var(--bg);
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
     padding: 12px 22px; border-radius: var(--radius-pill);
     border: none; cursor: pointer;
@@ -115,7 +112,7 @@
   .pill-ghost {
     border: 1px solid rgba(217,95,82,0.35);
     color: var(--ink); background: transparent;
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
     padding: 10px 18px; border-radius: var(--radius-pill);
     cursor: pointer;
@@ -142,7 +139,7 @@
   .ef-logo-link img { display: block; border-radius: 12px; }
   .appbar__right { display: flex; align-items: center; gap: 16px; }
   .nav-current {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
     color: var(--ink-dim);
     display: inline-flex; align-items: center; gap: 9px;
@@ -186,7 +183,7 @@
   .hero__meta {
     margin-top: 26px;
     display: flex; flex-wrap: wrap; gap: 10px 22px;
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
     color: var(--ink-low);
   }
@@ -207,7 +204,7 @@
      `hidden` property/attribute as the second filter tier shows/hides. */
   .controls[hidden] { display: none; }
   .filter-label {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
     color: var(--ink-low); margin-right: 6px;
   }
@@ -215,7 +212,7 @@
     background: rgba(217,95,82,0.05);
     border: 1px solid var(--border-soft);
     color: var(--ink-dim);
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
     padding: 8px 15px; border-radius: var(--radius-pill);
     cursor: pointer;
@@ -338,7 +335,7 @@
   }
   .context-name .ctx-outlet { color: var(--periwinkle); }
   .context-clear {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
     color: var(--ink-dim);
     display: inline-flex; align-items: center; gap: 6px;
@@ -365,7 +362,7 @@
     font-size: clamp(26px, 4vw, 38px);
   }
   .restaurant-head .count-badge {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
     color: var(--ink-low);
   }
@@ -376,12 +373,12 @@
     margin-bottom: 16px;
   }
   .outlet-head .outlet-name {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
     color: var(--periwinkle);
   }
   .outlet-head .outlet-area {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
     color: var(--ink-low);
   }
@@ -428,7 +425,7 @@
   .job-card__chips { display: flex; flex-wrap: wrap; gap: 7px; }
 
   .chip {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
     padding: 5px 10px; border-radius: var(--radius-pill);
     border: 1px solid var(--border-soft);
@@ -455,13 +452,13 @@
     padding-top: 4px;
   }
   .job-card__openings {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
     color: var(--ink-low);
   }
   .job-card__openings b { color: var(--ink); font-weight: 500; }
   .job-card__cta {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
     color: var(--periwinkle);
     display: inline-flex; align-items: center; gap: 6px;
@@ -477,7 +474,7 @@
     margin-top: 12px;
   }
   .state-box .state-eyebrow {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
     color: var(--periwinkle);
   }
@@ -554,7 +551,7 @@
 
   .modal__title { font-size: clamp(24px, 5vw, 30px); margin: 0; }
   .modal__where {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
     color: var(--ink-dim);
     margin: 10px 0 0;
@@ -568,7 +565,7 @@
   .modal__divider { height: 1px; background: var(--border-soft); margin: 22px 0; border: 0; }
 
   .modal__sub {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
     color: var(--periwinkle);
     margin: 0 0 14px;
@@ -585,7 +582,7 @@
   }
   .req-row .req-text { color: var(--ink); font-size: 14px; }
   .badge {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase;
     padding: 4px 9px; border-radius: var(--radius-pill);
     white-space: nowrap; flex-shrink: 0;
@@ -597,7 +594,7 @@
   .apply-form { display: flex; flex-direction: column; gap: 16px; }
   .field { display: flex; flex-direction: column; gap: 7px; }
   .field > label {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
     color: var(--ink-dim);
   }
@@ -644,7 +641,7 @@
   /* ---- Resume advisory badge (pure client-side, never blocks submit) ---- */
   .verify-state {
     display: inline-flex; align-items: center; gap: 8px;
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 11px; letter-spacing: 0.08em;
     min-height: 0;
   }
@@ -679,7 +676,7 @@
     background: var(--bg-3);
     border: 1px solid var(--border-soft);
     color: var(--ink-dim);
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 12px; letter-spacing: 0.10em; text-transform: uppercase;
     padding: 11px 12px; border-radius: 11px;
     cursor: pointer;
@@ -777,7 +774,7 @@
   }
   .footer__brand {
     display: flex; align-items: center; gap: 12px;
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
     color: var(--ink-dim);
   }
@@ -785,7 +782,7 @@
   .footer__links {
     display: flex; flex-wrap: wrap; gap: 10px 22px;
     justify-content: center;
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
   }
   .footer__links a { color: var(--ink); }
