@@ -80,7 +80,7 @@
 <!-- Fonts: same stack as production -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <!-- Tailwind utilities (precompiled subset, inlined). Regenerate via the
      recipe in README.md when new utility classes are introduced. The
@@ -103,6 +103,35 @@
 .wl-card .wl-title{white-space:nowrap;margin:0 0 8px;text-wrap:nowrap}
 .wl-card .wl-lede{margin:0 0 18px;color:var(--ink-dim);font-size:15px;line-height:1.45;max-width:40ch;text-wrap:pretty}
 @media (max-width:767px){.wl-card .wl-lede{font-size:14px;margin-bottom:14px}}
+</style>
+<style id="hero-spotlight">
+/* Hero headline in Plus Jakarta Sans with a warm studio spotlight on "how" (2026-11-22).
+   The light warms up as the page loads; reduced motion gets it already on.
+   The one-line sizing below (the .hero-title-row rule) now divides by --hw, the headline's
+   measured one-line width in ems, set on the h1. */
+h1.hero__title.display{font-family:'Plus Jakarta Sans','Space Grotesk',system-ui,sans-serif;font-weight:700;letter-spacing:-.035em;word-spacing:.08em;line-height:1.02;color:var(--ink)}
+.hero__title .spot{position:relative;display:inline-block;isolation:isolate;
+  background:radial-gradient(130% 100% at 50% -10%,#ffffff 0%,#fffaf0 40%,#f9ecd8 75%,#f1dcbc 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 .18em rgba(255,200,140,.30))}
+.hero__title .spot::before{content:"";position:absolute;z-index:-1;pointer-events:none;left:50%;bottom:-2%;width:5.2em;height:4.4em;transform:translateX(-50%);
+  background:radial-gradient(55% 90% at 50% 78%,rgba(255,214,165,.26),rgba(255,206,150,.10) 50%,rgba(255,206,150,0) 82%);
+  -webkit-mask-image:conic-gradient(from 155deg at 50% -40%,transparent 0deg,#000 20deg 30deg,transparent 50deg),linear-gradient(180deg,transparent 0%,#000 50%,#000 72%,transparent 100%);
+  -webkit-mask-composite:source-in;
+  mask-image:conic-gradient(from 155deg at 50% -40%,transparent 0deg,#000 20deg 30deg,transparent 50deg),linear-gradient(180deg,transparent 0%,#000 50%,#000 72%,transparent 100%);
+  mask-composite:intersect;filter:blur(8px);mix-blend-mode:screen}
+.hero__title .spot::after{content:"";position:absolute;z-index:-1;pointer-events:none;left:50%;top:55%;width:4.4em;height:2.4em;transform:translate(-50%,-50%);
+  background:radial-gradient(closest-side,rgba(255,196,130,.20),rgba(255,180,110,.08) 55%,rgba(255,180,110,0));filter:blur(14px);mix-blend-mode:screen}
+/* On paper the same light reads as warm bronze ink under an amber wash */
+html.theme-light .hero__title .spot{background:radial-gradient(130% 100% at 50% -10%,#a8662a 0%,#7a4518 45%,#4a2a10 100%);-webkit-background-clip:text;background-clip:text;
+  filter:drop-shadow(0 0 .2em rgba(214,150,70,.28))}
+html.theme-light .hero__title .spot::before{background:radial-gradient(55% 90% at 50% 78%,rgba(240,176,96,.22),rgba(240,176,96,.08) 50%,rgba(240,176,96,0) 82%);mix-blend-mode:multiply}
+html.theme-light .hero__title .spot::after{background:radial-gradient(closest-side,rgba(240,170,90,.20),rgba(240,170,90,.07) 55%,rgba(240,170,90,0));mix-blend-mode:multiply}
+@keyframes ef-spot-warm{0%{opacity:0}18%{opacity:.35}100%{opacity:1}}
+@keyframes ef-spot-glow{0%{filter:drop-shadow(0 0 0 rgba(255,200,140,0))}}
+.hero__title .spot::before,.hero__title .spot::after{animation:ef-spot-warm 2.4s cubic-bezier(.25,.1,.25,1) .3s both}
+.hero__title .spot{animation:ef-spot-glow 2.4s cubic-bezier(.25,.1,.25,1) .3s both}
+@media (prefers-reduced-motion:reduce){.hero__title .spot,.hero__title .spot::before,.hero__title .spot::after{animation:none}}
 </style>
 <style id="tailwind-static">.pointer-events-none{pointer-events:none}.visible{visibility:visible}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.inset-x-0{left:0;right:0}.-bottom-6{bottom:-1.5rem}.-left-2{left:-.5rem}.left-1\/2{left:50%}.top-0{top:0}.top-1\/2{top:50%}.z-10{z-index:10}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-2{margin-bottom:.5rem}.mb-3{margin-bottom:.75rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.ml-3{margin-left:.75rem}.mt-1{margin-top:.25rem}.mt-10{margin-top:2.5rem}.mt-2{margin-top:.5rem}.mt-3{margin-top:.75rem}.mt-4{margin-top:1rem}.mt-6{margin-top:1.5rem}.mt-8{margin-top:2rem}.block{display:block}.inline{display:inline}.flex{display:flex}.table{display:table}.grid{display:grid}.hidden{display:none}.h-1\.5{height:.375rem}.h-10{height:2.5rem}.h-14{height:3.5rem}.h-\[68px\]{height:68px}.h-px{height:1px}.w-1\.5{width:.375rem}.w-10{width:2.5rem}.w-14{width:3.5rem}.max-w-\[1280px\]{max-width:1280px}.max-w-\[1400px\]{max-width:1400px}.max-w-\[280px\]{max-width:280px}.max-w-\[400px\]{max-width:400px}.max-w-\[480px\]{max-width:480px}.max-w-\[520px\]{max-width:520px}.max-w-\[560px\]{max-width:560px}.max-w-\[640px\]{max-width:640px}.max-w-\[720px\]{max-width:720px}.max-w-\[760px\]{max-width:760px}.flex-1{flex:1 1 0%}.-translate-x-1\/2{--tw-translate-x:-50%}.-translate-x-1\/2,.-translate-y-1\/2{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.-translate-y-1\/2{--tw-translate-y:-50%}.transform{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.select-none{-webkit-user-select:none;-moz-user-select:none;user-select:none}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-12{gap:3rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-5{gap:1.25rem}.gap-8{gap:2rem}.gap-x-4{-moz-column-gap:1rem;column-gap:1rem}.gap-x-5{-moz-column-gap:1.25rem;column-gap:1.25rem}.gap-y-1{row-gap:.25rem}.gap-y-2{row-gap:.5rem}.space-y-2>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.5rem*var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.whitespace-nowrap{white-space:nowrap}.rounded{border-radius:.25rem}.rounded-3xl{border-radius:1.5rem}.rounded-full{border-radius:9999px}.rounded-xl{border-radius:.75rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-white\/10{border-color:hsla(0,0%,100%,.1)}.border-white\/5{border-color:hsla(0,0%,100%,.05)}.bg-bg{--tw-bg-opacity:1;background-color:rgb(7 7 11/var(--tw-bg-opacity))}.bg-bg\/70{background-color:rgba(7,7,11,.7)}.bg-bg2\/80{background-color:rgba(12,12,18,.8)}.bg-periwinkle{background-color:var(--periwinkle)}.bg-periwinkle\/10{background-color:rgba(207,89,105,.1)}.p-6{padding:1.5rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.py-12{padding-top:3rem;padding-bottom:3rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.pb-6{padding-bottom:1.5rem}.pt-12{padding-top:3rem}.pt-4{padding-top:1rem}.pt-6{padding-top:1.5rem}.pt-\[96px\]{padding-top:96px}.text-center{text-align:center}.align-baseline{vertical-align:baseline}.font-body{font-family:Inter,system-ui,sans-serif}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-5xl{font-size:3rem;line-height:1}.text-6xl{font-size:3.75rem;line-height:1}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[12px\]{font-size:12px}.text-\[clamp\(140px\2c 22vw\2c 360px\)\]{font-size:clamp(140px,22vw,360px)}.text-\[clamp\(64px\2c 10vw\2c 160px\)\]{font-size:clamp(64px,10vw,160px)}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xs{font-size:.75rem;line-height:1rem}.uppercase{text-transform:uppercase}.italic{font-style:italic}.not-italic{font-style:normal}.leading-\[0\.98\]{line-height:.98}.leading-\[1\.05\]{line-height:1.05}.leading-none{line-height:1}.leading-relaxed{line-height:1.625}.leading-snug{line-height:1.375}.leading-tight{line-height:1.25}.tracking-\[0\.14em\]{letter-spacing:.14em}.tracking-\[0\.16em\]{letter-spacing:.16em}.tracking-\[0\.18em\]{letter-spacing:.18em}.tracking-\[0\.22em\]{letter-spacing:.22em}.tracking-tight{letter-spacing:-.025em}.text-budget{color:var(--budget)}.text-calorie{color:rgb(110 221 240/var(--tw-text-opacity))}.text-calorie,.text-ink{--tw-text-opacity:1}.text-ink{color:rgb(236 234 243/var(--tw-text-opacity))}.text-ink\/90{color:rgba(236,234,243,.9)}.text-inkdim{--tw-text-opacity:1;color:rgb(150 147 172/var(--tw-text-opacity))}.text-inklow{--tw-text-opacity:1;color:rgb(107 104 133/var(--tw-text-opacity))}.text-periwinkle{color:var(--periwinkle)}.text-white\/\[0\.025\]{color:hsla(0,0%,100%,.025)}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.outline{outline-style:solid}.ring{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px)}.backdrop-blur-md,.backdrop-blur-sm{-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px)}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition-colors{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.ease-in-out{transition-timing-function:cubic-bezier(.4,0,.2,1)}.hover\:text-periwinkle:hover{color:var(--periwinkle)}@media (min-width:768px){.md\:mb-10{margin-bottom:2.5rem}.md\:mt-10{margin-top:2.5rem}.md\:flex{display:flex}.md\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.md\:flex-row{flex-direction:row}.md\:gap-14{gap:3.5rem}.md\:p-7{padding:1.75rem}.md\:px-10{padding-left:2.5rem;padding-right:2.5rem}.md\:py-16{padding-top:4rem;padding-bottom:4rem}.md\:pb-8{padding-bottom:2rem}.md\:pt-16{padding-top:4rem}.md\:text-4xl{font-size:2.25rem;line-height:2.5rem}.md\:text-6xl{font-size:3.75rem}.md\:text-6xl,.md\:text-7xl{line-height:1}.md\:text-7xl{font-size:4.5rem}.md\:text-\[2\.4rem\]{font-size:2.4rem}.md\:text-base{font-size:1rem;line-height:1.5rem}.md\:text-lg{font-size:1.125rem;line-height:1.75rem}}@media (min-width:1024px){.lg\:sticky{position:sticky}.lg\:top-28{top:7rem}.lg\:inline-flex{display:inline-flex}.lg\:grid-cols-\[1fr_320px\]{grid-template-columns:1fr 320px}.lg\:grid-cols-\[1fr_440px\]{grid-template-columns:1fr 440px}.lg\:grid-cols-\[380px_1fr\]{grid-template-columns:380px 1fr}.lg\:gap-14{gap:3.5rem}.lg\:gap-16{gap:4rem}}</style>
 
@@ -359,7 +388,7 @@
   @supports (font-size: 1cqi) {
     .hero-title-row .hero__title,
     .hero-grid-lg .hero-title-row .hero__title {
-      font-size: 9.6cqi;
+      font-size: calc(96cqi / var(--hw, 10.03));
       /* Deliberately NOT white-space: nowrap. At 9.6cqi the line already
          measures ~96% of the container, so it fits on one line without
          being forced to. Forcing it would mean that anyone whose text is
@@ -383,7 +412,7 @@
        the 768px padding change either. */
     @media (min-width: 640px) and (max-width: 1023px) {
       .hero-title-row .hero__title,
-      .hero-grid-lg .hero-title-row .hero__title { font-size: min(9.6cqi, 56px); }
+      .hero-grid-lg .hero-title-row .hero__title { font-size: min(calc(96cqi / var(--hw, 10.03)), 56px); }
     }
   }
 
@@ -2422,9 +2451,9 @@ html.theme-light .bp-knob { left: 3px; }
       <div>
         <!-- Title row: sizing container for the one-line H1. -->
         <div class="hero-title-row">
-        <h1 class="hero__title display text-[clamp(44px,12vw,160px)]">
+        <h1 class="hero__title display text-[clamp(44px,12vw,160px)]" style="--hw:9.28">
           <span class="word">You&nbsp;are</span>
-          <span class="word accent">HOW</span>
+          <span class="word"><span class="spot">how</span></span>
           <span class="word">you&nbsp;eat</span><span class="period word"></span>
         </h1>
         </div><!-- /.hero-title-row -->
