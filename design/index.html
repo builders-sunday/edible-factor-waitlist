@@ -6,11 +6,11 @@
 <title>Design language - Edible Factor brand kit</title>
 <meta name="description" content="The Edible Factor brand kit: the mark in every cut and format you need. Static and motion, backgroundless or framed, SVG and PNG. Use freely on anything you ship for or with us." />
 <link rel="canonical" href="https://ediblefactor.com/design" />
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self';" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self';" />
 <link rel="icon" type="image/svg+xml" href="assets/ef-glyph.svg?v=2" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
 <meta property="og:title" content="Design language - Edible Factor brand kit" />
 <meta property="og:description" content="The Edible Factor mark in every cut and format. Static and motion, backgroundless or framed, SVG and PNG. Use freely." />
@@ -18,6 +18,9 @@
 <meta property="og:url" content="https://ediblefactor.com/design" />
 
 <style>
+@font-face{font-family:'Plus Jakarta Sans';src:url('/fonts/plus-jakarta-sans-var.woff2?v=1') format('woff2');font-weight:200 800;font-style:normal;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Plus Jakarta Sans';src:url('/fonts/plus-jakarta-sans-rupee-var.woff2?v=1') format('woff2');font-weight:200 800;font-style:normal;font-display:swap;unicode-range:U+20B9}
+
 :root{
   --void:#040407;
   --coal:#0b0b11;
@@ -41,7 +44,7 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
 body{
-  font-family:'Inter',system-ui,sans-serif;
+  font-family:'Plus Jakarta Sans',system-ui,sans-serif;
   background:var(--void);
   color:var(--ink);
   line-height:1.55;
@@ -58,7 +61,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
 :focus-visible{outline:2px solid var(--peri);outline-offset:3px;border-radius:4px;}
 
 .wrap{width:min(100% - 44px,1120px);margin-inline:auto;}
-.disp{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:700;letter-spacing:-.03em;line-height:.98;}
+.disp{font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-weight:700;letter-spacing:-.03em;line-height:.98;}
 .mono{font-family:'JetBrains Mono',ui-monospace,monospace;}
 
 /* ---------------- header ---------------- */
@@ -71,7 +74,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
 .head .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;}
 .brand{display:flex;align-items:center;gap:11px;}
 .brand img{width:28px;height:28px;}
-.brand b{font-family:'Space Grotesk';font-weight:700;font-size:16px;letter-spacing:-.01em;}
+.brand b{font-family:'Plus Jakarta Sans';font-weight:700;font-size:16px;letter-spacing:-.01em;}
 .back{
   font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;
   text-transform:uppercase;color:var(--ink-dim);
@@ -92,7 +95,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
   text-transform:uppercase;color:var(--peri-bright);
 }
 .hero h1{
-  font-family:'Space Grotesk';font-weight:700;
+  font-family:'Plus Jakarta Sans';font-weight:700;
   font-size:clamp(46px,8.6vw,108px);line-height:.92;letter-spacing:-.045em;
   margin-top:22px;max-width:14ch;
 }
@@ -116,7 +119,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
   text-transform:uppercase;color:var(--peri);
 }
 .sec-head h2{
-  font-family:'Space Grotesk';font-weight:700;
+  font-family:'Plus Jakarta Sans';font-weight:700;
   font-size:clamp(30px,4.6vw,54px);line-height:1.02;letter-spacing:-.03em;
   margin-top:16px;
 }
@@ -232,7 +235,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
   background:radial-gradient(60% 120% at 12% 30%,rgba(168,170,255,.1),transparent 60%),var(--coal);
 }
 .lockup-stage img{width:clamp(52px,8vw,72px);height:auto;}
-.lockup-stage b{font-family:'Space Grotesk';font-weight:700;font-size:clamp(28px,5.4vw,56px);letter-spacing:-.035em;line-height:1;}
+.lockup-stage b{font-family:'Plus Jakarta Sans';font-weight:700;font-size:clamp(28px,5.4vw,56px);letter-spacing:-.035em;line-height:1;}
 .lockup--light .lockup-stage{background:radial-gradient(60% 120% at 12% 30%,rgba(168,170,255,.2),transparent 60%),var(--paper);}
 .lockup--light .lockup-stage b{color:#101018;}
 
@@ -245,7 +248,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
 .sw-copy{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;opacity:0;transition:opacity .3s var(--ease);}
 .swatch:hover .sw-copy,.swatch:focus-visible .sw-copy{opacity:.7;}
 .sw-foot{padding:14px 16px 16px;border-top:1px solid var(--line);}
-.sw-name{font-family:'Space Grotesk';font-weight:700;font-size:15px;letter-spacing:-.01em;color:var(--ink);}
+.sw-name{font-family:'Plus Jakarta Sans';font-weight:700;font-size:15px;letter-spacing:-.01em;color:var(--ink);}
 .sw-hex{display:block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:var(--ink-low);margin-top:6px;text-transform:uppercase;transition:color .3s var(--ease);}
 .swatch.is-copied .sw-hex{color:var(--peri-bright);}
 
@@ -256,15 +259,15 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
 .spec-role{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--peri);}
 .spec-w{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-low);}
 .sample{margin-top:22px;color:var(--ink);}
-.spec.is-grotesk .sample{font-family:'Space Grotesk';font-weight:700;font-size:clamp(28px,5vw,54px);letter-spacing:-.03em;line-height:1.0;}
-.spec.is-inter .sample{font-family:'Inter';font-weight:400;font-size:clamp(22px,3.6vw,38px);letter-spacing:-.012em;line-height:1.18;color:var(--ink-72);max-width:24ch;}
+.spec.is-grotesk .sample{font-family:'Plus Jakarta Sans';font-weight:700;font-size:clamp(28px,5vw,54px);letter-spacing:-.03em;line-height:1.0;}
+.spec.is-inter .sample{font-family:'Plus Jakarta Sans';font-weight:400;font-size:clamp(22px,3.6vw,38px);letter-spacing:-.012em;line-height:1.18;color:var(--ink-72);max-width:24ch;}
 .spec.is-mono .sample{font-family:'JetBrains Mono';font-weight:500;font-size:clamp(19px,3.1vw,32px);letter-spacing:.02em;line-height:1.1;}
 .spec-name{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--ink-dim);margin-top:26px;text-transform:uppercase;}
 .weights{display:flex;gap:clamp(20px,4vw,44px);flex-wrap:wrap;margin-top:22px;border-top:1px solid var(--line);padding-top:22px;}
 .weights .w{display:flex;flex-direction:column;gap:8px;}
 .weights .aa{font-size:34px;line-height:1;color:var(--ink);}
-.spec.is-grotesk .aa{font-family:'Space Grotesk';}
-.spec.is-inter .aa{font-family:'Inter';}
+.spec.is-grotesk .aa{font-family:'Plus Jakarta Sans';}
+.spec.is-inter .aa{font-family:'Plus Jakarta Sans';}
 .spec.is-mono .aa{font-family:'JetBrains Mono';}
 .weights .wn{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-low);}
 
@@ -273,11 +276,11 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
 .foot .wrap{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;position:relative;z-index:1;}
 .foot .fbrand{display:flex;align-items:center;gap:11px;}
 .foot .fbrand img{width:26px;height:26px;}
-.foot .fbrand b{font-family:'Space Grotesk';font-weight:700;font-size:15px;letter-spacing:-.01em;}
+.foot .fbrand b{font-family:'Plus Jakarta Sans';font-weight:700;font-size:15px;letter-spacing:-.01em;}
 .foot .fnote{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-low);text-align:right;line-height:1.9;}
 .foot .fnote a{color:var(--ink-dim);}
 .foot .fnote a:hover{color:var(--peri-bright);}
-.watermark{position:absolute;right:-2vw;bottom:-3.2vw;z-index:0;pointer-events:none;font-family:'Space Grotesk';font-weight:700;font-size:clamp(120px,26vw,340px);line-height:.7;letter-spacing:-.05em;color:var(--panel2);opacity:.7;user-select:none;}
+.watermark{position:absolute;right:-2vw;bottom:-3.2vw;z-index:0;pointer-events:none;font-family:'Plus Jakarta Sans';font-weight:700;font-size:clamp(120px,26vw,340px);line-height:.7;letter-spacing:-.05em;color:var(--panel2);opacity:.7;user-select:none;}
 
 /* ---------------- reveal ---------------- */
 .rise{opacity:0;transform:translateY(26px);}
@@ -546,15 +549,15 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
   <div class="wrap">
     <header class="sec-head rise">
       <span class="idx">04 / type</span>
-      <h2>Three families, one job each.</h2>
-      <p>Space Grotesk sets the display, Inter carries the body, JetBrains Mono stamps the labels, readouts, and eyebrows. Load them together from Google Fonts.</p>
+      <h2>Two families, one job each.</h2>
+      <p>Plus Jakarta Sans sets the display and carries the body, JetBrains Mono stamps the labels and readouts. Jakarta is self-hosted from /fonts, Mono loads from Google Fonts.</p>
     </header>
 
     <div class="specs">
       <div class="spec is-grotesk rise">
         <div class="spec-top"><span class="spec-role">display</span><span class="spec-w">500 / 700</span></div>
         <div class="sample">You are HOW you eat.</div>
-        <div class="spec-name">Space Grotesk</div>
+        <div class="spec-name">Plus Jakarta Sans</div>
         <div class="weights">
           <div class="w"><span class="aa" style="font-weight:500">Aa</span><span class="wn">Medium 500</span></div>
           <div class="w"><span class="aa" style="font-weight:700">Aa</span><span class="wn">Bold 700</span></div>
@@ -564,7 +567,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
       <div class="spec is-inter rise">
         <div class="spec-top"><span class="spec-role">body</span><span class="spec-w">300 / 400 / 500 / 600</span></div>
         <div class="sample">Two budgets, tracked on one plate, every meal you eat out.</div>
-        <div class="spec-name">Inter</div>
+        <div class="spec-name">Plus Jakarta Sans</div>
         <div class="weights">
           <div class="w"><span class="aa" style="font-weight:300">Aa</span><span class="wn">Light 300</span></div>
           <div class="w"><span class="aa" style="font-weight:400">Aa</span><span class="wn">Regular 400</span></div>

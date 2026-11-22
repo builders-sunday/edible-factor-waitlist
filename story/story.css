@@ -3,7 +3,8 @@
 .efstory *{box-sizing:border-box}
 .efstory h2,.efstory h3,.efstory h4,.efstory h5,.efstory p,.efstory ul{margin:0}
 .efstory img{display:block;max-width:100%}
-@font-face{font-family:"EF Inter";src:url(/story/fonts/inter.woff2) format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('/fonts/plus-jakarta-sans-var.woff2?v=1') format('woff2');font-weight:200 800;font-style:normal;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Plus Jakarta Sans';src:url('/fonts/plus-jakarta-sans-rupee-var.woff2?v=1') format('woff2');font-weight:200 800;font-style:normal;font-display:swap;unicode-range:U+20B9}
 @font-face{font-family:"EF Mono";src:url(/story/fonts/jetbrainsmono.woff2) format("woff2");font-weight:100 800;font-display:swap}
 @font-face{font-family:NinanDM;src:url(/story/fonts/ninan-dm-sans-v1.woff2) format("woff2");font-weight:100 1000;font-display:swap}
 @font-face{font-family:NinanOutfit;src:url(/story/fonts/ninan-outfit-v1.woff2) format("woff2");font-weight:100 900;font-display:swap}
@@ -13,8 +14,8 @@
   --efs-line:rgba(20,26,30,.12);
   --efs-chrome:rgba(230,236,239,.82);
   --efs-paper:#fdfdfb; --efs-paper-ink:#28272b; --efs-machine:#2b2f33; --efs-machine-screen:#0b0d10;
-  --efs-f:"EF Inter",system-ui,sans-serif; --efs-mono:"EF Mono",ui-monospace,monospace;
-  --efs-nn-h:NinanOutfit,"EF Inter",sans-serif; --efs-nn-b:NinanDM,"EF Inter",sans-serif;
+  --efs-f:'Plus Jakarta Sans',system-ui,sans-serif; --efs-mono:"EF Mono",ui-monospace,monospace;
+  --efs-nn-h:NinanOutfit,'Plus Jakarta Sans',sans-serif; --efs-nn-b:NinanDM,'Plus Jakarta Sans',sans-serif;
   /* two motion tokens: move (photo, sheet, screen) and reveal (rows) */
   --efs-glide:cubic-bezier(.32,.72,0,1); --efs-out:cubic-bezier(.23,1,.32,1);
   --efs-move:450ms; --efs-reveal:300ms;
@@ -305,11 +306,11 @@
 .efstory *::after{animation-duration:1ms!important;animation-delay:0ms!important;transition-duration:1ms!important}
 }
 /* apex adaptation */
-/* Copy column speaks the apex: Space Grotesk display headings, wine accent, the site's ink and
+/* Copy column speaks the apex: Plus Jakarta Sans display headings, wine accent, the site's ink and
    surfaces in both themes. The phone keeps the app's own light, black-and-white screens. */
-.efstory{position:relative;padding-block:8px 56px;color:var(--ink);font-family:'Inter',system-ui,sans-serif}
+.efstory{position:relative;padding-block:8px 56px;color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif}
 .efstory .story{max-width:1280px}
-.efstory h2{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:500;line-height:.98;letter-spacing:-.025em;
+.efstory h2{font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-weight:500;line-height:.98;letter-spacing:-.025em;
   font-size:clamp(2.5rem,1.6rem + 2.4vw,3.75rem);color:var(--ink);margin-bottom:18px;text-wrap:balance}
 .efstory .accent{font-weight:700;color:var(--periwinkle)}
 .efstory .copy p{color:var(--ink-dim);font-size:1.0625rem;line-height:1.6;max-width:30rem}

@@ -50,3 +50,6 @@
 # that's actually live, not a stale edge copy.
 /version.json
   Cache-Control: no-store
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
