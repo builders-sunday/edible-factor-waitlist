@@ -146,10 +146,10 @@ function head({ title, desc, url, extraCss = '' }) {
 <meta name="twitter:description" content="${esc(desc)}">
 <link rel="preload" href="/fonts/plus-jakarta-sans-var.woff2?v=1" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/blog/blog.css?v=${ASSET_V}">
-${extraCss}<link rel="icon" type="image/svg+xml" href="/ef-favicon.svg">
-<link rel="icon" type="image/x-icon" href="/favicon.ico">
-<link rel="apple-touch-icon" href="/ef-mark-180.png">
-<link rel="manifest" href="/manifest.webmanifest">
+${extraCss}<link rel="icon" type="image/svg+xml" href="/ef3d-favicon.svg">
+<link rel="icon" type="image/x-icon" href="/favicon-3d.ico">
+<link rel="apple-touch-icon" href="/ef3d-180.png">
+<link rel="manifest" href="/manifest.webmanifest?v=2">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'self';">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 </head>

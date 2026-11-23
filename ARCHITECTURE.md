@@ -73,7 +73,7 @@ flowchart TD
 | `/v2` | `v2/index.html` | Redesign preview ("not the live homepage" ribbon). Loads external `assets/styles.css`, `app.js`, `lenis.min.js`. `noindex`. | No |
 | any unknown path | `404.html` | Branded not-found page, served with a real `404` status. Its presence at the root is also what turns off Pages' single-page-app fallback (before it, every unknown URL returned the homepage with `200`). Also the body of the `404` that `functions/_middleware.js` returns for repo-internal files. Every URL inside it is absolute, because it renders at any depth. | No (`noindex`) |
 
-Static assets at the root: `ef-mark.svg`, `ef-mark-180.png`, `favicon.ico`, `og-image.png`, `manifest.webmanifest`, `robots.txt`, and `mockups/*.webp` (deck screenshots: `home-dashboard`, `restaurants-browse`, `ai-sommelier`, `calorie-trend`).
+Static assets at the root: `ef-mark.svg` (the animated header mark), the tab and home screen icon set (`ef3d-favicon.svg`, `favicon-3d.ico`, `ef3d-180.png`, `ef3d-192.png`, `ef3d-512.png`, `ef3d-maskable-512.png`: the 3D EF monogram; the older `ef-favicon.svg`, `favicon.ico` and `ef-mark-180.png` stay on disk for anything still cached against them), `logo.png` (512 px, the JSON-LD Organization logo), `og-image.png`, `manifest.webmanifest`, `robots.txt`, and `mockups/*.webp` (deck screenshots: `home-dashboard`, `restaurants-browse`, `ai-sommelier`, `calorie-trend`).
 
 ### Pages Functions endpoints
 
