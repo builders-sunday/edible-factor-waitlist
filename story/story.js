@@ -63,7 +63,7 @@
   var svh = document.createElement('div');
   svh.style.cssText = 'position:fixed;left:0;top:0;width:0;height:100svh;visibility:hidden;pointer-events:none';
   document.body.appendChild(svh);
-  var LABEL_MIN = 11.25;
+  var LABEL_MIN = 11.25, fitW = 0, fitH = 0, fitTwo = false;
   function fit(){
     var w = innerWidth, h = innerHeight, s;
     if (!w || !h) return;
@@ -91,10 +91,12 @@
       /* peek crop: the chassis stays a full 668 phone and only ph of it shows; the rest runs on under the
          card and fades out at the card's top edge, so it reads as a phone partly hidden, never a squat device */
       rig.style.setProperty('--rig-top', (top + (668 * s) / 2) + 'px');
-      /* the cut sits at the lowest card top, so every card's top edge covers the phone's foot */
+      /* the lowest card top: the screen above it is what a docked card leaves in view */
       var low = Math.min.apply(null, steps.map(function(st){ return st.querySelector('.copy').offsetHeight; }));
       var cut = Math.round(h - low - 10 - insB - barH);
-      root.style.setProperty('--story-cut', cut + 'px');
+      /* the fade sits just above the cards' bottom edge, so a docked card hides it and mid-swipe the
+         phone runs on down to the bar instead of stopping above a band of empty page */
+      root.style.setProperty('--story-cut', Math.round(h - 10 - insB - barH - 30) + 'px');
       root.classList.toggle('story-peek', ph < 668);
       /* the screen height that shows above the card (screen px), for parking the home list */
       vis = ph < 668 ? (cut - top) / s - 10 : 0;
@@ -109,6 +111,8 @@
     rig.style.setProperty('--phone-scale', s.toFixed(3));
     rig.style.setProperty('--rig-h', ph + 'px');
     rig._s = s; rig._vis = vis;
+    /* what the resize guard compares against: every refit (fonts, rotation, layout flip) resets it */
+    fitW = innerWidth; fitH = innerHeight; fitTwo = twoCol.matches;
     floorLabels(twoCol.matches ? 0 : LABEL_MIN / s);
   }
   /* label floor: on phones every phone label renders at LABEL_MIN css px or more after the phone's scale.
@@ -294,11 +298,9 @@
   document.addEventListener('scroll', onScroll, { passive: true, capture: true });
   /* Safari's toolbars resize the viewport mid-swipe; same width and a small height change is just them,
      so the phone keeps its shape. Rotation, a width change or a real resize still refits. */
-  var fitW = innerWidth, fitH = innerHeight;
   addEventListener('resize', function(){
-    var w = innerWidth, h = innerHeight;
-    if (!twoCol.matches && w === fitW && Math.abs(h - fitH) < 160){ onScroll(); return; }
-    fitW = w; fitH = h; fit(); onScroll();
+    if (!fitTwo && !twoCol.matches && innerWidth === fitW && Math.abs(innerHeight - fitH) < 160){ onScroll(); return; }
+    fit(); onScroll();
   });
   /* copy reveal is armed only after the first measure has marked what is already on screen */
   measure();
