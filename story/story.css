@@ -373,8 +373,8 @@ html.theme-light .efstory .phone{box-shadow:0 60px 90px -46px rgba(35,32,29,.45)
    story.js sizes the phone (--phone-scale, --rig-h) and lifts every phone label to 11px on screen. */
 .efstory .more,.efstory .brief{display:none}
 @media (max-width:899px) and (not ((orientation:landscape) and (min-width:560px))){
-  .efstory.is-story .stage .rig,.efstory.is-story .stage .phone{height:var(--rig-h,668px)}
-  .efstory.is-story .stage .screen{height:calc(var(--rig-h,668px) - 20px)}
+  /* the phone keeps its full 668 shape and fades out under the cards; --rig-h is now only its visible part (story.js) */
+  .efstory.is-story.story-peek .stage{-webkit-mask-image:linear-gradient(#000 calc(var(--story-cut) + 2px),transparent calc(var(--story-cut) + 30px));mask-image:linear-gradient(#000 calc(var(--story-cut) + 2px),transparent calc(var(--story-cut) + 30px))}
   .efstory.is-story .step{padding-bottom:calc(10px + var(--story-bottom,0px) + env(safe-area-inset-bottom,0px))}
   .efstory.is-story .step .copy{position:relative;padding:12px 56px 13px 16px;border-radius:20px}
   .efstory.is-story .step h2{--hb:1.3rem;margin-bottom:3px}

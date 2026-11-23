@@ -7,9 +7,11 @@
   /* home: the screen scrolls to the Today list (dy) so the list is never stuck behind the dock */
   function todayShift(inner){
     var t = inner.querySelector(inner.dataset.scrollto), scr = inner.closest('.screen');
-    /* a shorter phone (phone-led layout) parks the list higher, so it still clears the dock */
-    var lift = scr && scr.classList.contains('screen-live') ? Math.max(0, 648 - scr.offsetHeight) : 0;
-    return Math.max(0, t.offsetTop - 250 + lift);
+    var dy = Math.max(0, t.offsetTop - 250);
+    /* a cropped phone (phone-led layout) shows its screen only down to the card, so the list ends above it */
+    var vis = scr && scr.classList.contains('screen-live') && rig && rig._vis, end = inner.lastElementChild;
+    if (vis) dy = Math.max(dy, end.offsetTop + end.offsetHeight + 24 - vis);
+    return dy;
   }
 
   if (!root.classList.contains('is-story')){
@@ -57,10 +59,15 @@
   var probe = document.createElement('div');
   probe.style.cssText = 'position:fixed;left:0;top:0;width:0;height:0;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)';
   document.body.appendChild(probe);
-  var LABEL_MIN = 11.25;
+  /* the steps are 100svh tall, so the phone is fitted to svh: Safari's toolbars never move it */
+  var svh = document.createElement('div');
+  svh.style.cssText = 'position:fixed;left:0;top:0;width:0;height:100svh;visibility:hidden;pointer-events:none';
+  document.body.appendChild(svh);
+  var LABEL_MIN = 11.25, fitW = 0, fitH = 0, fitTwo = false;
   function fit(){
     var w = innerWidth, h = innerHeight, s;
     if (!w || !h) return;
+    if (!twoCol.matches) h = svh.offsetHeight || h;
     var cs = getComputedStyle(probe), insB = parseFloat(cs.paddingBottom) || 0;
     /* layout box, not the painted one: the nav sits translated off screen above the story and slides
        back in during it, so its painted bottom read 0 here and the phone's status bar hid under it */
@@ -69,10 +76,10 @@
     var bar = document.querySelector('[data-story-bottom-bar]');
     var barH = bar && !twoCol.matches ? bar.offsetHeight + 8 : 0;
     root.style.setProperty('--story-bottom', barH + 'px');
-    var ph = 668;
+    var ph = 668, vis = 0;
     if (!twoCol.matches){
       /* phone-led: the strip is short, so the phone takes the screen. Width sets the scale (leaving the
-         rail its own gutter); on short screens the phone gets shorter (down to 520) before it gets smaller. */
+         rail its own gutter); on short screens less of the phone shows (down to 400 of 668) before it gets smaller. */
       /* short screens (an SE-class 568) drop the strip to its title, the first line still reaches screen readers */
       root.classList.toggle('story-short', h - top - barH - insB < 470);
       var card = Math.max.apply(null, steps.map(function(st){ return st.classList.contains('open') ? 0 : st.querySelector('.copy').offsetHeight; }));
@@ -81,7 +88,18 @@
       /* below .8 the label floor would reflow the screens, so keep the width's scale and crop the phone instead */
       if (s < .8) s = Math.min(sw, Math.max(avail / 400, .5));
       ph = Math.round(Math.min(668, Math.max(400, avail / s)));
-      rig.style.setProperty('--rig-top', (top + (ph * s) / 2) + 'px');
+      /* peek crop: the chassis stays a full 668 phone and only ph of it shows; the rest runs on under the
+         card and fades out at the card's top edge, so it reads as a phone partly hidden, never a squat device */
+      rig.style.setProperty('--rig-top', (top + (668 * s) / 2) + 'px');
+      /* the lowest card top: the screen above it is what a docked card leaves in view */
+      var low = Math.min.apply(null, steps.map(function(st){ return st.querySelector('.copy').offsetHeight; }));
+      var cut = Math.round(h - low - 10 - insB - barH);
+      /* the fade sits just above the cards' bottom edge, so a docked card hides it and mid-swipe the
+         phone runs on down to the bar instead of stopping above a band of empty page */
+      root.style.setProperty('--story-cut', Math.round(h - 10 - insB - barH - 30) + 'px');
+      root.classList.toggle('story-peek', ph < 668);
+      /* the screen height that shows above the card (screen px), for parking the home list */
+      vis = ph < 668 ? (cut - top) / s - 10 : 0;
     } else if (h < 620){
       var room = h - 64 - insB;
       s = Math.max(.35, Math.min(1, room / 668, (w / 2 - 40) / 320));
@@ -92,7 +110,9 @@
     }
     rig.style.setProperty('--phone-scale', s.toFixed(3));
     rig.style.setProperty('--rig-h', ph + 'px');
-    rig._s = s;
+    rig._s = s; rig._vis = vis;
+    /* what the resize guard compares against: every refit (fonts, rotation, layout flip) resets it */
+    fitW = innerWidth; fitH = innerHeight; fitTwo = twoCol.matches;
     floorLabels(twoCol.matches ? 0 : LABEL_MIN / s);
   }
   /* label floor: on phones every phone label renders at LABEL_MIN css px or more after the phone's scale.
@@ -276,7 +296,12 @@
   function onScroll(){ if (!ticking){ ticking = true; requestAnimationFrame(measure); } }
   /* capture: also hears a scrolling body or any other scroller the host wraps us in */
   document.addEventListener('scroll', onScroll, { passive: true, capture: true });
-  addEventListener('resize', function(){ fit(); onScroll(); });
+  /* Safari's toolbars resize the viewport mid-swipe; same width and a small height change is just them,
+     so the phone keeps its shape. Rotation, a width change or a real resize still refits. */
+  addEventListener('resize', function(){
+    if (!fitTwo && !twoCol.matches && innerWidth === fitW && Math.abs(innerHeight - fitH) < 160){ onScroll(); return; }
+    fit(); onScroll();
+  });
   /* copy reveal is armed only after the first measure has marked what is already on screen */
   measure();
   if (!reduce.matches) root.classList.add('armed');
